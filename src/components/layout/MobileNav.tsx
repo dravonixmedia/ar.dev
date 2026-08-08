@@ -7,6 +7,7 @@ import { primaryNav } from "@/lib/data/nav";
 import { contact } from "@/lib/data/site";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
 import { gsap } from "@/lib/gsapConfig";
+import Logo from "./Logo";
 
 export default function MobileNav({ open, onClose }: { open: boolean; onClose: () => void }) {
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -58,9 +59,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
       aria-hidden={!open}
     >
       <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-        <span className="text-[13px] font-bold uppercase tracking-[0.18em] text-yellow">
-          AR Hydraulics
-        </span>
+        <Logo dark />
         <button
           type="button"
           onClick={onClose}

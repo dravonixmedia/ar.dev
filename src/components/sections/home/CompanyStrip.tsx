@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
+import DevGroupLogo from "@/components/layout/DevGroupLogo";
 import { sisterConcerns, credentials } from "@/lib/data/site";
 
 export default function CompanyStrip() {
@@ -9,6 +10,9 @@ export default function CompanyStrip() {
       <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
+            <div className="mb-5">
+              <DevGroupLogo size={48} />
+            </div>
             <SectionLabel>DEV Group</SectionLabel>
             <h3 className="mt-4 font-heading text-[22px] font-semibold uppercase tracking-tight text-black">
               Sister Concerns

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin, ArrowUpRight } from "lucide-react";
 import Logo from "./Logo";
+import DevGroupLogo from "./DevGroupLogo";
 import { contact, credentials, sisterConcerns, siteInfo } from "@/lib/data/site";
 import { footerServiceLinks } from "@/lib/data/nav";
 import { productFamilies } from "@/lib/data/products";
@@ -118,7 +119,8 @@ export default function Footer() {
           <span>
             © {year} {siteInfo.name}. All rights reserved.
           </span>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3">
+            <DevGroupLogo size={22} onDark />
             <span>{siteInfo.group}</span>
             <Link href="/privacy-policy" className="hover:text-white">
               Privacy Policy
