@@ -2,7 +2,15 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { productFamilies } from "@/lib/data/products";
+import { mediaConfig, type ProductMediaKey } from "@/config/media";
+
+const productMediaKey: Record<string, ProductMediaKey> = {
+  "sealing-products": "sealing",
+  "hydraulic-products": "hydraulic",
+  "industrial-components": "industrial",
+};
 
 export default function ProductsSection() {
   return (
@@ -33,30 +41,38 @@ export default function ProductsSection() {
               key={family.slug}
               href={`/products#${family.slug}`}
               data-cursor="link"
-              className="group flex flex-col justify-between rounded-2xl border border-border bg-white p-8 transition-colors hover:bg-black"
+              className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:bg-black"
             >
-              <div>
-                <span className="font-heading text-[13px] font-semibold text-orange group-hover:text-yellow">
-                  0{i + 1}
-                </span>
-                <h3 className="mt-4 font-heading text-[24px] font-semibold uppercase leading-tight text-black group-hover:text-white">
-                  {family.title}
-                </h3>
-                <p className="mt-3 text-[14px] leading-relaxed text-charcoal group-hover:text-white/60">
-                  {family.summary}
-                </p>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-2">
-                {family.items.slice(0, 4).map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-border px-3 py-1 text-[11px] text-charcoal group-hover:border-white/20 group-hover:text-white/70"
-                  >
-                    {item}
+              <CinematicMedia
+                asset={mediaConfig.products[productMediaKey[family.slug]]}
+                placeholderLabel={family.title}
+                hoverScale
+                frameClassName="rounded-none"
+              />
+              <div className="flex flex-1 flex-col justify-between p-8">
+                <div>
+                  <span className="font-heading text-[13px] font-semibold text-orange group-hover:text-yellow">
+                    0{i + 1}
                   </span>
-                ))}
+                  <h3 className="mt-4 font-heading text-[24px] font-semibold uppercase leading-tight text-black group-hover:text-white">
+                    {family.title}
+                  </h3>
+                  <p className="mt-3 text-[14px] leading-relaxed text-charcoal group-hover:text-white/60">
+                    {family.summary}
+                  </p>
+                </div>
+                <div className="mt-8 flex flex-wrap gap-2">
+                  {family.items.slice(0, 4).map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border border-border px-3 py-1 text-[11px] text-charcoal group-hover:border-white/20 group-hover:text-white/70"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+                <ArrowUpRight className="mt-6 h-5 w-5 text-black transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-yellow" />
               </div>
-              <ArrowUpRight className="mt-6 h-5 w-5 text-black transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-yellow" />
             </Link>
           ))}
         </div>

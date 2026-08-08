@@ -7,6 +7,7 @@ import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import HeroGraphic from "@/components/graphics/HeroGraphic";
 import { gsap } from "@/lib/gsapConfig";
 import { useIsFinePointer, usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
+import { mediaConfig } from "@/config/media";
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -120,8 +121,39 @@ export default function Hero() {
         </div>
 
         <div className="relative lg:col-span-5">
-          <div ref={mainLayerRef} className="relative mx-auto aspect-[6/7] w-full max-w-[420px] will-change-transform">
-            <HeroGraphic />
+          {/* Hero media stage — poster/video/overlay layers are prepared
+              here so a future ar-hydraulics-hero-workshop.mp4/.webm +
+              poster can be dropped into mediaConfig.hero without touching
+              this structure. Until supplied, the approved HeroGraphic
+              still-treatment renders as the poster layer. No video tag is
+              mounted while mediaConfig.hero.video is null — this task only
+              prepares the architecture. */}
+          <div
+            ref={mainLayerRef}
+            className="relative mx-auto aspect-[6/7] w-full max-w-[420px] overflow-hidden will-change-transform"
+          >
+            <div className="absolute inset-0" data-hero-layer="poster">
+              <HeroGraphic />
+            </div>
+            {mediaConfig.hero.video && (
+              <video
+                className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700 data-[ready=true]:opacity-100"
+                data-hero-layer="video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                poster={mediaConfig.hero.poster ?? undefined}
+              >
+                <source src={mediaConfig.hero.video} type="video/mp4" />
+                {mediaConfig.hero.webm && <source src={mediaConfig.hero.webm} type="video/webm" />}
+              </video>
+            )}
+            <div
+              className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-warm/0"
+              data-hero-layer="overlay"
+              aria-hidden="true"
+            />
           </div>
           <div
             ref={midLayerRef}

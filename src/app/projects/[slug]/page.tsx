@@ -4,11 +4,11 @@ import { notFound } from "next/navigation";
 import { AlertTriangle } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import BreadcrumbSchema from "@/components/ui/BreadcrumbSchema";
-import ImageReveal from "@/components/ui/ImageReveal";
-import ServiceGraphic from "@/components/graphics/ServiceGraphic";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { projects, getProjectBySlug } from "@/lib/data/projects";
 import { getServiceBySlug } from "@/lib/data/services";
+import { getProjectMedia } from "@/config/media";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -101,11 +101,12 @@ export default async function ProjectDetailPage({
           </div>
 
           <div className="lg:col-span-6">
-            <ImageReveal className="aspect-[4/3] w-full rounded-2xl bg-yellow-light">
-              <div className="flex h-full w-full items-center justify-center p-14 text-orange">
-                {service && <ServiceGraphic kind={service.graphic} className="h-full w-full" />}
-              </div>
-            </ImageReveal>
+            <CinematicMedia
+              asset={getProjectMedia(project.slug)}
+              placeholderLabel={project.category}
+              placeholderIcon={service?.graphic}
+              frameClassName="rounded-2xl"
+            />
           </div>
         </div>
 

@@ -2,10 +2,10 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
-import ImageReveal from "@/components/ui/ImageReveal";
-import ServiceGraphic from "@/components/graphics/ServiceGraphic";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { projects } from "@/lib/data/projects";
 import { getServiceBySlug } from "@/lib/data/services";
+import { getProjectMedia } from "@/config/media";
 
 export default function ProjectsSection() {
   const featured = projects.slice(0, 4);
@@ -37,11 +37,13 @@ export default function ProjectsSection() {
             const service = getServiceBySlug(project.serviceSlug);
             return (
               <Link key={project.slug} href={`/projects/${project.slug}`} data-cursor="view" className="group">
-                <ImageReveal className="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-grey">
-                  <div className="flex h-full w-full items-center justify-center p-16 text-black/40 transition-transform duration-700 ease-out group-hover:scale-[1.04]">
-                    {service && <ServiceGraphic kind={service.graphic} className="h-full w-full" />}
-                  </div>
-                </ImageReveal>
+                <CinematicMedia
+                  asset={getProjectMedia(project.slug)}
+                  placeholderLabel={project.category}
+                  placeholderIcon={service?.graphic}
+                  frameClassName="rounded-2xl"
+                  hoverScale
+                />
                 <div className="mt-5 flex items-start justify-between gap-4">
                   <div data-cursor="link">
                     <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange">
