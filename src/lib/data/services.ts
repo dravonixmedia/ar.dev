@@ -7,6 +7,7 @@ export const services: ServiceItem[] = [
     title: "Hydraulic & Fluid Power",
     shortTitle: "Hydraulics",
     headline: "Hydraulic & Fluid Power",
+    tagline: "Repair. Restore. Perform.",
     summary:
       "Cylinders, power packs, pumps, motors and valves — repair, testing and system support.",
     description:
@@ -39,6 +40,7 @@ export const services: ServiceItem[] = [
     shortTitle: "Mobile Works",
     headline: "Mobile Hydraulic Solutions",
     supportingHeadline: "On-Site Support Where The Work Happens.",
+    tagline: "On-site, on demand.",
     summary:
       "On-site inspection, fault finding and repair assistance for hydraulic equipment at your location.",
     description:
@@ -69,6 +71,7 @@ export const services: ServiceItem[] = [
     title: "Sealing Solutions",
     shortTitle: "Sealing",
     headline: "Hydraulic & Industrial Sealing Solutions",
+    tagline: "Precision where pressure matters.",
     summary:
       "O-rings, piston seals, rod seals, wipers and custom sealing components for hydraulic and industrial applications.",
     description:
@@ -106,6 +109,7 @@ export const services: ServiceItem[] = [
     title: "Precision Machining",
     shortTitle: "Machining",
     headline: "Precision Machining & Component Works",
+    tagline: "Made to fit.",
     summary:
       "Turning, boring, honing and thread repair for custom shafts, bushes, rods and hydraulic components.",
     description:
@@ -139,6 +143,7 @@ export const services: ServiceItem[] = [
     title: "Structural Fabrication",
     shortTitle: "Fabrication",
     headline: "Industrial & Structural Fabrication",
+    tagline: "Built for demanding work.",
     summary:
       "Industrial welding, structural steel work and custom frameworks, including gates and metal structures.",
     description:
@@ -168,6 +173,7 @@ export const services: ServiceItem[] = [
     title: "Roofing Works",
     shortTitle: "Roofing",
     headline: "Industrial & Commercial Roofing Works",
+    tagline: "Engineered to endure.",
     summary:
       "Structural roofing fabrication, sheet installation, trusses and supporting steel works.",
     description:

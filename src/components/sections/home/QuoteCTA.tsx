@@ -4,7 +4,7 @@ import TechLine from "@/components/graphics/TechLine";
 
 export default function QuoteCTA() {
   return (
-    <section className="relative overflow-hidden bg-black py-24 text-white lg:py-32">
+    <section className="relative overflow-hidden bg-black py-24 text-white lg:py-32" data-cursor-theme="dark">
       <TechLine className="pointer-events-none absolute inset-x-0 top-10 h-8 w-full text-white/10" />
       <TechLine className="pointer-events-none absolute inset-x-0 bottom-10 h-8 w-full text-white/10" />
 

@@ -64,12 +64,23 @@ select:focus-visible {
   outline-offset: 3px;
 }
 
-/* Custom cursor — fine pointers only */
+/* Custom cursor — fine pointers only. Single dot + single ring, one
+   coordinated system. No mix-blend-mode: keep colors literal and
+   predictable rather than letting the compositor recolor them. */
 .cursor-active,
 .cursor-active a,
 .cursor-active button,
 .cursor-active [data-cursor] {
   cursor: none;
+}
+
+/* Native cursor stays put over form controls — the custom cursor hides
+   itself there instead (see CustomCursor.tsx), so this is the fallback. */
+.cursor-active input,
+.cursor-active textarea,
+.cursor-active select,
+.cursor-active [contenteditable="true"] {
+  cursor: auto;
 }
 
 .cc-dot,
@@ -79,8 +90,10 @@ select:focus-visible {
   left: 0;
   pointer-events: none;
   z-index: 200;
-  will-change: transform;
+  will-change: transform, opacity;
   transform: translate3d(-50%, -50%, 0);
+  mix-blend-mode: normal;
+  transition: opacity 0.2s ease;
 }
 
 .cc-dot {
@@ -100,7 +113,17 @@ select:focus-visible {
   align-items: center;
   justify-content: center;
   transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.28s ease, border-color 0.28s ease;
+    background-color 0.28s ease, border-color 0.28s ease, opacity 0.2s ease;
+}
+
+/* Over a dark section, the same two elements swap to a light/yellow
+   treatment instead of a second cursor variant being layered on top. */
+.cc-dot.cc-on-dark {
+  background: var(--color-yellow);
+}
+
+.cc-ring.cc-on-dark {
+  border-color: var(--color-yellow);
 }
 
 .cc-ring span {
@@ -128,7 +151,7 @@ select:focus-visible {
   transform: scale(1);
 }
 
-@media (pointer: coarse) {
+@media (pointer: coarse), (hover: none) {
   .cc-dot,
   .cc-ring {
     display: none !important;

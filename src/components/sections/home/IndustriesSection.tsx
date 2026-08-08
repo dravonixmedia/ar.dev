@@ -5,7 +5,7 @@ import { legalDisclaimers } from "@/lib/data/site";
 
 export default function IndustriesSection() {
   return (
-    <section className="bg-black py-24 text-white lg:py-32">
+    <section className="bg-black py-24 text-white lg:py-32" data-cursor-theme="dark">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
         <SectionLabel light>Industries We Serve</SectionLabel>
         <TextReveal

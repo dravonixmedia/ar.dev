@@ -11,6 +11,11 @@ const CURSOR_LABELS: Record<string, string> = {
   play: "Play",
 };
 
+const FORM_SELECTOR = "input, textarea, select, [contenteditable='true']";
+
+// Single global cursor controller — one dot + one ring, always moving as one
+// coordinated system. Interactive elements only ever change its STATE via
+// data-cursor; they never mount cursor visuals of their own.
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement | null>(null);
   const ringRef = useRef<HTMLDivElement | null>(null);
@@ -32,58 +37,127 @@ export default function CustomCursor() {
     const label = labelRef.current;
     if (!dot || !ring || !label) return;
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let ringX = mouseX;
-    let ringY = mouseY;
+    let mouseX = 0;
+    let mouseY = 0;
+    let dotX = 0;
+    let dotY = 0;
+    let ringX = 0;
+    let ringY = 0;
+    let hasMoved = false;
+    let visible = false;
+    let ringActive = false;
+    let currentTheme = "";
     let rafId = 0;
+
+    // The dot's opacity depends on two independent concerns — overall
+    // cursor visibility, and whether the ring is currently in an active
+    // state (in which case the dot fades out so only the ring reads) —
+    // resolved here in one place instead of racing inline styles.
+    const syncDotOpacity = () => {
+      dot.style.opacity = visible && !ringActive ? "" : "0";
+    };
+
+    const setVisible = (next: boolean) => {
+      if (visible === next) return;
+      visible = next;
+      ring.style.opacity = next ? "" : "0";
+      syncDotOpacity();
+    };
 
     const handleMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate3d(-50%, -50%, 0)`;
+      if (!hasMoved) {
+        // First real movement: snap both elements straight to the pointer
+        // instead of letting them fly in from an initial default position.
+        hasMoved = true;
+        dotX = ringX = mouseX;
+        dotY = ringY = mouseY;
+        setVisible(true);
+      }
+    };
+
+    const handleLeave = () => setVisible(false);
+    const handleEnter = () => {
+      if (hasMoved) setVisible(true);
     };
 
     const loop = () => {
-      ringX += (mouseX - ringX) * 0.16;
-      ringY += (mouseY - ringY) * 0.16;
-      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate3d(-50%, -50%, 0)`;
+      if (hasMoved) {
+        dotX += (mouseX - dotX) * 0.35;
+        dotY += (mouseY - dotY) * 0.35;
+        ringX += (mouseX - ringX) * 0.16;
+        ringY += (mouseY - ringY) * 0.16;
+        dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate3d(-50%, -50%, 0)`;
+        ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate3d(-50%, -50%, 0)`;
+
+        const el = document.elementFromPoint(mouseX, mouseY);
+        const themedAncestor = el?.closest?.("[data-cursor-theme]");
+        const theme = themedAncestor?.getAttribute("data-cursor-theme") || "";
+        if (theme !== currentTheme) {
+          currentTheme = theme;
+          ring.classList.toggle("cc-on-dark", theme === "dark");
+          dot.classList.toggle("cc-on-dark", theme === "dark");
+        }
+      }
       rafId = requestAnimationFrame(loop);
     };
 
+    const applyState = (state: string, customLabel: string | null) => {
+      ringActive = Boolean(state);
+      ring.classList.toggle("is-active", ringActive);
+      label.textContent = ringActive ? customLabel || CURSOR_LABELS[state] || "" : "";
+      syncDotOpacity();
+    };
+
     const handleOver = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement)?.closest?.("[data-cursor]") as HTMLElement | null;
-      if (!target) return;
-      const state = target.getAttribute("data-cursor") || "";
-      const customLabel = target.getAttribute("data-cursor-label");
-      const text = customLabel || CURSOR_LABELS[state] || "";
-      label.textContent = text;
-      ring.classList.add("is-active");
+      const target = e.target as HTMLElement;
+      if (!target?.closest) return;
+
+      const formEl = target.closest(FORM_SELECTOR);
+      if (formEl) {
+        setVisible(false);
+        return;
+      }
+
+      const cursorEl = target.closest("[data-cursor]") as HTMLElement | null;
+      if (!cursorEl) return;
+      applyState(cursorEl.getAttribute("data-cursor") || "", cursorEl.getAttribute("data-cursor-label"));
     };
 
     const handleOut = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement)?.closest?.("[data-cursor]") as HTMLElement | null;
-      if (!target) return;
-      ring.classList.remove("is-active");
-      label.textContent = "";
-    };
+      const target = e.target as HTMLElement;
+      const related = e.relatedTarget as HTMLElement | null;
+      if (!target?.closest) return;
 
-    const handleDown = () => ring.style.setProperty("transform", ring.style.transform + " scale(0.92)");
-    const handleUp = () => {};
+      const formEl = target.closest(FORM_SELECTOR);
+      if (formEl) {
+        const stillOnForm = related?.closest?.(FORM_SELECTOR);
+        if (!stillOnForm && hasMoved) setVisible(true);
+        return;
+      }
+
+      const cursorEl = target.closest("[data-cursor]") as HTMLElement | null;
+      if (!cursorEl) return;
+      // Ignore the "out" if we moved to a descendant still inside the same
+      // data-cursor element — prevents flicker on nested hover targets.
+      if (related && cursorEl.contains(related)) return;
+      applyState("", null);
+    };
 
     window.addEventListener("mousemove", handleMove, { passive: true });
     window.addEventListener("mouseover", handleOver, { passive: true });
     window.addEventListener("mouseout", handleOut, { passive: true });
-    window.addEventListener("mousedown", handleDown, { passive: true });
-    window.addEventListener("mouseup", handleUp, { passive: true });
+    document.documentElement.addEventListener("mouseleave", handleLeave);
+    document.documentElement.addEventListener("mouseenter", handleEnter);
     rafId = requestAnimationFrame(loop);
 
     return () => {
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("mouseover", handleOver);
       window.removeEventListener("mouseout", handleOut);
-      window.removeEventListener("mousedown", handleDown);
-      window.removeEventListener("mouseup", handleUp);
+      document.documentElement.removeEventListener("mouseleave", handleLeave);
+      document.documentElement.removeEventListener("mouseenter", handleEnter);
       cancelAnimationFrame(rafId);
       document.documentElement.classList.remove("cursor-active");
     };
@@ -93,8 +167,8 @@ export default function CustomCursor() {
 
   return (
     <>
-      <div ref={dotRef} className="cc-dot" aria-hidden="true" />
-      <div ref={ringRef} className="cc-ring" aria-hidden="true">
+      <div ref={dotRef} className="cc-dot" aria-hidden="true" style={{ opacity: 0 }} />
+      <div ref={ringRef} className="cc-ring" aria-hidden="true" style={{ opacity: 0 }}>
         <span ref={labelRef} />
       </div>
     </>
