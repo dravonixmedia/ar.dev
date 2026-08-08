@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-heading: var(--font-space-grotesk);
+  --font-heading-alt: var(--font-sora);
+  --font-body: var(--font-inter);
+
+  --color-white: #ffffff;
+  --color-warm: #fffdf7;
+  --color-yellow: #f6c515;
+  --color-yellow-light: #fff4bf;
+  --color-yellow-soft: #fff9e3;
+  --color-orange: #f0411e;
+  --color-black: #100f0d;
+  --color-charcoal: #34363a;
+  --color-grey: #f4f5f6;
+  --color-border: #e2e5e8;
+  --color-blue-soft: #eaf7fc;
+
+  --breakpoint-xs: 30rem;
+}
+
+:root {
+  --header-height: 88px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-warm);
+}
+
+body {
+  background: var(--color-warm);
+  color: var(--color-black);
+  font-family: var(--font-body), Arial, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-yellow);
+  color: var(--color-black);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), var(--font-heading-alt), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Focus visibility for accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 3px;
+}
+
+/* Custom cursor — fine pointers only */
+.cursor-active,
+.cursor-active a,
+.cursor-active button,
+.cursor-active [data-cursor] {
+  cursor: none;
+}
+
+.cc-dot,
+.cc-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 200;
+  will-change: transform;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.cc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-black);
+}
+
+.cc-ring {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-black);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.28s ease, border-color 0.28s ease;
+}
+
+.cc-ring span {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--color-black);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.cc-ring.is-active {
+  width: 76px;
+  height: 76px;
+  background: var(--color-yellow);
+  border-color: var(--color-yellow);
+}
+
+.cc-ring.is-active span {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (pointer: coarse) {
+  .cc-dot,
+  .cc-ring {
+    display: none !important;
+  }
+}
+
+.reveal-line {
+  overflow: hidden;
+  display: block;
+}
+
+.reveal-mask {
+  overflow: hidden;
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee-x 24s linear infinite;
+}
+
+@keyframes scroll-indicator-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+.animate-scroll-indicator {
+  animation: scroll-indicator-line 1.8s ease-in-out infinite;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
