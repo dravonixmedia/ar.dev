@@ -43,7 +43,7 @@ export default function ProjectsSection() {
                   </div>
                 </ImageReveal>
                 <div className="mt-5 flex items-start justify-between gap-4">
-                  <div>
+                  <div data-cursor="link">
                     <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange">
                       {project.category}
                     </span>

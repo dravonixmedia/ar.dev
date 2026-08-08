@@ -97,27 +97,40 @@ select:focus-visible {
 }
 
 .cc-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 999px;
   background: var(--color-black);
+  transition: opacity 0.2s ease;
 }
 
+/* Default (idle): small, thin, transparent-centred ring — never a solid
+   fill, so it never competes with whatever text/label sits under it. */
 .cc-ring {
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   border: 1.5px solid var(--color-black);
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.28s ease, border-color 0.28s ease, opacity 0.2s ease;
+  transition: width 0.24s cubic-bezier(0.16, 1, 0.3, 1), height 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.24s ease, border-color 0.24s ease, opacity 0.2s ease;
 }
 
-/* Over a dark section, the same two elements swap to a light/yellow
-   treatment instead of a second cursor variant being layered on top. */
+/* Text / navigation / buttons — category A. Ring grows only slightly and
+   stays an outline: no fill, no label, so the word underneath stays 100%
+   readable. This is the state nav links, breadcrumbs, footer links and
+   buttons use. */
+.cc-ring.is-link {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+}
+
+/* Over a dark section (or a specific dark-surfaced element), the same
+   ring/dot swap to yellow instead of a second cursor variant appearing. */
 .cc-dot.cc-on-dark {
   background: var(--color-yellow);
 }

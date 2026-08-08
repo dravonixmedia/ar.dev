@@ -39,6 +39,15 @@ const fillColor: Record<Variant, string> = {
   ghost: "bg-yellow",
 };
 
+// Cursor ring colour is chosen for contrast against the button's own
+// resting surface (a "black button" gets a yellow ring, a "yellow button"
+// gets a dark ring) rather than the ambient section theme, since a
+// button's own colour can differ from what's around it.
+const cursorSurface: Partial<Record<Variant, "dark" | "light">> = {
+  primary: "dark",
+  secondary: "light",
+};
+
 const sizeClasses: Record<Size, string> = {
   md: "gap-3 px-7 py-4 text-[13px] tracking-[0.12em]",
   sm: "gap-2 px-5 py-3 text-[12px] tracking-[0.1em]",
@@ -90,7 +99,11 @@ export default function Button({
   external = false,
 }: ButtonProps) {
   const content = (
-    <span className={cn("group inline-block", className)} data-cursor={cursor}>
+    <span
+      className={cn("group inline-block", className)}
+      data-cursor={cursor}
+      data-cursor-surface={cursorSurface[variant]}
+    >
       {href ? (
         external ? (
           <a href={href} target="_blank" rel="noopener noreferrer" className="inline-block">

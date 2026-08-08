@@ -99,6 +99,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="link"
+              data-cursor-surface="dark"
               className="group inline-flex w-fit items-center gap-2 rounded-full bg-black px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.1em] text-yellow"
             >
               WhatsApp Enquiry

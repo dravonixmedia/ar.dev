@@ -32,7 +32,7 @@ export default function ProductsSection() {
             <Link
               key={family.slug}
               href={`/products#${family.slug}`}
-              data-cursor="view"
+              data-cursor="link"
               className="group flex flex-col justify-between rounded-2xl border border-border bg-white p-8 transition-colors hover:bg-black"
             >
               <div>

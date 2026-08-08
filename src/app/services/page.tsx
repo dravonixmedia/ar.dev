@@ -29,7 +29,7 @@ export default function ServicesPage() {
               <Link
                 key={service.slug}
                 href={`/services/${service.slug}`}
-                data-cursor="explore"
+                data-cursor="link"
                 className="group flex flex-col justify-between gap-8 rounded-2xl border border-border bg-white p-9 transition-colors hover:bg-black"
               >
                 <div className="flex items-start justify-between">

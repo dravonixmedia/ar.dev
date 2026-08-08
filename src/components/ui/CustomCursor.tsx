@@ -3,12 +3,16 @@
 import { useEffect, useRef } from "react";
 import { useIsFinePointer, usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
 
+// Only large-visual targets (images, showcase areas, draggable zones) get
+// the big filled/labeled ring. Everything else — nav, buttons, breadcrumbs,
+// inline links, form controls — uses the compact outline-only "link" state
+// so the word underneath always stays readable.
+const LARGE_STATES = new Set(["view", "explore", "drag"]);
+
 const CURSOR_LABELS: Record<string, string> = {
   view: "View",
   explore: "Explore",
   drag: "Drag",
-  next: "Next",
-  play: "Play",
 };
 
 const FORM_SELECTOR = "input, textarea, select, [contenteditable='true']";
@@ -45,16 +49,15 @@ export default function CustomCursor() {
     let ringY = 0;
     let hasMoved = false;
     let visible = false;
-    let ringActive = false;
-    let currentTheme = "";
+    let isLarge = false;
+    let currentSurface = "";
     let rafId = 0;
 
-    // The dot's opacity depends on two independent concerns — overall
-    // cursor visibility, and whether the ring is currently in an active
-    // state (in which case the dot fades out so only the ring reads) —
-    // resolved here in one place instead of racing inline styles.
+    // The dot only fades out for the large filled state (view/explore/
+    // drag) — the small default and compact link rings keep it, since a
+    // thin same-colour outline + tiny dot reads as one cursor either way.
     const syncDotOpacity = () => {
-      dot.style.opacity = visible && !ringActive ? "" : "0";
+      dot.style.opacity = visible && !isLarge ? "" : "0";
     };
 
     const setVisible = (next: boolean) => {
@@ -91,22 +94,33 @@ export default function CustomCursor() {
         dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate3d(-50%, -50%, 0)`;
         ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate3d(-50%, -50%, 0)`;
 
+        // Element-level surface override (e.g. a black button needing a
+        // yellow ring even on an otherwise light section) wins; ambient
+        // section theme is the fallback.
         const el = document.elementFromPoint(mouseX, mouseY);
-        const themedAncestor = el?.closest?.("[data-cursor-theme]");
-        const theme = themedAncestor?.getAttribute("data-cursor-theme") || "";
-        if (theme !== currentTheme) {
-          currentTheme = theme;
-          ring.classList.toggle("cc-on-dark", theme === "dark");
-          dot.classList.toggle("cc-on-dark", theme === "dark");
+        const surfaceEl = el?.closest?.("[data-cursor-surface]");
+        const themeEl = el?.closest?.("[data-cursor-theme]");
+        const surface = surfaceEl
+          ? surfaceEl.getAttribute("data-cursor-surface")
+          : themeEl?.getAttribute("data-cursor-theme") === "dark"
+          ? "dark"
+          : "light";
+        if (surface !== currentSurface) {
+          currentSurface = surface || "light";
+          const onDark = currentSurface === "dark";
+          ring.classList.toggle("cc-on-dark", onDark);
+          dot.classList.toggle("cc-on-dark", onDark);
         }
       }
       rafId = requestAnimationFrame(loop);
     };
 
     const applyState = (state: string, customLabel: string | null) => {
-      ringActive = Boolean(state);
-      ring.classList.toggle("is-active", ringActive);
-      label.textContent = ringActive ? customLabel || CURSOR_LABELS[state] || "" : "";
+      isLarge = LARGE_STATES.has(state);
+      const isCompactLink = Boolean(state) && !isLarge;
+      ring.classList.toggle("is-active", isLarge);
+      ring.classList.toggle("is-link", isCompactLink);
+      label.textContent = isLarge ? customLabel || CURSOR_LABELS[state] || "" : "";
       syncDotOpacity();
     };
 

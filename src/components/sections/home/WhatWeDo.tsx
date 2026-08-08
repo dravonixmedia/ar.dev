@@ -33,7 +33,7 @@ export default function WhatWeDo() {
               <Link
                 key={service.slug}
                 href={`/services/${service.slug}`}
-                data-cursor="explore"
+                data-cursor="link"
                 onMouseEnter={() => setActive(i)}
                 className={cn(
                   "group flex items-center justify-between gap-6 border-t border-white/10 py-7 transition-colors last:border-b",
