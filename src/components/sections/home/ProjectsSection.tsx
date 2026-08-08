@@ -43,13 +43,16 @@ export default function ProjectsSection() {
                   </div>
                 </ImageReveal>
                 <div className="mt-5 flex items-start justify-between gap-4">
-                  <div>
+                  <div data-cursor="link">
                     <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange">
                       {project.category}
                     </span>
                     <h3 className="mt-1 font-heading text-[20px] font-semibold uppercase tracking-tight text-black transition-transform duration-300 group-hover:translate-x-1">
                       {project.title}
                     </h3>
+                    <p className="mt-2 max-w-md text-[13px] leading-relaxed text-charcoal/70 line-clamp-2">
+                      {project.problem}
+                    </p>
                   </div>
                   <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-black transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </div>

@@ -99,6 +99,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="link"
+              data-cursor-surface="dark"
               className="group inline-flex w-fit items-center gap-2 rounded-full bg-black px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.1em] text-yellow"
             >
               WhatsApp Enquiry
@@ -114,7 +115,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="bg-black">
+      <div className="bg-black" data-cursor-theme="dark">
         <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-2 px-6 py-5 text-[12px] text-white/60 lg:flex-row lg:px-10">
           <span>
             © {year} {siteInfo.name}. All rights reserved.

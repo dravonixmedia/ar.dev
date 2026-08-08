@@ -14,7 +14,7 @@ export default function WhatWeDo() {
   const activeService = services[active];
 
   return (
-    <section className="bg-black py-24 text-white lg:py-32">
+    <section className="bg-black py-24 text-white lg:py-32" data-cursor-theme="dark">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
@@ -33,7 +33,7 @@ export default function WhatWeDo() {
               <Link
                 key={service.slug}
                 href={`/services/${service.slug}`}
-                data-cursor="explore"
+                data-cursor="link"
                 onMouseEnter={() => setActive(i)}
                 className={cn(
                   "group flex items-center justify-between gap-6 border-t border-white/10 py-7 transition-colors last:border-b",
@@ -81,7 +81,7 @@ export default function WhatWeDo() {
                 data-cursor="link"
                 className="mt-6 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-yellow"
               >
-                Learn More <ArrowUpRight className="h-4 w-4" />
+                Explore Service <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>
           </div>

@@ -90,6 +90,14 @@ export default function SignatureStory() {
                   >
                     {service.shortTitle}
                   </span>
+                  <span
+                    className={cn(
+                      "text-[12px] leading-snug transition-colors duration-300",
+                      i <= active ? "text-charcoal" : "text-black/25"
+                    )}
+                  >
+                    {service.tagline}
+                  </span>
                 </div>
               ))}
             </div>

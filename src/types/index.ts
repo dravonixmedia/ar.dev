@@ -5,6 +5,7 @@ export interface ServiceItem {
   shortTitle: string;
   headline: string;
   supportingHeadline?: string;
+  tagline: string;
   summary: string;
   description: string;
   items: string[];
@@ -43,8 +44,3 @@ export interface NavLink {
   children?: { label: string; href: string; description?: string }[];
 }
 
-export interface ProcessStep {
-  number: string;
-  title: string;
-  description: string;
-}

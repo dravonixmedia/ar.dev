@@ -58,7 +58,7 @@ export default function ProductsPage() {
         </section>
       ))}
 
-      <section className="bg-black py-20 text-white lg:py-24">
+      <section className="bg-black py-20 text-white lg:py-24" data-cursor-theme="dark">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
           <SectionLabel light>Technical Specifications</SectionLabel>
           <h2 className="mt-6 max-w-2xl font-heading text-[7vw] font-semibold uppercase leading-[0.98] tracking-tight sm:text-[4vw] lg:text-[2.2vw]">

@@ -54,7 +54,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-black py-20 text-white lg:py-28">
+      <section className="bg-black py-20 text-white lg:py-28" data-cursor-theme="dark">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
             <div className="rounded-2xl border border-white/10 p-8">

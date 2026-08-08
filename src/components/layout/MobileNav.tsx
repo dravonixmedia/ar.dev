@@ -54,6 +54,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
       ref={panelRef}
       className="fixed inset-0 z-[100] hidden flex-col bg-black text-white"
       style={{ display: "none" }}
+      data-cursor-theme="dark"
       role="dialog"
       aria-modal="true"
       aria-hidden={!open}
