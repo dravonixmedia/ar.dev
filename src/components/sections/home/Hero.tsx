@@ -19,10 +19,11 @@ const HERO_VIDEO_OBJECT_POSITION_DESKTOP = "62% 45%";
 const HERO_VIDEO_OBJECT_POSITION_MOBILE = "68% center";
 
 // The site's --color-warm token (#fffdf7) is the exact rgb(255,253,247)
-// the editorial panel is specified against — reused here as an inline
-// rgba() so the same one value sits inside both the desktop (0.78-0.88)
-// and mobile (0.84-0.9) opacity ranges the spec calls for.
-const PANEL_BG = "rgba(255,253,247,0.86)";
+// the content card is specified against. Desktop and mobile call for
+// slightly different opacities (0.78 vs 0.84) but a single inline value
+// can't switch per breakpoint — 0.80 sits close to both and keeps a lot
+// of video visible through the card either way.
+const PANEL_BG = "rgba(255,253,247,0.80)";
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -130,7 +131,7 @@ export default function Hero() {
           gsap.to(scrollIndicatorRef.current, { opacity: 0, ease: "none", scrollTrigger: scrub });
         }
         if (panelRef.current) {
-          gsap.to(panelRef.current, { y: -10, ease: "none", scrollTrigger: scrub });
+          gsap.to(panelRef.current, { y: -8, ease: "none", scrollTrigger: scrub });
         }
 
         // Subtle object-position drift on the shared ancestor custom
@@ -173,8 +174,8 @@ export default function Hero() {
           poster and video are literally the same footage at the same crop,
           the handoff reads as one continuous shot rather than a swap. No
           gradient sits over the footage anywhere — readability comes from
-          the translucent editorial panel below, not from darkening the
-          video. */}
+          the small translucent content card below, which the video
+          otherwise dominates around and behind. */}
       <div className="absolute inset-0 overflow-hidden bg-warm" aria-hidden="true">
         <div
           ref={mainLayerRef}
@@ -223,74 +224,70 @@ export default function Hero() {
         <div ref={scrollFadeRef} className="pointer-events-none absolute inset-0 bg-black opacity-0" />
       </div>
 
-      {/* Editorial content surface. Mobile: a compact floating card toward
-          the lower-left, video visible above and around it. Desktop: a
-          full-height translucent panel from the true left edge — an
-          architectural layer the video reads faintly through, not a card
-          floating over it. */}
+      {/* Compact editorial content card — wraps only its own content, never
+          a full-height/full-width slab. Mobile: floats near the lower
+          area, video fully visible above and around it. Desktop: a small
+          card inset from the top-left, video dominating the remaining
+          ~75-80% of the frame around it — an overlay on the film, not a
+          second column beside it. */}
       <div
         ref={panelRef}
-        className="relative z-10 mx-4 mb-6 w-[calc(100%-2rem)] rounded-[16px] border border-white/40 shadow-[0_20px_60px_-30px_rgba(16,15,13,0.3)] will-change-transform lg:absolute lg:inset-y-0 lg:left-0 lg:mx-0 lg:mb-0 lg:w-[44%] lg:rounded-none lg:border-y-0 lg:border-l-0 lg:border-r lg:shadow-none"
+        className="relative z-10 mx-4 mb-6 w-[calc(100%-2rem)] rounded-[16px] border border-white/45 p-[24px] shadow-[0_20px_50px_-28px_rgba(16,15,13,0.28)] will-change-transform lg:absolute lg:left-[5vw] lg:top-[20vh] lg:mx-0 lg:mb-0 lg:w-[560px] lg:rounded-[20px] lg:p-[38px] xl:w-[600px]"
         style={{
           background: PANEL_BG,
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
         }}
       >
-        <div className="flex h-full flex-col justify-center px-6 py-7 lg:mx-auto lg:max-w-[620px] lg:justify-start lg:px-0 lg:py-0 lg:pb-16 lg:pl-[5.5vw] lg:pr-[4vw] lg:pt-[18vh]">
-          <div
-            ref={eyebrowRef}
-            className="mb-5 flex items-center gap-2.5 lg:mb-6"
-          >
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-charcoal">
-              Hydraulics · Sealing · Engineering
-            </span>
-          </div>
+        <div ref={eyebrowRef} className="mb-4 flex items-center gap-2.5 lg:mb-5">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-charcoal lg:text-[11px]">
+            Hydraulics · Sealing · Engineering
+          </span>
+        </div>
 
-          <TextReveal
-            as="h1"
-            trigger={false}
-            delay={0.2}
-            duration={0.55}
-            stagger={0.08}
-            lines={[
-              "COMPLETE",
-              <span key="line-2" className="text-yellow">
-                INDUSTRIAL
-              </span>,
-              "SOLUTIONS.",
-            ]}
-            className="font-heading text-[clamp(46px,11vw,58px)] font-bold uppercase leading-[0.9] tracking-[-0.045em] text-black lg:text-[clamp(64px,6vw,92px)]"
-          />
+        <TextReveal
+          as="h1"
+          trigger={false}
+          delay={0.2}
+          duration={0.55}
+          stagger={0.08}
+          lines={[
+            "COMPLETE",
+            <span key="line-2" className="text-yellow">
+              INDUSTRIAL
+            </span>,
+            "SOLUTIONS.",
+          ]}
+          className="font-heading text-[clamp(42px,10vw,52px)] font-bold uppercase leading-[0.92] tracking-[-0.045em] text-black lg:text-[clamp(58px,5vw,78px)]"
+        />
 
-          <TextReveal
-            as="p"
-            trigger={false}
-            delay={0.5}
-            duration={0.45}
-            lines={["From hydraulics to fabrication."]}
-            className="mt-5 text-[15px] font-semibold uppercase tracking-[0.12em] text-orange"
-          />
+        <TextReveal
+          as="p"
+          trigger={false}
+          delay={0.5}
+          duration={0.45}
+          lines={["From hydraulics to fabrication."]}
+          className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-orange lg:text-[14px]"
+        />
 
-          <p
-            ref={paragraphRef}
-            className="mt-6 max-w-[560px] text-[17px] font-normal leading-[1.6] text-charcoal lg:text-[18px]"
-          >
-            AR Hydraulics and Sealing Solutions provides hydraulic repair, mobile hydraulic
-            services, sealing solutions, hydraulic testing, component support, precision
-            machining, structural fabrication and roofing solutions for industrial and
-            heavy-equipment requirements.
-          </p>
+        <p
+          ref={paragraphRef}
+          className="mt-5 max-w-[520px] text-[16px] font-normal leading-[1.55] text-charcoal lg:text-[17px]"
+        >
+          AR Hydraulics and Sealing Solutions provides hydraulic repair, mobile hydraulic
+          services, sealing solutions, hydraulic testing, component support, precision
+          machining, structural fabrication and roofing solutions for industrial and
+          heavy-equipment requirements.
+        </p>
 
-          <div ref={ctaRef} className="mt-9 flex flex-wrap items-center gap-4">
-            <Button href="/quote" variant="secondary">
-              Request a Quote
-            </Button>
-            <Button href="/services" variant="outline" magnetic={false}>
-              Explore Our Solutions
-            </Button>
-          </div>
+        <div ref={ctaRef} className="mt-7 flex flex-wrap items-center gap-3 lg:gap-4">
+          <Button href="/quote" variant="secondary">
+            Request a Quote
+          </Button>
+          <Button href="/services" variant="outline" magnetic={false}>
+            Explore Our Solutions
+          </Button>
         </div>
       </div>
 
