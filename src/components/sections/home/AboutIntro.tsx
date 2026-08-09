@@ -2,20 +2,22 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
-import ImageReveal from "@/components/ui/ImageReveal";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import ServiceGraphic from "@/components/graphics/ServiceGraphic";
+import { mediaConfig } from "@/config/media";
 
 export default function AboutIntro() {
   return (
     <section className="relative overflow-hidden bg-warm py-24 lg:py-32">
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 px-6 lg:grid-cols-12 lg:gap-8 lg:px-10">
         <div className="lg:col-span-5">
-          <ImageReveal className="aspect-[4/5] w-full rounded-2xl bg-grey">
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-yellow-soft to-yellow-light p-10 text-charcoal/40">
-              <ServiceGraphic kind="hydraulic" className="h-full w-full" />
-            </div>
-          </ImageReveal>
-          <div className="relative -mt-16 ml-10 hidden aspect-square w-40 rounded-xl border border-border bg-white p-5 shadow-[0_20px_50px_-20px_rgba(16,15,13,0.3)] lg:block">
+          <CinematicMedia
+            asset={mediaConfig.company.workshop}
+            placeholderLabel="AR Hydraulics Workshop"
+            placeholderIcon="hydraulic"
+            frameClassName="rounded-2xl"
+          />
+          <div className="relative -mt-10 ml-10 hidden aspect-square w-40 rounded-xl border border-border bg-white p-5 shadow-[0_20px_50px_-20px_rgba(16,15,13,0.3)] lg:block">
             <ServiceGraphic kind="sealing" className="h-full w-full text-orange" />
           </div>
         </div>

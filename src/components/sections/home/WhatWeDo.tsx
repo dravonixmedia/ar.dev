@@ -5,8 +5,9 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
-import ServiceGraphic from "@/components/graphics/ServiceGraphic";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { services } from "@/lib/data/services";
+import { mediaConfig, type ServiceMediaKey } from "@/config/media";
 import { cn } from "@/lib/utils";
 
 export default function WhatWeDo() {
@@ -70,9 +71,15 @@ export default function WhatWeDo() {
 
           <div className="lg:col-span-5">
             <div className="sticky top-28 rounded-2xl border border-white/10 bg-white/[0.03] p-8">
-              <div className="aspect-square w-full text-yellow">
-                <ServiceGraphic kind={activeService.graphic} className="h-full w-full" />
-              </div>
+              <CinematicMedia
+                key={activeService.slug}
+                asset={mediaConfig.services[activeService.graphic as ServiceMediaKey]}
+                placeholderLabel={activeService.shortTitle}
+                placeholderIcon={activeService.graphic}
+                frameClassName="rounded-xl"
+                cursor="explore"
+                cursorLabel="Explore"
+              />
               <p className="mt-6 text-[14px] leading-relaxed text-white/60">
                 {activeService.summary}
               </p>

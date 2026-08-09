@@ -171,6 +171,26 @@ select:focus-visible {
   }
 }
 
+/* CinematicMedia: object-position differs per breakpoint per image, set
+   via CSS custom properties from JS (mediaConfig) rather than Tailwind
+   arbitrary classes, since those values are data-driven at runtime and
+   Tailwind's JIT can only generate classes it finds as literal text. */
+.cm-image {
+  object-position: var(--cm-op-mobile, center);
+}
+
+@media (min-width: 1024px) {
+  .cm-image {
+    object-position: var(--cm-op-desktop, var(--cm-op-mobile, center));
+  }
+}
+
+.cm-placeholder-grid {
+  background-image: linear-gradient(to right, var(--color-charcoal) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-charcoal) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
 .reveal-line {
   overflow: hidden;
   display: block;

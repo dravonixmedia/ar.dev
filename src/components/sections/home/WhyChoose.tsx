@@ -3,15 +3,17 @@
 import { useState } from "react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
-import ServiceGraphic from "@/components/graphics/ServiceGraphic";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { whyChooseItems } from "@/lib/data/why-choose";
 import { services } from "@/lib/data/services";
+import { mediaConfig, type ServiceMediaKey } from "@/config/media";
 import { cn } from "@/lib/utils";
 
 export default function WhyChoose() {
   const [active, setActive] = useState(0);
   const activeItem = whyChooseItems[active];
-  const activeGraphic = services[active]?.graphic ?? "hydraulic";
+  const activeService = services[active];
+  const activeGraphic = activeService?.graphic ?? "hydraulic";
 
   return (
     <section className="bg-warm py-24 lg:py-32">
@@ -56,11 +58,17 @@ export default function WhyChoose() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-1 gap-10 rounded-2xl border border-border bg-white p-10 sm:grid-cols-[1fr_1.3fr]">
-              <div className="aspect-square w-full text-orange">
-                <ServiceGraphic kind={activeGraphic} className="h-full w-full" />
-              </div>
-              <div className="flex flex-col justify-center">
+            <div className="overflow-hidden rounded-2xl border border-border bg-white">
+              <CinematicMedia
+                key={activeGraphic}
+                asset={mediaConfig.services[activeGraphic as ServiceMediaKey]}
+                placeholderLabel={activeService?.shortTitle}
+                placeholderIcon={activeGraphic}
+                frameClassName="rounded-none"
+                cursor="explore"
+                cursorLabel="Explore"
+              />
+              <div className="flex flex-col justify-center p-8 lg:p-10">
                 <h3 className="font-heading text-[24px] font-semibold uppercase leading-tight text-black">
                   {activeItem.headline}
                 </h3>

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/sections/PageHero";
 import SectionLabel from "@/components/ui/SectionLabel";
-import ImageReveal from "@/components/ui/ImageReveal";
-import ServiceGraphic from "@/components/graphics/ServiceGraphic";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { getServiceBySlug } from "@/lib/data/services";
 import { siteInfo } from "@/lib/data/site";
+import { mediaConfig } from "@/config/media";
 
 export const metadata: Metadata = {
   title: "Hydraulic Seals in Kollam | Sealing Solutions",
@@ -53,11 +53,12 @@ export default function SealingSolutionsPage() {
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
           <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-10">
             <div className="lg:col-span-5">
-              <ImageReveal className="aspect-[4/5] w-full rounded-2xl bg-yellow-light">
-                <div className="flex h-full w-full items-center justify-center p-14 text-orange">
-                  <ServiceGraphic kind="sealing" className="h-full w-full" />
-                </div>
-              </ImageReveal>
+              <CinematicMedia
+                asset={mediaConfig.services.sealing}
+                placeholderLabel="Sealing Solutions"
+                placeholderIcon="sealing"
+                frameClassName="rounded-2xl"
+              />
             </div>
             <div className="lg:col-span-7">
               <SectionLabel>Sealing Product Range</SectionLabel>

@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import PageHero from "@/components/sections/PageHero";
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
-import ImageReveal from "@/components/ui/ImageReveal";
-import ServiceGraphic from "@/components/graphics/ServiceGraphic";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import CompanyStrip from "@/components/sections/home/CompanyStrip";
 import { services } from "@/lib/data/services";
 import { credentials } from "@/lib/data/site";
+import { mediaConfig } from "@/config/media";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -30,11 +30,12 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
           <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-10">
             <div className="lg:col-span-6">
-              <ImageReveal className="aspect-[4/3] w-full rounded-2xl bg-grey">
-                <div className="flex h-full w-full items-center justify-center p-14 text-black/40">
-                  <ServiceGraphic kind="hydraulic" className="h-full w-full" />
-                </div>
-              </ImageReveal>
+              <CinematicMedia
+                asset={mediaConfig.company.workshop}
+                placeholderLabel="AR Hydraulics Workshop"
+                placeholderIcon="hydraulic"
+                frameClassName="rounded-2xl"
+              />
             </div>
             <div className="flex flex-col justify-center lg:col-span-6">
               <SectionLabel>Our Positioning</SectionLabel>

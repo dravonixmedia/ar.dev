@@ -2,7 +2,15 @@ import type { Metadata } from "next";
 import PageHero from "@/components/sections/PageHero";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { productFamilies, technicalSpecFields } from "@/lib/data/products";
+import { mediaConfig, type ProductMediaKey } from "@/config/media";
+
+const productMediaKey: Record<string, ProductMediaKey> = {
+  "sealing-products": "sealing",
+  "hydraulic-products": "hydraulic",
+  "industrial-components": "industrial",
+};
 
 export const metadata: Metadata = {
   title: "Products",
@@ -28,8 +36,15 @@ export default function ProductsPage() {
           className={`scroll-mt-24 py-20 lg:py-24 ${i % 2 === 0 ? "bg-warm" : "bg-grey"}`}
         >
           <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-              <div className="lg:col-span-4">
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-10">
+              <div className={`lg:col-span-5 ${i % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}>
+                <CinematicMedia
+                  asset={mediaConfig.products[productMediaKey[family.slug]]}
+                  placeholderLabel={family.title}
+                  frameClassName="rounded-2xl"
+                />
+              </div>
+              <div className={`lg:col-span-7 ${i % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}>
                 <SectionLabel>{`0${i + 1}`}</SectionLabel>
                 <h2 className="mt-6 font-heading text-[7vw] font-semibold uppercase leading-[0.98] tracking-tight text-black sm:text-[4vw] lg:text-[2.2vw]">
                   {family.title}
@@ -42,9 +57,7 @@ export default function ProductsPage() {
                     Enquire About {family.title}
                   </Button>
                 </div>
-              </div>
-              <div className="lg:col-span-8">
-                <div className="grid grid-cols-1 gap-x-8 gap-y-4 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-10 grid grid-cols-1 gap-x-8 gap-y-4 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-3">
                   {family.items.map((item) => (
                     <div key={item} className="flex items-center gap-3 border-b border-border py-3">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />

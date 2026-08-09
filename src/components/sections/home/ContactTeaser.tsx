@@ -2,13 +2,21 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
 import Button from "@/components/ui/Button";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { contact } from "@/lib/data/site";
+import { mediaConfig } from "@/config/media";
 
 export default function ContactTeaser() {
   return (
     <section className="bg-warm py-24 lg:py-28">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
-        <div className="grid grid-cols-1 gap-14 rounded-3xl border border-border bg-white p-10 lg:grid-cols-12 lg:p-16">
+        <div className="overflow-hidden rounded-3xl border border-border bg-white">
+          <CinematicMedia
+            asset={mediaConfig.company.exterior}
+            placeholderLabel="AR Hydraulics Workshop, Kollam"
+            frameClassName="rounded-none"
+          />
+          <div className="grid grid-cols-1 gap-14 p-10 lg:grid-cols-12 lg:p-16">
           <div className="lg:col-span-7">
             <SectionLabel>Get In Touch</SectionLabel>
             <TextReveal
@@ -38,6 +46,7 @@ export default function ContactTeaser() {
               {contact.address.line1}, {contact.address.line2}, {contact.address.line3},{" "}
               {contact.address.city}, {contact.address.state}
             </span>
+          </div>
           </div>
         </div>
       </div>

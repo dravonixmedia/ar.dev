@@ -1,7 +1,9 @@
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { industries } from "@/lib/data/industries";
 import { legalDisclaimers } from "@/lib/data/site";
+import { mediaConfig } from "@/config/media";
 
 export default function IndustriesSection() {
   return (
@@ -13,6 +15,18 @@ export default function IndustriesSection() {
           lines={["EQUIPMENT ACROSS", "EVERY HEAVY INDUSTRY."]}
           className="mt-6 max-w-2xl font-heading text-[8vw] font-semibold uppercase leading-[0.98] tracking-tight sm:text-[5vw] lg:text-[3vw]"
         />
+
+        <div className="mt-12 lg:mt-14">
+          <CinematicMedia
+            asset={mediaConfig.industries.heavyEquipment}
+            placeholderLabel="Heavy Equipment"
+            frameClassName="rounded-2xl"
+            overlay="soft"
+            parallax
+            cursor="explore"
+            cursorLabel="Explore"
+          />
+        </div>
 
         <div className="mt-16 flex flex-wrap gap-x-12 gap-y-6 border-t border-white/10 pt-12">
           {industries.map((industry) => (

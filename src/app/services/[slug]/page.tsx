@@ -5,12 +5,12 @@ import { ArrowUpRight, MessageCircle } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import BreadcrumbSchema from "@/components/ui/BreadcrumbSchema";
 import TextReveal from "@/components/ui/TextReveal";
-import ImageReveal from "@/components/ui/ImageReveal";
-import ServiceGraphic from "@/components/graphics/ServiceGraphic";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { services, getServiceBySlug } from "@/lib/data/services";
 import { legalDisclaimers, siteInfo } from "@/lib/data/site";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
+import { mediaConfig, type ServiceMediaKey } from "@/config/media";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -114,11 +114,12 @@ export default async function ServiceDetailPage({
             </div>
 
             <div className="lg:col-span-5">
-              <ImageReveal className="aspect-square w-full rounded-2xl bg-yellow-light">
-                <div className="flex h-full w-full items-center justify-center p-14 text-orange">
-                  <ServiceGraphic kind={service.graphic} className="h-full w-full" />
-                </div>
-              </ImageReveal>
+              <CinematicMedia
+                asset={mediaConfig.services[service.graphic as ServiceMediaKey]}
+                placeholderLabel={service.title}
+                placeholderIcon={service.graphic}
+                frameClassName="rounded-2xl"
+              />
             </div>
           </div>
         </div>
