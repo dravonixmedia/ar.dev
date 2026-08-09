@@ -5,7 +5,6 @@ import type { CSSProperties } from "react";
 import Button from "@/components/ui/Button";
 import TextReveal from "@/components/ui/TextReveal";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
-import HeroGraphic from "@/components/graphics/HeroGraphic";
 import { ensureGsapRegistered, gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { useIsFinePointer, usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
 import { mediaConfig } from "@/config/media";
@@ -29,6 +28,7 @@ export default function Hero() {
   const paragraphRef = useRef<HTMLParagraphElement | null>(null);
   const ctaRef = useRef<HTMLDivElement | null>(null);
   const scrollFadeRef = useRef<HTMLDivElement | null>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement | null>(null);
   const isFinePointer = useIsFinePointer();
   const reducedMotion = usePrefersReducedMotion();
   const [videoReady, setVideoReady] = useState(false);
@@ -92,52 +92,79 @@ export default function Hero() {
     return () => section.removeEventListener("mousemove", handleMove);
   }, [isFinePointer, reducedMotion]);
 
-  // Scroll choreography — the hero should feel like the deepest, most
-  // cinematic scroll moment on the page: video scales/drifts, the
-  // technical line layer parallaxes at its own (shallower) speed, the
-  // text column lifts slightly and only starts fading past the midpoint
-  // of the hero's scroll range (never an abrupt disappearance), and a
-  // thin dark wash builds under everything as the next section approaches.
+  // Scroll choreography — deliberately understated. The video carries the
+  // motion (a slow cinematic push-in, nothing more); the headline stays
+  // put through most of the hero and only eases back and softens slightly
+  // near the very end, so scrolling never feels like the text is escaping.
+  // Desktop and mobile get entirely separate ScrollTrigger instances via
+  // gsap.matchMedia — mobile's text stays fully static (no scrub at all)
+  // and the video gets a smaller, cheaper scale for smoothness/battery.
   useEffect(() => {
     const section = sectionRef.current;
     if (!section || reducedMotion) return;
 
     ensureGsapRegistered();
     const ctx = gsap.context(() => {
-      gsap.to(mainLayerRef.current, {
-        scale: 1.06,
-        yPercent: 8,
-        xPercent: -2,
-        ease: "none",
-        scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: true },
-      });
-      gsap.to(lineLayerRef.current, {
-        yPercent: -20,
-        ease: "none",
-        scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: true },
-      });
-      if (scrollFadeRef.current) {
-        gsap.to(scrollFadeRef.current, {
-          opacity: 0.16,
-          ease: "none",
-          scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: true },
-        });
-      }
+      const mm = gsap.matchMedia();
 
-      const FADE_START = 0.58;
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-        onUpdate: (self) => {
-          const p = self.progress;
-          const fadeProgress = p <= FADE_START ? 0 : (p - FADE_START) / (1 - FADE_START);
-          gsap.set(textColRef.current, {
-            y: -42 * p,
-            opacity: 1 - fadeProgress,
-          });
-        },
+      mm.add("(min-width: 1024px)", () => {
+        const scrub = { trigger: section, start: "top top", end: "bottom top", scrub: 0.6 };
+
+        gsap.to(mainLayerRef.current, {
+          scale: 1.035,
+          yPercent: 3,
+          ease: "none",
+          scrollTrigger: scrub,
+        });
+        gsap.to(lineLayerRef.current, {
+          yPercent: -10,
+          ease: "none",
+          scrollTrigger: scrub,
+        });
+        if (scrollFadeRef.current) {
+          gsap.to(scrollFadeRef.current, { opacity: 0.1, ease: "none", scrollTrigger: scrub });
+        }
+        if (scrollIndicatorRef.current) {
+          gsap.to(scrollIndicatorRef.current, { opacity: 0, ease: "none", scrollTrigger: scrub });
+        }
+
+        // Subtle object-position drift on the shared ancestor custom
+        // property, so poster and video (both reading --hero-op-desktop)
+        // stay in lockstep — a slow focal push, not an independent layer.
+        const drift = { t: 0 };
+        gsap.to(drift, {
+          t: 1,
+          ease: "none",
+          scrollTrigger: scrub,
+          onUpdate: () => {
+            const x = 62 - 2 * drift.t;
+            const y = 45 + 2 * drift.t;
+            mainLayerRef.current?.style.setProperty("--hero-op-desktop", `${x}% ${y}%`);
+          },
+        });
+
+        const TEXT_Y_MAX = 16;
+        const FADE_START = 0.72;
+        const FADE_FLOOR = 0.88;
+        ScrollTrigger.create({
+          ...scrub,
+          onUpdate: (self) => {
+            const p = self.progress;
+            const fadeProgress = p <= FADE_START ? 0 : (p - FADE_START) / (1 - FADE_START);
+            gsap.set(textColRef.current, {
+              y: -TEXT_Y_MAX * p,
+              opacity: 1 - fadeProgress * (1 - FADE_FLOOR),
+            });
+          },
+        });
+      });
+
+      mm.add("(max-width: 1023px)", () => {
+        gsap.to(mainLayerRef.current, {
+          scale: 1.02,
+          ease: "none",
+          scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: 0.6 },
+        });
       });
     }, section);
 
@@ -149,37 +176,44 @@ export default function Hero() {
       ref={sectionRef}
       className="relative flex min-h-[100svh] items-center overflow-hidden pt-[84px]"
     >
-      {/* Full-bleed cinematic background: HeroGraphic paints instantly as
-          the fallback (no black flash, no fake poster), the real video
-          crossfades in once it can play, and a warm gradient — strongest
-          right at the text edge, opening up quickly so the footage reads
-          clearly across the center-right — keeps the current black/
-          yellow copy readable without washing out the video. */}
+      {/* Full-bleed cinematic background: the poster — a real frame lifted
+          from the hero video itself — paints instantly on first render, so
+          there is nothing to flash before the video takes over. The video
+          crossfades in fast (~300ms) once it can actually play, and because
+          poster and video are literally the same footage at the same crop,
+          the handoff reads as one continuous shot rather than a swap. A warm
+          gradient — strongest right at the text edge, opening up quickly so
+          the footage reads clearly across the center-right — keeps the
+          black/yellow copy readable without washing out the video. */}
       <div className="absolute inset-0 overflow-hidden bg-warm" aria-hidden="true">
         <div
           ref={mainLayerRef}
           className="absolute left-1/2 top-1/2 h-[150%] w-[125%] -translate-x-1/2 -translate-y-1/2 will-change-transform"
+          style={
+            {
+              "--hero-op-mobile": HERO_VIDEO_OBJECT_POSITION_MOBILE,
+              "--hero-op-desktop": HERO_VIDEO_OBJECT_POSITION_DESKTOP,
+            } as CSSProperties
+          }
         >
-          <div
-            className="absolute inset-0 flex items-center justify-center transition-opacity duration-700"
-            style={{ opacity: showVideo && videoReady ? 0 : 1 }}
-            data-hero-layer="poster"
-          >
-            <div className="aspect-[6/7] h-[70%] max-h-[560px]">
-              <HeroGraphic />
-            </div>
-          </div>
+          {mediaConfig.hero.poster && (
+            // eslint-disable-next-line @next/next/no-img-element -- static export + unoptimized images; a plain <img> avoids next/image wrapper overhead for this LCP-critical, always-absolute-fill layer.
+            <img
+              src={mediaConfig.hero.poster}
+              alt=""
+              className="hero-media absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
+              style={{ opacity: showVideo && videoReady ? 0 : 1 }}
+              data-hero-layer="poster"
+              fetchPriority="high"
+              decoding="async"
+            />
+          )}
           {showVideo && (
             <video
-              className="hero-video absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
-              style={
-                {
-                  opacity: videoReady ? 1 : 0,
-                  "--hero-op-mobile": HERO_VIDEO_OBJECT_POSITION_MOBILE,
-                  "--hero-op-desktop": HERO_VIDEO_OBJECT_POSITION_DESKTOP,
-                } as CSSProperties
-              }
+              className="hero-media absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
+              style={{ opacity: videoReady ? 1 : 0 }}
               data-hero-layer="video"
+              poster={mediaConfig.hero.poster ?? undefined}
               autoPlay
               muted
               loop
@@ -206,9 +240,12 @@ export default function Hero() {
         <div ref={scrollFadeRef} className="pointer-events-none absolute inset-0 bg-black opacity-0" />
       </div>
 
+      {/* Minimal technical accents only — thin engineering lines and the
+          bore/rod/stroke marker below. Kept deliberately faint (~12%) and
+          near-static so the real footage stays the hero, not the vectors. */}
       <div
         ref={lineLayerRef}
-        className="pointer-events-none absolute inset-0 opacity-30"
+        className="pointer-events-none absolute inset-0 opacity-[0.12]"
         aria-hidden="true"
       >
         <div className="absolute left-[6%] top-[18%] h-px w-[30%] bg-black/10" />
@@ -283,7 +320,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 right-8 hidden lg:block">
+      <div ref={scrollIndicatorRef} className="absolute bottom-8 right-8 hidden lg:block">
         <ScrollIndicator />
       </div>
     </section>

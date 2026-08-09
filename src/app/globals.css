@@ -219,12 +219,12 @@ select:focus-visible {
   }
 }
 
-.hero-video {
+.hero-media {
   object-position: var(--hero-op-mobile, center);
 }
 
 @media (min-width: 1024px) {
-  .hero-video {
+  .hero-media {
     object-position: var(--hero-op-desktop, var(--hero-op-mobile, center));
   }
 }

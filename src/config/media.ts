@@ -57,13 +57,14 @@ interface MediaConfig {
 }
 
 export const mediaConfig: MediaConfig = {
-  // See Hero.tsx for the poster/video/overlay layer architecture. No
-  // dedicated poster image has been supplied — the existing HeroGraphic
-  // still-treatment is the fallback shown until the video is ready.
+  // See Hero.tsx for the poster/video/overlay layer architecture. The
+  // poster is a real frame extracted from the hero video itself (0.5s),
+  // so the poster→video handoff is visually seamless — same footage,
+  // same framing, no fallback illustration underneath.
   hero: {
     video: "/media/hero/ar-hydraulics-hero-workshop.mp4",
     webm: "/media/hero/ar-hydraulics-hero-workshop.webm",
-    poster: null,
+    poster: "/media/hero/ar-hydraulics-hero-poster.webp",
   },
 
   company: {
