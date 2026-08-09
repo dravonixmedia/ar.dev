@@ -54,7 +54,11 @@ export default function Header() {
             "border-b transition-all duration-400",
             scrolled
               ? "border-border bg-white/90 backdrop-blur-md shadow-[0_1px_0_0_rgba(16,15,13,0.04)]"
-              : "border-transparent bg-transparent"
+              : // Flat, uniform tint (no gradient/vignette) so nav text and the
+                // logo subtitle stay readable over the hero video without a
+                // fade — barely visible on other pages, which already sit on
+                // this same warm base color.
+                "border-transparent bg-warm/35 backdrop-blur-[2px]"
           )}
         >
           <div className="mx-auto flex h-[84px] max-w-[1440px] items-center justify-between px-6 lg:px-8">

@@ -223,9 +223,6 @@ export default function Hero() {
             </video>
           )}
         </div>
-        {/* Independent top scrim so the transparent header stays readable
-            regardless of what the video shows in that band. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-warm/70 to-transparent" />
         {/* Builds in on scroll only — a light cinematic transition toward
             the next (dark) section, not a resting-state darkener. */}
         <div ref={scrollFadeRef} className="pointer-events-none absolute inset-0 bg-black opacity-0" />
