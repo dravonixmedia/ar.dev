@@ -30,6 +30,14 @@ export type ServiceMediaKey =
 
 export type ProductMediaKey = "sealing" | "hydraulic" | "industrial";
 
+export type IndustryMediaKey =
+  | "heavyEquipment"
+  | "constructionEquipment"
+  | "heavyMachinery"
+  | "mining"
+  | "agriculturalEquipment"
+  | "manufacturing";
+
 export type ProjectMediaKey =
   | "cylinderRepair"
   | "hoseReplacement"
@@ -50,19 +58,19 @@ interface MediaConfig {
   };
   services: Record<ServiceMediaKey, MediaAsset>;
   products: Record<ProductMediaKey, MediaAsset>;
-  industries: {
-    heavyEquipment: MediaAsset;
-  };
+  industries: Record<IndustryMediaKey, MediaAsset>;
   projects: Record<ProjectMediaKey, MediaAsset>;
 }
 
 export const mediaConfig: MediaConfig = {
-  // Future ar-hydraulics-hero-workshop.mp4 / .webm / poster.webp — see
-  // Hero.tsx for the layer architecture already prepared to receive these.
+  // See Hero.tsx for the poster/video/overlay layer architecture. The
+  // poster is a real frame extracted from the hero video itself (0.5s),
+  // so the poster→video handoff is visually seamless — same footage,
+  // same framing, no fallback illustration underneath.
   hero: {
-    video: null,
-    webm: null,
-    poster: null,
+    video: "/media/hero/ar-hydraulics-hero-workshop.mp4",
+    webm: "/media/hero/ar-hydraulics-hero-workshop.webm",
+    poster: "/media/hero/ar-hydraulics-hero-poster.webp",
   },
 
   company: {
@@ -158,8 +166,50 @@ export const mediaConfig: MediaConfig = {
     },
   },
 
+  // Per-industry photos for the homepage Industries stage's image switcher.
+  // Only industry-heavy-equipment.png has been supplied so far — the other
+  // four categories temporarily reuse that same file (src AND alt, since
+  // the alt text must describe what's actually on screen) rather than
+  // showing broken media. Each entry is otherwise ready: once a dedicated
+  // photo lands at e.g. /media/industries/industry-mining.png, only that
+  // one src/alt/object-position needs updating — no component changes.
   industries: {
     heavyEquipment: {
+      src: "/media/industries/industry-heavy-equipment.png",
+      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
+      desktopObjectPosition: "center",
+      mobileObjectPosition: "45% center",
+      revealDirection: "up",
+    },
+    constructionEquipment: {
+      src: "/media/industries/industry-heavy-equipment.png",
+      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
+      desktopObjectPosition: "center",
+      mobileObjectPosition: "45% center",
+      revealDirection: "up",
+    },
+    heavyMachinery: {
+      src: "/media/industries/industry-heavy-equipment.png",
+      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
+      desktopObjectPosition: "center",
+      mobileObjectPosition: "45% center",
+      revealDirection: "up",
+    },
+    mining: {
+      src: "/media/industries/industry-heavy-equipment.png",
+      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
+      desktopObjectPosition: "center",
+      mobileObjectPosition: "45% center",
+      revealDirection: "up",
+    },
+    agriculturalEquipment: {
+      src: "/media/industries/industry-heavy-equipment.png",
+      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
+      desktopObjectPosition: "center",
+      mobileObjectPosition: "45% center",
+      revealDirection: "up",
+    },
+    manufacturing: {
       src: "/media/industries/industry-heavy-equipment.png",
       alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
       desktopObjectPosition: "center",

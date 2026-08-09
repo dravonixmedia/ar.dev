@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Phone, MessageCircle, Wrench } from "lucide-react";
 import TextReveal from "@/components/ui/TextReveal";
 import CinematicMedia from "@/components/ui/CinematicMedia";
@@ -57,15 +58,21 @@ export default function MobileHydraulicCTA() {
           </div>
 
           <div className="lg:col-span-6">
-            <CinematicMedia
-              asset={mediaConfig.services.mobile}
-              placeholderLabel="Mobile Hydraulic Works"
-              placeholderIcon="mobile"
-              frameClassName="rounded-2xl"
-              cursor="explore"
-              cursorLabel="Explore"
-              cursorSurface="light"
-            />
+            <Link
+              href="/services/mobile-hydraulic-works"
+              data-cursor="explore"
+              data-cursor-label="Explore"
+              data-cursor-surface="light"
+              className="block"
+            >
+              <CinematicMedia
+                asset={mediaConfig.services.mobile}
+                placeholderLabel="Mobile Hydraulic Works"
+                placeholderIcon="mobile"
+                frameClassName="rounded-2xl"
+                hoverScale
+              />
+            </Link>
           </div>
         </div>
       </div>

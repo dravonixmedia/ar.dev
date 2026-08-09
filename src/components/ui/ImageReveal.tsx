@@ -49,7 +49,7 @@ export default function ImageReveal({
 
     const ctx = gsap.context(() => {
       gsap.set(wrap, { clipPath: clipFrom });
-      gsap.set(inner, { scale: 1.15 });
+      gsap.set(inner, { scale: 1.06 });
 
       gsap.to(wrap, {
         clipPath: "inset(0% 0% 0% 0%)",

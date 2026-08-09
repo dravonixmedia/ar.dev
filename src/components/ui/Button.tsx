@@ -49,8 +49,8 @@ const cursorSurface: Partial<Record<Variant, "dark" | "light">> = {
 };
 
 const sizeClasses: Record<Size, string> = {
-  md: "gap-3 px-7 py-4 text-[13px] tracking-[0.12em]",
-  sm: "gap-2 px-5 py-3 text-[12px] tracking-[0.1em]",
+  md: "gap-3 px-7 py-4 text-[13px] tracking-[0.08em]",
+  sm: "gap-2 px-5 py-3 text-[12px] tracking-[0.06em]",
 };
 
 function ButtonInner({

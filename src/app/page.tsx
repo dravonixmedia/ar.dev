@@ -9,7 +9,6 @@ import WhyChoose from "@/components/sections/home/WhyChoose";
 import ProjectsSection from "@/components/sections/home/ProjectsSection";
 import SealingKollamSection from "@/components/sections/home/SealingKollamSection";
 import QuoteCTA from "@/components/sections/home/QuoteCTA";
-import CompanyStrip from "@/components/sections/home/CompanyStrip";
 import ContactTeaser from "@/components/sections/home/ContactTeaser";
 
 export default function Home() {
@@ -26,7 +25,6 @@ export default function Home() {
       <ProjectsSection />
       <SealingKollamSection />
       <QuoteCTA />
-      <CompanyStrip />
       <ContactTeaser />
     </>
   );
