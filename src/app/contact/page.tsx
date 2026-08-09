@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Phone, Mail, MapPin } from "lucide-react";
 import PageHero from "@/components/sections/PageHero";
 import ContactForm from "@/components/forms/ContactForm";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { contact } from "@/lib/data/site";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
+import { mediaConfig } from "@/config/media";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -28,6 +30,14 @@ export default function ContactPage() {
 
       <section className="bg-warm py-20 lg:py-28">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
+          <div className="mb-14 overflow-hidden rounded-3xl border border-border">
+            <CinematicMedia
+              asset={mediaConfig.company.exterior}
+              placeholderLabel="AR Hydraulics Workshop, Kollam"
+              frameClassName="rounded-none"
+            />
+          </div>
+
           <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-10">
             <div className="flex flex-col gap-6 lg:col-span-4">
               <a href={buildTelUrl()} data-cursor="link" className="flex items-start gap-4 rounded-2xl border border-border bg-white p-6">
