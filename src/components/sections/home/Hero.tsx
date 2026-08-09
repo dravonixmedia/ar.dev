@@ -21,7 +21,6 @@ const HERO_VIDEO_OBJECT_POSITION_MOBILE = "68% center";
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const mainLayerRef = useRef<HTMLDivElement | null>(null);
-  const midLayerRef = useRef<HTMLDivElement | null>(null);
   const lineLayerRef = useRef<HTMLDivElement | null>(null);
   const textColRef = useRef<HTMLDivElement | null>(null);
   const eyebrowRef = useRef<HTMLDivElement | null>(null);
@@ -73,7 +72,6 @@ export default function Hero() {
     if (!section) return;
 
     const mainTo = { x: gsap.quickTo(mainLayerRef.current, "x", { duration: 0.8, ease: "power3.out" }), y: gsap.quickTo(mainLayerRef.current, "y", { duration: 0.8, ease: "power3.out" }) };
-    const midTo = { x: gsap.quickTo(midLayerRef.current, "x", { duration: 1, ease: "power3.out" }), y: gsap.quickTo(midLayerRef.current, "y", { duration: 1, ease: "power3.out" }) };
     const lineTo = { x: gsap.quickTo(lineLayerRef.current, "x", { duration: 1.2, ease: "power3.out" }), y: gsap.quickTo(lineLayerRef.current, "y", { duration: 1.2, ease: "power3.out" }) };
 
     const handleMove = (e: MouseEvent) => {
@@ -82,8 +80,6 @@ export default function Hero() {
       const relY = (e.clientY - rect.top) / rect.height - 0.5;
       mainTo.x(relX * 16);
       mainTo.y(relY * 16);
-      midTo.x(relX * 30);
-      midTo.y(relY * 24);
       lineTo.x(relX * 8);
       lineTo.y(relY * 8);
     };
@@ -181,10 +177,9 @@ export default function Hero() {
           there is nothing to flash before the video takes over. The video
           crossfades in fast (~300ms) once it can actually play, and because
           poster and video are literally the same footage at the same crop,
-          the handoff reads as one continuous shot rather than a swap. A warm
-          gradient — strongest right at the text edge, opening up quickly so
-          the footage reads clearly across the center-right — keeps the
-          black/yellow copy readable without washing out the video. */}
+          the handoff reads as one continuous shot rather than a swap. No
+          gradient sits over the footage — the video is shown naturally,
+          full-strength, across the whole hero. */}
       <div className="absolute inset-0 overflow-hidden bg-warm" aria-hidden="true">
         <div
           ref={mainLayerRef}
@@ -228,10 +223,6 @@ export default function Hero() {
             </video>
           )}
         </div>
-        <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-warm from-0% via-warm/40 via-28% to-transparent to-56%"
-          data-hero-layer="overlay"
-        />
         {/* Independent top scrim so the transparent header stays readable
             regardless of what the video shows in that band. */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-warm/70 to-transparent" />
@@ -240,9 +231,9 @@ export default function Hero() {
         <div ref={scrollFadeRef} className="pointer-events-none absolute inset-0 bg-black opacity-0" />
       </div>
 
-      {/* Minimal technical accents only — thin engineering lines and the
-          bore/rod/stroke marker below. Kept deliberately faint (~12%) and
-          near-static so the real footage stays the hero, not the vectors. */}
+      {/* Minimal technical accents only — thin engineering lines, kept
+          deliberately faint (~12%) and near-static so the real footage
+          stays the hero, not the vectors. */}
       <div
         ref={lineLayerRef}
         className="pointer-events-none absolute inset-0 opacity-[0.12]"
@@ -272,7 +263,7 @@ export default function Hero() {
             duration={0.68}
             lines={[
               <span key="line-1">
-                COMPLETE <span className="text-yellow [-webkit-text-stroke:1.5px_#100F0D]">INDUSTRIAL</span>
+                COMPLETE <span className="text-yellow">INDUSTRIAL</span>
               </span>,
               <span key="line-2">SOLUTIONS.</span>,
             ]}
@@ -288,7 +279,10 @@ export default function Hero() {
             className="mt-5 text-[15px] font-semibold uppercase tracking-[0.14em] text-orange"
           />
 
-          <p ref={paragraphRef} className="mt-7 max-w-xl text-[16px] leading-relaxed text-charcoal">
+          <p
+            ref={paragraphRef}
+            className="mt-7 max-w-xl text-[16px] font-medium leading-relaxed text-charcoal [text-shadow:0_1px_2px_rgba(250,247,238,0.95),0_0_14px_rgba(250,247,238,0.6)]"
+          >
             AR Hydraulics and Sealing Solutions provides hydraulic repair, mobile hydraulic
             services, sealing solutions, hydraulic testing, component support, precision
             machining, structural fabrication and roofing solutions for industrial and
@@ -299,22 +293,15 @@ export default function Hero() {
             <Button href="/quote" variant="secondary">
               Request a Quote
             </Button>
-            <Button href="/services" variant="outline" magnetic={false}>
-              Explore Our Solutions
-            </Button>
-          </div>
-        </div>
-
-        {/* Right column is intentionally content-free — the video reads
-            directly behind it. Only the floating spec badge remains,
-            anchored at roughly its original position over the footage. */}
-        <div className="relative hidden lg:col-span-5 lg:block">
-          <div
-            ref={midLayerRef}
-            className="pointer-events-none absolute -left-4 top-6 flex h-24 w-24 items-center justify-center rounded-2xl border border-black/10 bg-white/70 backdrop-blur-sm"
-          >
-            <span className="text-center text-[10px] font-semibold uppercase leading-tight tracking-[0.1em] text-charcoal">
-              Bore · Rod<br />Stroke
+            {/* Small translucent backing (matches the eyebrow pill's own
+                bg-white/60 treatment already used above) so the outline
+                button's dark text stays readable without a gradient — not
+                a new device, just the same local backing pattern already
+                established in this hero. */}
+            <span className="inline-flex rounded-full bg-white/55 backdrop-blur-sm">
+              <Button href="/services" variant="outline" magnetic={false}>
+                Explore Our Solutions
+              </Button>
             </span>
           </div>
         </div>

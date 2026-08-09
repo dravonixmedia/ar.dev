@@ -79,7 +79,7 @@ export default function AboutIntro() {
 
           <TextReveal
             as="h2"
-            lines={["ONE WORKSHOP.", <span key="line-2">MULTIPLE <span className="text-yellow [-webkit-text-stroke:1px_#100F0D]">CAPABILITIES.</span></span>]}
+            lines={["ONE WORKSHOP.", <span key="line-2">MULTIPLE <span className="text-yellow">CAPABILITIES.</span></span>]}
             className="mt-6 font-heading text-[10vw] font-semibold uppercase leading-[0.96] tracking-tight text-black sm:text-[6vw] lg:text-[3.6vw]"
           />
 
