@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/sections/PageHero";
 import SectionLabel from "@/components/ui/SectionLabel";
+import CinematicMedia from "@/components/ui/CinematicMedia";
 import { industries, equipmentManufacturers } from "@/lib/data/industries";
 import { legalDisclaimers } from "@/lib/data/site";
+import { mediaConfig } from "@/config/media";
 
 export const metadata: Metadata = {
   title: "Industries",
@@ -22,6 +24,16 @@ export default function IndustriesPage() {
         lines={["EQUIPMENT ACROSS", "EVERY HEAVY INDUSTRY."]}
         intro="Our hydraulic, sealing, machining, fabrication and roofing capabilities support a wide range of equipment types and industrial settings."
       />
+
+      <section className="bg-warm pt-20 lg:pt-28">
+        <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
+          <CinematicMedia
+            asset={mediaConfig.industries.heavyEquipment}
+            placeholderLabel="Heavy Equipment"
+            frameClassName="rounded-2xl"
+          />
+        </div>
+      </section>
 
       <section className="bg-warm py-20 lg:py-28">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
