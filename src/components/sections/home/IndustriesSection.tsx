@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
-import CinematicMedia from "@/components/ui/CinematicMedia";
+import ImageReveal from "@/components/ui/ImageReveal";
 import { industries } from "@/lib/data/industries";
 import { legalDisclaimers } from "@/lib/data/site";
-import { mediaConfig } from "@/config/media";
+import { mediaConfig, type IndustryMediaKey } from "@/config/media";
+import { ensureGsapRegistered, gsap } from "@/lib/gsapConfig";
+import { usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
 import { cn } from "@/lib/utils";
 
 // Grouped by the category field already in the data layer — no new
@@ -22,6 +26,16 @@ function groupIndustries() {
 }
 
 const groups = groupIndustries();
+
+// Maps each existing category string to its mediaConfig.industries slot —
+// the 5 categories in the data layer line up 1:1 with the 5 media slots.
+const CATEGORY_MEDIA_KEY: Record<string, IndustryMediaKey> = {
+  "Construction Equipment": "constructionEquipment",
+  "Heavy Machinery": "heavyMachinery",
+  Mining: "mining",
+  "Agricultural Equipment": "agriculturalEquipment",
+  Manufacturing: "manufacturing",
+};
 
 export default function IndustriesSection() {
   const [active, setActive] = useState(0);
@@ -44,14 +58,7 @@ export default function IndustriesSection() {
               data-cursor-label="Explore"
               className="relative z-10 block"
             >
-              <CinematicMedia
-                asset={mediaConfig.industries.heavyEquipment}
-                placeholderLabel="Heavy Equipment"
-                frameClassName="rounded-2xl"
-                overlay="soft"
-                parallax
-                hoverScale
-              />
+              <IndustryImageStage active={active} />
             </Link>
             <span
               aria-hidden="true"
@@ -69,6 +76,8 @@ export default function IndustriesSection() {
                   type="button"
                   onMouseEnter={() => setActive(i)}
                   onFocus={() => setActive(i)}
+                  onClick={() => setActive(i)}
+                  aria-pressed={active === i}
                   data-cursor="link"
                   className="relative flex items-start gap-4 border-t border-white/10 py-6 text-left last:border-b"
                 >
@@ -128,5 +137,90 @@ export default function IndustriesSection() {
         </p>
       </div>
     </section>
+  );
+}
+
+// The large 16:9 stage behind the industry rows. Every industry's photo is
+// mounted at once, stacked absolutely and preloaded (loading="eager") so
+// the very first hover/tap never shows a blank frame — only opacity/scale
+// crossfades between layers on `active` change. This sits inside
+// ImageReveal purely for the section's one-time entrance clip/scale; the
+// crossfade below runs on its own refs and never touches ImageReveal's
+// own scroll-triggered tween, so the two never fight each other.
+function IndustryImageStage({ active }: { active: number }) {
+  const reducedMotion = usePrefersReducedMotion();
+  const layerRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const isFirstRun = useRef(true);
+
+  useEffect(() => {
+    const layers = layerRefs.current;
+
+    if (reducedMotion || isFirstRun.current) {
+      layers.forEach((el, i) => {
+        if (el) gsap.set(el, { opacity: i === active ? 1 : 0, scale: 1 });
+      });
+      isFirstRun.current = false;
+      return;
+    }
+
+    ensureGsapRegistered();
+    const duration = window.matchMedia("(min-width: 768px)").matches ? 0.42 : 0.3;
+    layers.forEach((el, i) => {
+      if (!el) return;
+      if (i === active) {
+        gsap.fromTo(
+          el,
+          { opacity: 0, scale: 1.03 },
+          { opacity: 1, scale: 1, duration, ease: "power2.out" }
+        );
+      } else {
+        gsap.to(el, { opacity: 0, duration, ease: "power2.out" });
+      }
+    });
+  }, [active, reducedMotion]);
+
+  return (
+    <ImageReveal className="relative aspect-video w-full overflow-hidden rounded-2xl" direction="up">
+      <div className="group/cm relative h-full w-full">
+        {groups.map((group, i) => {
+          const asset =
+            mediaConfig.industries[CATEGORY_MEDIA_KEY[group.category]] ?? mediaConfig.industries.heavyEquipment;
+          return (
+            <div
+              key={group.category}
+              ref={(el) => {
+                layerRefs.current[i] = el;
+              }}
+              className="absolute inset-0"
+              style={{ opacity: i === active ? 1 : 0 }}
+              aria-hidden={i !== active}
+            >
+              {asset.src ? (
+                <Image
+                  src={asset.src}
+                  alt={asset.alt}
+                  fill
+                  loading="eager"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  style={
+                    {
+                      "--cm-op-mobile": asset.mobileObjectPosition ?? asset.desktopObjectPosition ?? "center",
+                      "--cm-op-desktop": asset.desktopObjectPosition ?? "center",
+                    } as CSSProperties
+                  }
+                  className="cm-image object-cover transition-transform duration-700 ease-out group-hover/cm:scale-[1.05]"
+                />
+              ) : (
+                <div className="h-full w-full bg-grey" />
+              )}
+            </div>
+          );
+        })}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent"
+        />
+      </div>
+    </ImageReveal>
   );
 }
