@@ -67,8 +67,8 @@ export const mediaConfig: MediaConfig = {
 
   company: {
     workshop: {
-      src: null,
-      alt: "AR Hydraulics workshop floor with hydraulic equipment and tooling in progress",
+      src: "/media/company/about-workshop-overview.png",
+      alt: "AR Hydraulics workshop floor — two technicians assembling hydraulic components at workbenches, with a yellow hydraulic cylinder in the foreground and cylinder rods and seal kits stored on shelving behind",
       desktopObjectPosition: "center",
       mobileObjectPosition: "center",
       revealDirection: "up",
