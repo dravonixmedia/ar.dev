@@ -57,11 +57,12 @@ interface MediaConfig {
 }
 
 export const mediaConfig: MediaConfig = {
-  // Future ar-hydraulics-hero-workshop.mp4 / .webm / poster.webp — see
-  // Hero.tsx for the layer architecture already prepared to receive these.
+  // See Hero.tsx for the poster/video/overlay layer architecture. No
+  // dedicated poster image has been supplied — the existing HeroGraphic
+  // still-treatment is the fallback shown until the video is ready.
   hero: {
-    video: null,
-    webm: null,
+    video: "/media/hero/ar-hydraulics-hero-workshop.mp4",
+    webm: "/media/hero/ar-hydraulics-hero-workshop.webm",
     poster: null,
   },
 

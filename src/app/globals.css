@@ -185,6 +185,16 @@ select:focus-visible {
   }
 }
 
+.hero-video {
+  object-position: var(--hero-op-mobile, center);
+}
+
+@media (min-width: 1024px) {
+  .hero-video {
+    object-position: var(--hero-op-desktop, var(--hero-op-mobile, center));
+  }
+}
+
 .cm-placeholder-grid {
   background-image: linear-gradient(to right, var(--color-charcoal) 1px, transparent 1px),
     linear-gradient(to bottom, var(--color-charcoal) 1px, transparent 1px);
