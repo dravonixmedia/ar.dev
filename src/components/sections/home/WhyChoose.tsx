@@ -5,15 +5,12 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
 import CinematicMedia from "@/components/ui/CinematicMedia";
 import { whyChooseItems } from "@/lib/data/why-choose";
-import { services } from "@/lib/data/services";
-import { mediaConfig, type ServiceMediaKey } from "@/config/media";
+import { mediaConfig } from "@/config/media";
 import { cn } from "@/lib/utils";
 
 export default function WhyChoose() {
   const [active, setActive] = useState(0);
   const activeItem = whyChooseItems[active];
-  const activeService = services[active];
-  const activeGraphic = activeService?.graphic ?? "hydraulic";
 
   return (
     <section className="bg-warm py-24 lg:py-32">
@@ -39,13 +36,23 @@ export default function WhyChoose() {
                   active === i && "text-orange"
                 )}
               >
-                <span
-                  className={cn(
-                    "text-[16px] font-semibold uppercase tracking-[0.02em] transition-colors sm:text-[19px]",
-                    active === i ? "text-black" : "text-charcoal/50"
-                  )}
-                >
-                  {item.label}
+                <span className="flex items-center gap-4">
+                  <span
+                    className={cn(
+                      "font-heading text-[13px] font-semibold transition-colors",
+                      active === i ? "text-orange" : "text-charcoal/30"
+                    )}
+                  >
+                    0{i + 1}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[16px] font-semibold uppercase tracking-[0.02em] transition-colors sm:text-[19px]",
+                      active === i ? "text-black" : "text-charcoal/50"
+                    )}
+                  >
+                    {item.label}
+                  </span>
                 </span>
                 <span
                   className={cn(
@@ -58,17 +65,24 @@ export default function WhyChoose() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="overflow-hidden rounded-2xl border border-border bg-white">
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-white">
+              {/* Decorative context image — same shot for every item since
+                  these are business-wide differentiators, not per-service
+                  claims, so there's no honest 1:1 image to swap in.
+                  Default cursor only: nothing here is a click target. */}
               <CinematicMedia
-                key={activeGraphic}
-                asset={mediaConfig.services[activeGraphic as ServiceMediaKey]}
-                placeholderLabel={activeService?.shortTitle}
-                placeholderIcon={activeGraphic}
+                asset={mediaConfig.company.workshop}
+                placeholderLabel="AR Hydraulics Workshop"
+                placeholderIcon="hydraulic"
                 frameClassName="rounded-none"
-                cursor="explore"
-                cursorLabel="Explore"
               />
-              <div className="flex flex-col justify-center p-8 lg:p-10">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute right-6 top-4 select-none font-heading text-[15vw] font-extrabold leading-none text-black/[0.06] sm:text-[8vw] lg:text-[6vw]"
+              >
+                0{active + 1}
+              </span>
+              <div className="relative flex flex-col justify-center p-8 lg:p-10">
                 <h3 className="font-heading text-[24px] font-semibold uppercase leading-tight text-black">
                   {activeItem.headline}
                 </h3>

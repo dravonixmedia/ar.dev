@@ -71,15 +71,15 @@ export default function WhatWeDo() {
 
           <div className="lg:col-span-5">
             <div className="sticky top-28 rounded-2xl border border-white/10 bg-white/[0.03] p-8">
-              <CinematicMedia
-                key={activeService.slug}
-                asset={mediaConfig.services[activeService.graphic as ServiceMediaKey]}
-                placeholderLabel={activeService.shortTitle}
-                placeholderIcon={activeService.graphic}
-                frameClassName="rounded-xl"
-                cursor="explore"
-                cursorLabel="Explore"
-              />
+              <Link href={`/services/${activeService.slug}`} data-cursor="explore" data-cursor-label="Explore" className="block">
+                <CinematicMedia
+                  key={activeService.slug}
+                  asset={mediaConfig.services[activeService.graphic as ServiceMediaKey]}
+                  placeholderLabel={activeService.shortTitle}
+                  placeholderIcon={activeService.graphic}
+                  frameClassName="rounded-xl"
+                />
+              </Link>
               <p className="mt-6 text-[14px] leading-relaxed text-white/60">
                 {activeService.summary}
               </p>

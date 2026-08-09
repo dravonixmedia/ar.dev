@@ -10,6 +10,8 @@ interface TextRevealProps {
   className?: string;
   lineClassName?: string;
   delay?: number;
+  duration?: number;
+  stagger?: number;
   trigger?: boolean;
 }
 
@@ -19,6 +21,8 @@ export default function TextReveal({
   className,
   lineClassName,
   delay = 0,
+  duration = 0.9,
+  stagger = 0.08,
   trigger = true,
 }: TextRevealProps) {
   const containerRef = useRef<HTMLElement | null>(null);
@@ -49,9 +53,9 @@ export default function TextReveal({
       gsap.to(spans, {
         yPercent: 0,
         opacity: 1,
-        duration: 0.9,
+        duration,
         ease: "power3.out",
-        stagger: 0.08,
+        stagger,
         delay,
         scrollTrigger:
           trigger && !alreadyInView
@@ -65,7 +69,7 @@ export default function TextReveal({
     }, el);
 
     return () => ctx.revert();
-  }, [delay, trigger]);
+  }, [delay, duration, stagger, trigger]);
 
   const Component = Tag as ElementType;
 

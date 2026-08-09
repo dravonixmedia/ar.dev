@@ -71,7 +71,7 @@ export default function Header() {
                   >
                     <button
                       className={cn(
-                        "flex items-center gap-1 text-[13px] font-semibold uppercase tracking-[0.1em] text-black transition-colors hover:text-orange",
+                        "flex items-center gap-1 text-[13px] font-semibold uppercase tracking-[0.06em] text-black transition-colors hover:text-orange",
                         pathname.startsWith(link.href) && "text-orange"
                       )}
                       data-cursor="link"
@@ -117,7 +117,7 @@ export default function Header() {
                     href={link.href}
                     data-cursor="link"
                     className={cn(
-                      "text-[13px] font-semibold uppercase tracking-[0.1em] text-black transition-colors hover:text-orange",
+                      "text-[13px] font-semibold uppercase tracking-[0.06em] text-black transition-colors hover:text-orange",
                       pathname === link.href && "text-orange"
                     )}
                   >

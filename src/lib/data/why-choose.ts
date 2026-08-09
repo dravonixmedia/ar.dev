@@ -5,47 +5,44 @@ export interface WhyChooseItem {
   description: string;
 }
 
+// Actual differentiators, not a restatement of the service list already
+// covered in What We Do. Kept to claims the current business scope
+// supports — no certifications, guarantees or availability claims that
+// haven't been verified.
 export const whyChooseItems: WhyChooseItem[] = [
   {
-    key: "hydraulic",
-    label: "Hydraulic Expertise",
-    headline: "Hands-on hydraulic knowledge",
+    key: "one-workshop",
+    label: "One Workshop. Multiple Capabilities.",
+    headline: "One workshop. Multiple capabilities.",
     description:
-      "From cylinders to power packs, our team works across hydraulic systems every day — supporting diagnosis, repair and component sourcing.",
+      "Hydraulics, sealing, machining and fabrication can be coordinated through one workshop workflow.",
   },
   {
-    key: "mobile",
-    label: "Mobile Support",
-    headline: "We come to your site",
+    key: "workshop-onsite",
+    label: "Workshop + On-Site Support.",
+    headline: "Workshop + on-site support.",
     description:
-      "Equipment downtime is costly. Our mobile hydraulic team attends site to inspect, diagnose and support repair without unnecessary delay.",
+      "Requirements can be handled through workshop services or mobile hydraulic support depending on the job and location.",
   },
   {
-    key: "sealing",
-    label: "Sealing Solutions",
-    headline: "Precise seal identification",
+    key: "component-id",
+    label: "Component Identification Support.",
+    headline: "Component identification support.",
     description:
-      "From standard O-rings to custom profiles, we help identify and source the correct sealing component for your application.",
+      "Customers can share samples, dimensions, photos, equipment details or part numbers for identification and quotation support.",
   },
   {
-    key: "machining",
-    label: "Precision Machining",
-    headline: "Workshop machining capability",
+    key: "repair-manufacturing",
+    label: "Repair + Manufacturing Capability.",
+    headline: "Repair + manufacturing capability.",
     description:
-      "Our lathe and machining capability supports custom shafts, bushes and thread repair when standard parts aren't available.",
+      "Repair requirements can be supported alongside machining, component modification and fabrication work where appropriate.",
   },
   {
-    key: "fabrication",
-    label: "Fabrication Capability",
-    headline: "Structural steel and welding",
+    key: "industrial-focus",
+    label: "Industrial & Heavy-Equipment Focus.",
+    headline: "Industrial & heavy-equipment focus.",
     description:
-      "Industrial welding and structural fabrication support for custom frameworks, gates and equipment-related repair.",
-  },
-  {
-    key: "roofing",
-    label: "Roofing Works",
-    headline: "Structural roofing solutions",
-    description:
-      "Roofing fabrication, sheet installation and truss work for industrial and commercial structures.",
+      "Solutions are structured around hydraulic, workshop and heavy-equipment applications.",
   },
 ];

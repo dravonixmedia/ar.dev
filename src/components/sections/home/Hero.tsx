@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 import TextReveal from "@/components/ui/TextReveal";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import HeroGraphic from "@/components/graphics/HeroGraphic";
-import { gsap } from "@/lib/gsapConfig";
+import { ensureGsapRegistered, gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { useIsFinePointer, usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
 import { mediaConfig } from "@/config/media";
 
@@ -24,10 +24,48 @@ export default function Hero() {
   const mainLayerRef = useRef<HTMLDivElement | null>(null);
   const midLayerRef = useRef<HTMLDivElement | null>(null);
   const lineLayerRef = useRef<HTMLDivElement | null>(null);
+  const textColRef = useRef<HTMLDivElement | null>(null);
+  const eyebrowRef = useRef<HTMLDivElement | null>(null);
+  const paragraphRef = useRef<HTMLParagraphElement | null>(null);
+  const ctaRef = useRef<HTMLDivElement | null>(null);
+  const scrollFadeRef = useRef<HTMLDivElement | null>(null);
   const isFinePointer = useIsFinePointer();
   const reducedMotion = usePrefersReducedMotion();
   const [videoReady, setVideoReady] = useState(false);
   const showVideo = Boolean(mediaConfig.hero.video) && !reducedMotion;
+
+  // Intro timeline — a single coordinated sequence for every non-line-
+  // masked element (the headline/tagline lines animate via TextReveal
+  // itself, with trigger={false} so they always play on mount rather than
+  // waiting on a scroll position). Nothing here is hidden by default CSS:
+  // if this effect never runs (JS error, disabled JS), every element stays
+  // at its normal server-rendered visible state — the safe fallback.
+  useEffect(() => {
+    const eyebrow = eyebrowRef.current;
+    const paragraph = paragraphRef.current;
+    const cta = ctaRef.current;
+    if (!eyebrow || !paragraph || !cta) return;
+
+    if (reducedMotion) {
+      gsap.set([eyebrow, paragraph, cta], { opacity: 1, y: 0 });
+      return;
+    }
+
+    ensureGsapRegistered();
+    const ctx = gsap.context(() => {
+      gsap.set(eyebrow, { opacity: 0, y: 14 });
+      gsap.set(paragraph, { opacity: 0, y: 20 });
+      gsap.set(cta, { opacity: 0, y: 20 });
+
+      gsap
+        .timeline({ defaults: { ease: "power3.out" } })
+        .to(eyebrow, { opacity: 1, y: 0, duration: 0.45 }, 0.15)
+        .to(paragraph, { opacity: 1, y: 0, duration: 0.5 }, 0.65)
+        .to(cta, { opacity: 1, y: 0, duration: 0.5 }, 0.82);
+    });
+
+    return () => ctx.revert();
+  }, [reducedMotion]);
 
   useEffect(() => {
     if (!isFinePointer || reducedMotion) return;
@@ -54,13 +92,22 @@ export default function Hero() {
     return () => section.removeEventListener("mousemove", handleMove);
   }, [isFinePointer, reducedMotion]);
 
+  // Scroll choreography — the hero should feel like the deepest, most
+  // cinematic scroll moment on the page: video scales/drifts, the
+  // technical line layer parallaxes at its own (shallower) speed, the
+  // text column lifts slightly and only starts fading past the midpoint
+  // of the hero's scroll range (never an abrupt disappearance), and a
+  // thin dark wash builds under everything as the next section approaches.
   useEffect(() => {
     const section = sectionRef.current;
     if (!section || reducedMotion) return;
+
+    ensureGsapRegistered();
     const ctx = gsap.context(() => {
       gsap.to(mainLayerRef.current, {
-        yPercent: 12,
-        scale: 1.04,
+        scale: 1.06,
+        yPercent: 8,
+        xPercent: -2,
         ease: "none",
         scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: true },
       });
@@ -69,7 +116,31 @@ export default function Hero() {
         ease: "none",
         scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: true },
       });
+      if (scrollFadeRef.current) {
+        gsap.to(scrollFadeRef.current, {
+          opacity: 0.16,
+          ease: "none",
+          scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: true },
+        });
+      }
+
+      const FADE_START = 0.58;
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          const fadeProgress = p <= FADE_START ? 0 : (p - FADE_START) / (1 - FADE_START);
+          gsap.set(textColRef.current, {
+            y: -42 * p,
+            opacity: 1 - fadeProgress,
+          });
+        },
+      });
     }, section);
+
     return () => ctx.revert();
   }, [reducedMotion]);
 
@@ -81,9 +152,9 @@ export default function Hero() {
       {/* Full-bleed cinematic background: HeroGraphic paints instantly as
           the fallback (no black flash, no fake poster), the real video
           crossfades in once it can play, and a warm gradient — strongest
-          behind the text column, fading out toward the right where the
-          footage itself should read clearly — keeps the current black/
-          yellow copy readable without darkening the video. */}
+          right at the text edge, opening up quickly so the footage reads
+          clearly across the center-right — keeps the current black/
+          yellow copy readable without washing out the video. */}
       <div className="absolute inset-0 overflow-hidden bg-warm" aria-hidden="true">
         <div
           ref={mainLayerRef}
@@ -124,18 +195,20 @@ export default function Hero() {
           )}
         </div>
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-warm from-10% via-warm/55 via-45% to-transparent"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-warm from-0% via-warm/40 via-28% to-transparent to-56%"
           data-hero-layer="overlay"
         />
         {/* Independent top scrim so the transparent header stays readable
-            regardless of what the video shows in that band — the left-right
-            gradient above only guarantees contrast for the text column. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-warm/80 to-transparent" />
+            regardless of what the video shows in that band. */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-warm/70 to-transparent" />
+        {/* Builds in on scroll only — a light cinematic transition toward
+            the next (dark) section, not a resting-state darkener. */}
+        <div ref={scrollFadeRef} className="pointer-events-none absolute inset-0 bg-black opacity-0" />
       </div>
 
       <div
         ref={lineLayerRef}
-        className="pointer-events-none absolute inset-0 opacity-60"
+        className="pointer-events-none absolute inset-0 opacity-30"
         aria-hidden="true"
       >
         <div className="absolute left-[6%] top-[18%] h-px w-[30%] bg-black/10" />
@@ -144,8 +217,11 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-10 px-6 py-16 lg:grid-cols-12 lg:gap-6 lg:px-10 lg:py-0">
-        <div className="lg:col-span-7">
-          <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-black/10 bg-white/60 px-4 py-2">
+        <div ref={textColRef} className="lg:col-span-7">
+          <div
+            ref={eyebrowRef}
+            className="mb-6 inline-flex items-center gap-3 rounded-full border border-black/10 bg-white/60 px-4 py-2"
+          >
             <span className="h-1.5 w-1.5 rounded-full bg-orange" />
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-charcoal">
               Hydraulics · Sealing · Engineering
@@ -154,6 +230,9 @@ export default function Hero() {
 
           <TextReveal
             as="h1"
+            trigger={false}
+            delay={0.25}
+            duration={0.68}
             lines={[
               <span key="line-1">
                 COMPLETE <span className="text-yellow [-webkit-text-stroke:1.5px_#100F0D]">INDUSTRIAL</span>
@@ -165,19 +244,21 @@ export default function Hero() {
 
           <TextReveal
             as="p"
+            trigger={false}
+            delay={0.6}
+            duration={0.6}
             lines={["From hydraulics to fabrication."]}
-            delay={0.3}
             className="mt-5 text-[15px] font-semibold uppercase tracking-[0.14em] text-orange"
           />
 
-          <p className="mt-7 max-w-xl text-[16px] leading-relaxed text-charcoal">
+          <p ref={paragraphRef} className="mt-7 max-w-xl text-[16px] leading-relaxed text-charcoal">
             AR Hydraulics and Sealing Solutions provides hydraulic repair, mobile hydraulic
             services, sealing solutions, hydraulic testing, component support, precision
             machining, structural fabrication and roofing solutions for industrial and
             heavy-equipment requirements.
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div ref={ctaRef} className="mt-10 flex flex-wrap items-center gap-4">
             <Button href="/quote" variant="secondary">
               Request a Quote
             </Button>
