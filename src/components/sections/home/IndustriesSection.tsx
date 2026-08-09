@@ -11,7 +11,7 @@ import { industries } from "@/lib/data/industries";
 import { legalDisclaimers } from "@/lib/data/site";
 import { mediaConfig, type IndustryMediaKey } from "@/config/media";
 import { ensureGsapRegistered, gsap } from "@/lib/gsapConfig";
-import { usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
+import { useIsFinePointer, usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
 import { cn } from "@/lib/utils";
 
 // Grouped by the category field already in the data layer — no new
@@ -39,6 +39,7 @@ const CATEGORY_MEDIA_KEY: Record<string, IndustryMediaKey> = {
 
 export default function IndustriesSection() {
   const [active, setActive] = useState(0);
+  const isFinePointer = useIsFinePointer();
 
   return (
     <section className="bg-black py-24 text-white lg:py-32" data-cursor-theme="dark">
@@ -74,7 +75,14 @@ export default function IndustriesSection() {
                 <button
                   key={group.category}
                   type="button"
-                  onMouseEnter={() => setActive(i)}
+                  // Hover-driven activation is desktop-only. On touch/
+                  // coarse-pointer devices a lingering compatibility mouse
+                  // position can otherwise re-fire as rows above collapse
+                  // and shift content underneath it, overriding the tap
+                  // that was just made — onClick alone is the source of
+                  // truth for touch, matching the "tap changes the active
+                  // industry" mobile requirement.
+                  onMouseEnter={isFinePointer ? () => setActive(i) : undefined}
                   onFocus={() => setActive(i)}
                   onClick={() => setActive(i)}
                   aria-pressed={active === i}

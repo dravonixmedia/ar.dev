@@ -167,12 +167,9 @@ export const mediaConfig: MediaConfig = {
   },
 
   // Per-industry photos for the homepage Industries stage's image switcher.
-  // Only industry-heavy-equipment.png has been supplied so far — the other
-  // four categories temporarily reuse that same file (src AND alt, since
-  // the alt text must describe what's actually on screen) rather than
-  // showing broken media. Each entry is otherwise ready: once a dedicated
-  // photo lands at e.g. /media/industries/industry-mining.png, only that
-  // one src/alt/object-position needs updating — no component changes.
+  // Each of the 5 category slots now has its own dedicated photo (1672x941,
+  // matching 16:9) — object-positions below reflect where the actual
+  // subject sits in each specific photo, not a blind "center" default.
   industries: {
     heavyEquipment: {
       src: "/media/industries/industry-heavy-equipment.png",
@@ -182,38 +179,38 @@ export const mediaConfig: MediaConfig = {
       revealDirection: "up",
     },
     constructionEquipment: {
-      src: "/media/industries/industry-heavy-equipment.png",
-      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
-      desktopObjectPosition: "center",
-      mobileObjectPosition: "45% center",
+      src: "/media/industries/industry-construction-equipment.png",
+      alt: "Yellow excavator digging alongside a wheel loader at a construction site, with a multi-storey building under construction and a tower crane in the background",
+      desktopObjectPosition: "42% 55%",
+      mobileObjectPosition: "38% 60%",
       revealDirection: "up",
     },
     heavyMachinery: {
-      src: "/media/industries/industry-heavy-equipment.png",
-      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
-      desktopObjectPosition: "center",
-      mobileObjectPosition: "45% center",
+      src: "/media/industries/industry-heavy-machinery.png",
+      alt: "Wheel loader dumping crushed rock from its bucket at a quarry, with a rocky cliff face in the background",
+      desktopObjectPosition: "58% 62%",
+      mobileObjectPosition: "62% 65%",
       revealDirection: "up",
     },
     mining: {
-      src: "/media/industries/industry-heavy-equipment.png",
-      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
-      desktopObjectPosition: "center",
-      mobileObjectPosition: "45% center",
+      src: "/media/industries/industry-mining.png",
+      alt: "Technician in an orange hi-vis jacket standing beside a large excavator at an open-pit mine, with terraced rock walls under an overcast sky",
+      desktopObjectPosition: "55% 58%",
+      mobileObjectPosition: "60% 55%",
       revealDirection: "up",
     },
     agriculturalEquipment: {
-      src: "/media/industries/industry-heavy-equipment.png",
-      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
-      desktopObjectPosition: "center",
-      mobileObjectPosition: "45% center",
+      src: "/media/industries/industry-agricultural-equipment.png",
+      alt: "Tractor with a rotary tiller attachment working a flooded rice paddy field, with palm trees and hills in the background",
+      desktopObjectPosition: "65% 55%",
+      mobileObjectPosition: "70% 55%",
       revealDirection: "up",
     },
     manufacturing: {
-      src: "/media/industries/industry-heavy-equipment.png",
-      alt: "Technician in a hard hat and hi-vis vest inspecting a yellow excavator at a quarry site",
+      src: "/media/industries/industry-manufacturing.png",
+      alt: "Technician in a workshop inspecting a precision-machined metal shaft beside a CNC machining center control panel",
       desktopObjectPosition: "center",
-      mobileObjectPosition: "45% center",
+      mobileObjectPosition: "48% 50%",
       revealDirection: "up",
     },
   },
