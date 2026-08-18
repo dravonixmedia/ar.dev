@@ -12,7 +12,6 @@ export const siteInfo = {
 export const contact = {
   companyName: "AR Hydraulics and Sealing Solutions",
   address: {
-    line1: "Building No. 7/628",
     line2: "East Kallada",
     line3: "Kallada P.O.",
     city: "Kollam",

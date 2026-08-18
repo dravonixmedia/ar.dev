@@ -90,7 +90,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
 
       <div className="flex flex-col gap-4 border-t border-white/10 px-6 py-6">
         <div className="text-[13px] text-white/60">
-          {contact.address.line1}, {contact.address.line2}, {contact.address.city}, {contact.address.state}
+          {contact.address.line2}, {contact.address.city}, {contact.address.state}
         </div>
         <div className="flex flex-wrap gap-3">
           <a

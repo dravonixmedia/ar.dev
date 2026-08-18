@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   const mapQuery = encodeURIComponent(
-    `${contact.address.line1}, ${contact.address.line2}, ${contact.address.line3}, ${contact.address.city}, ${contact.address.state}`
+    `${contact.address.line2}, ${contact.address.line3}, ${contact.address.city}, ${contact.address.state}`
   );
 
   return (
@@ -77,7 +77,7 @@ export default function ContactPage() {
                 <div>
                   <span className="block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/60">Address</span>
                   <span className="mt-1 block text-[15px] font-semibold text-black">
-                    {contact.address.line1}, {contact.address.line2}, {contact.address.line3},{" "}
+                    {contact.address.line2}, {contact.address.line3},{" "}
                     {contact.address.city}, {contact.address.state}
                   </span>
                 </div>

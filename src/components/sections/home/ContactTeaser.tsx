@@ -105,7 +105,7 @@ export default function ContactTeaser() {
                 </a>
                 <span className="flex items-start gap-3 text-[14px] text-charcoal">
                   <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-orange" />
-                  {contact.address.line1}, {contact.address.line2}, {contact.address.line3},{" "}
+                  {contact.address.line2}, {contact.address.line3},{" "}
                   {contact.address.city}, {contact.address.state}
                 </span>
               </div>

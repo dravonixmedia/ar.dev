@@ -53,7 +53,7 @@ export default function QuotePage() {
                   <MessageCircle className="h-5 w-5 text-orange" /> WhatsApp Enquiry
                 </a>
                 <p className="text-[13px] leading-relaxed text-charcoal">
-                  {contact.address.line1}, {contact.address.line2}, {contact.address.line3},{" "}
+                  {contact.address.line2}, {contact.address.line3},{" "}
                   {contact.address.city}, {contact.address.state}
                 </p>
               </div>

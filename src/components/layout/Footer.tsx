@@ -29,7 +29,7 @@ export default function Footer() {
               </a>
               <span className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                {contact.address.line1}, {contact.address.line2}, {contact.address.line3},{" "}
+                {contact.address.line2}, {contact.address.line3},{" "}
                 {contact.address.city}, {contact.address.state}
               </span>
             </div>

@@ -71,7 +71,7 @@ const organizationSchema = {
   email: contact.email,
   address: {
     "@type": "PostalAddress",
-    streetAddress: `${contact.address.line1}, ${contact.address.line2}, ${contact.address.line3}`,
+    streetAddress: `${contact.address.line2}, ${contact.address.line3}`,
     addressLocality: contact.address.city,
     addressRegion: contact.address.state,
     addressCountry: "IN",
