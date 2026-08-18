@@ -278,7 +278,7 @@ export default function Hero() {
           AR Hydraulics and Sealing Solutions provides hydraulic repair, mobile hydraulic
           services, sealing solutions, hydraulic testing, component support, precision
           machining, structural fabrication and roofing solutions for industrial and
-          heavy-equipment requirements.
+          heavy-equipment requirements across Kerala.
         </p>
 
         <div ref={ctaRef} className="mt-7 flex flex-wrap items-center gap-3 lg:gap-4">

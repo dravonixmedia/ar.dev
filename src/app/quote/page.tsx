@@ -4,12 +4,17 @@ import QuoteForm from "@/components/forms/QuoteForm";
 import { contact } from "@/lib/data/site";
 import { Phone, MessageCircle } from "lucide-react";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
+import { defaultOgImage } from "@/lib/data/seo";
+
+const title = "Request a Hydraulic Service Quote";
+const description =
+  "Request a quote from AR Hydraulics for hydraulic repair, sealing, machining, fabrication or roofing requirements across Kerala.";
 
 export const metadata: Metadata = {
-  title: "Request a Quote",
-  description:
-    "Request a quote from AR Hydraulics and Sealing Solutions for hydraulic, sealing, machining, fabrication or roofing requirements.",
+  title,
+  description,
   alternates: { canonical: "/quote" },
+  openGraph: { title, description, images: [defaultOgImage] },
 };
 
 export default function QuotePage() {

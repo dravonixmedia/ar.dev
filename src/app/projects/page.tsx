@@ -6,12 +6,17 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import { projects } from "@/lib/data/projects";
 import { getServiceBySlug } from "@/lib/data/services";
 import { getProjectMedia } from "@/config/media";
+import { defaultOgImage } from "@/lib/data/seo";
+
+const title = "Our Work";
+const description =
+  "Engineering in action — hydraulic repair, cylinder works, mobile hydraulic works, machining, fabrication and roofing projects.";
 
 export const metadata: Metadata = {
-  title: "Our Work",
-  description:
-    "Engineering in action — hydraulic repair, cylinder works, mobile hydraulic works, machining, fabrication and roofing projects.",
+  title,
+  description,
   alternates: { canonical: "/projects" },
+  openGraph: { title, description, images: [defaultOgImage] },
 };
 
 export default function ProjectsPage() {

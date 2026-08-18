@@ -9,12 +9,49 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { services, getServiceBySlug } from "@/lib/data/services";
 import { legalDisclaimers, siteInfo } from "@/lib/data/site";
+import { defaultOgImage } from "@/lib/data/seo";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { mediaConfig, type ServiceMediaKey } from "@/config/media";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
 }
+
+// SEO-specific title/description per service, kept separate from the
+// shared `services.ts` data (service.title/summary also feed nav, page
+// headings etc. and must stay UI-focused, not keyword-focused).
+const seoContent: Record<string, { title: string; description: string }> = {
+  "hydraulic-fluid-power": {
+    title: "Hydraulic Cylinder Repair & Fluid Power | AR Hydraulics",
+    description:
+      "Hydraulic cylinder, power pack, pump, motor and valve repair, testing and system support for industrial and heavy equipment across Kerala.",
+  },
+  "mobile-hydraulic-works": {
+    title: "Mobile Hydraulic Services | AR Hydraulics Kerala",
+    description:
+      "On-site hydraulic inspection, fault finding, hose replacement support and repair assistance for equipment across Kerala, wherever the work is.",
+  },
+  "sealing-solutions": {
+    title: "Hydraulic Sealing Solutions | AR Hydraulics",
+    description:
+      "O-rings, piston seals, rod seals, wipers and custom sealing components for hydraulic and industrial applications across Kerala.",
+  },
+  "precision-machining": {
+    title: "Precision Machining & Workshop Services | AR Hydraulics",
+    description:
+      "Turning, boring, cylinder barrel honing and thread repair for custom shafts, bushes, rods and hydraulic components across Kerala.",
+  },
+  "structural-fabrication": {
+    title: "Structural Fabrication Services | AR Hydraulics",
+    description:
+      "Industrial welding, structural steel fabrication and custom frameworks, gates and metal structures for sites across Kerala.",
+  },
+  "roofing-works": {
+    title: "Industrial Roofing Works | AR Hydraulics",
+    description:
+      "Structural roofing fabrication, sheet installation, trusses and supporting steel works for industrial sites across Kerala.",
+  },
+};
 
 export async function generateMetadata({
   params,
@@ -25,11 +62,13 @@ export async function generateMetadata({
   const service = getServiceBySlug(slug);
   if (!service) return {};
 
+  const seo = seoContent[service.slug] ?? { title: service.title, description: service.summary };
+
   return {
-    title: service.title,
-    description: service.summary,
+    title: { absolute: seo.title },
+    description: seo.description,
     alternates: { canonical: `/services/${service.slug}` },
-    openGraph: { title: `${service.title} | ${siteInfo.shortName}`, description: service.summary },
+    openGraph: { title: seo.title, description: seo.description, images: [defaultOgImage] },
   };
 }
 
@@ -47,8 +86,8 @@ export default async function ServiceDetailPage({
     "@type": "Service",
     name: service.title,
     description: service.description,
-    provider: { "@type": "LocalBusiness", name: siteInfo.name },
-    areaServed: "Kollam, Kerala, India",
+    provider: { "@id": `${siteInfo.url}/#organization` },
+    areaServed: "Kerala, India",
   };
 
   const related = services.filter((s) => s.slug !== service.slug).slice(0, 3);

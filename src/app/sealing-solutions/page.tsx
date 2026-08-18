@@ -5,13 +5,18 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { getServiceBySlug } from "@/lib/data/services";
 import { siteInfo } from "@/lib/data/site";
+import { defaultOgImage } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
+const title = "Hydraulic Seals in Kollam, Kerala | AR Hydraulics";
+const description =
+  "Hydraulic seals in Kollam, Kerala — O-rings, piston seals, rod seals, wipers, backup rings and custom sealing components from AR Hydraulics.";
+
 export const metadata: Metadata = {
-  title: "Hydraulic Seals in Kollam | Sealing Solutions",
-  description:
-    "Hydraulic seals in Kollam — O-rings, piston seals, rod seals, wipers, backup rings and custom sealing components from AR Hydraulics and Sealing Solutions.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/sealing-solutions" },
+  openGraph: { title, description, images: [defaultOgImage] },
 };
 
 export default function SealingSolutionsPage() {
@@ -21,7 +26,7 @@ export default function SealingSolutionsPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "Hydraulic and Industrial Sealing Solutions",
-    provider: { "@type": "LocalBusiness", name: siteInfo.name },
+    provider: { "@id": `${siteInfo.url}/#organization` },
     areaServed: "Kollam, Kerala, India",
     description: service.description,
   };

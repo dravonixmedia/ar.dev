@@ -6,12 +6,17 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import { contact } from "@/lib/data/site";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
 import { mediaConfig } from "@/config/media";
+import { defaultOgImage } from "@/lib/data/seo";
+
+const title = "Contact AR Hydraulics | Kollam, Kerala";
+const description =
+  "Contact AR Hydraulics and Sealing Solutions at Edakkadu, Kollam, Kerala — call, WhatsApp, email or send an enquiry.";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description:
-    "Contact AR Hydraulics and Sealing Solutions, Edakkadu, Kollam — call, WhatsApp, email or send an enquiry.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/contact" },
+  openGraph: { title, description, images: [defaultOgImage] },
 };
 
 export default function ContactPage() {

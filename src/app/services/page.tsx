@@ -4,12 +4,17 @@ import { ArrowUpRight } from "lucide-react";
 import PageHero from "@/components/sections/PageHero";
 import ServiceGraphic from "@/components/graphics/ServiceGraphic";
 import { services } from "@/lib/data/services";
+import { defaultOgImage } from "@/lib/data/seo";
+
+const title = "Hydraulic, Sealing & Industrial Services | AR Hydraulics";
+const description =
+  "Hydraulic & fluid power, mobile hydraulic works, sealing, precision machining, structural fabrication and roofing works — from AR Hydraulics, across Kerala.";
 
 export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Hydraulic & fluid power, mobile hydraulic works, sealing solutions, precision machining, structural fabrication and roofing works from AR Hydraulics and Sealing Solutions.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/services" },
+  openGraph: { title, description, images: [defaultOgImage] },
 };
 
 export default function ServicesPage() {

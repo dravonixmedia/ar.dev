@@ -4,13 +4,18 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import CinematicMedia from "@/components/ui/CinematicMedia";
 import { industries, equipmentManufacturers } from "@/lib/data/industries";
 import { legalDisclaimers } from "@/lib/data/site";
+import { defaultOgImage } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
+const title = "Industries We Serve | AR Hydraulics Kerala";
+const description =
+  "AR Hydraulics supports construction equipment, heavy machinery, mining equipment, agricultural equipment and manufacturing across Kerala.";
+
 export const metadata: Metadata = {
-  title: "Industries",
-  description:
-    "AR Hydraulics and Sealing Solutions supports construction equipment, heavy machinery, mining equipment and manufacturing / engineering workshops.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/industries" },
+  openGraph: { title, description, images: [defaultOgImage] },
 };
 
 export default function IndustriesPage() {

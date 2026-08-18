@@ -4,6 +4,7 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import CinematicMedia from "@/components/ui/CinematicMedia";
 import { productFamilies, technicalSpecFields } from "@/lib/data/products";
+import { defaultOgImage } from "@/lib/data/seo";
 import { mediaConfig, type ProductMediaKey } from "@/config/media";
 
 const productMediaKey: Record<string, ProductMediaKey> = {
@@ -12,11 +13,15 @@ const productMediaKey: Record<string, ProductMediaKey> = {
   "industrial-components": "industrial",
 };
 
+const title = "Hydraulic & Sealing Products | AR Hydraulics Kerala";
+const description =
+  "Sealing products, hydraulic products and industrial components supplied by AR Hydraulics, serving customers across Kerala from Kollam.";
+
 export const metadata: Metadata = {
-  title: "Products",
-  description:
-    "Sealing products, hydraulic products and industrial components supplied by AR Hydraulics and Sealing Solutions, Kollam.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/products" },
+  openGraph: { title, description, images: [defaultOgImage] },
 };
 
 export default function ProductsPage() {

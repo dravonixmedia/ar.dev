@@ -7,13 +7,18 @@ import Button from "@/components/ui/Button";
 import CompanyStrip from "@/components/sections/home/CompanyStrip";
 import { services } from "@/lib/data/services";
 import { credentials } from "@/lib/data/site";
+import { defaultOgImage } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
+const title = "About AR Hydraulics | Industrial Solutions in Kollam, Kerala";
+const description =
+  "AR Hydraulics is a DEV Group industrial workshop in Kollam, Kerala, covering hydraulics, sealing, machining, fabrication and roofing across six disciplines.";
+
 export const metadata: Metadata = {
-  title: "About Us",
-  description:
-    "AR Hydraulics and Sealing Solutions is an industrial engineering and workshop solutions provider under DEV Group, covering hydraulics, sealing, machining, fabrication and roofing.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/about" },
+  openGraph: { title, description, images: [defaultOgImage] },
 };
 
 export default function AboutPage() {
