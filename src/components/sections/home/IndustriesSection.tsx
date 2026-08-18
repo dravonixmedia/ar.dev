@@ -61,12 +61,6 @@ export default function IndustriesSection() {
             >
               <IndustryImageStage active={active} />
             </Link>
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-8 -left-2 select-none font-heading text-[9rem] font-extrabold leading-none text-white/[0.05] transition-all duration-500 lg:text-[12rem]"
-            >
-              {String(active + 1).padStart(2, "0")}
-            </span>
           </div>
 
           <div className="lg:col-span-5">
