@@ -11,7 +11,7 @@ export const services: ServiceItem[] = [
     summary:
       "Cylinders, power packs, pumps, motors and valves — repair, testing and system support.",
     description:
-      "AR Hydraulics supports hydraulic and pneumatic system requirements from component sales to full workshop repair and servicing — covering cylinder and ram repair, power pack repair, pumps, motors, valves and system-level troubleshooting for industrial and heavy-equipment applications.",
+      "AR Hydraulics supports hydraulic and pneumatic system requirements from component sales to full workshop repair and servicing, with specialists in hydraulic cylinder and ram repair — covering power pack repair, pumps, motors, valves and system-level troubleshooting for industrial and heavy-equipment applications.",
     items: [
       "Hydraulic system works",
       "Hydraulic cylinders",
@@ -42,9 +42,9 @@ export const services: ServiceItem[] = [
     supportingHeadline: "On-Site Support Where The Work Happens.",
     tagline: "On-site, on demand.",
     summary:
-      "On-site inspection, fault finding and repair assistance for hydraulic equipment at your location.",
+      "On-site inspection, fault finding and emergency repair assistance for hydraulic equipment at your location.",
     description:
-      "When equipment goes down on site, our mobile hydraulic team provides field hydraulic service — inspection, fault finding and repair assistance — so machines can be assessed and, where possible, brought back into service without unnecessary downtime.",
+      "When equipment goes down on site, our mobile hydraulic team provides field hydraulic service and emergency hydraulic repair support — inspection, fault finding and repair assistance — so machines can be assessed and, where possible, brought back into service without unnecessary downtime.",
     items: [
       "On-site hydraulic inspection",
       "Hydraulic fault finding",
@@ -57,6 +57,7 @@ export const services: ServiceItem[] = [
       "Equipment troubleshooting",
       "Component replacement support",
       "Mobile hydraulic repair assistance",
+      "Emergency hydraulic repair support",
       "Preventive maintenance support",
       "On-site technical consultation",
     ],

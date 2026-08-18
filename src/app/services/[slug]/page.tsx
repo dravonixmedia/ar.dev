@@ -29,7 +29,7 @@ const seoContent: Record<string, { title: string; description: string }> = {
   "mobile-hydraulic-works": {
     title: "Mobile Hydraulic Services | AR Hydraulics Kerala",
     description:
-      "On-site hydraulic inspection, fault finding, hose replacement support and repair assistance for equipment across Kerala, wherever the work is.",
+      "On-site hydraulic inspection, fault finding, hose replacement and emergency repair assistance for equipment across Kerala, wherever the work is.",
   },
   "sealing-solutions": {
     title: "Hydraulic Sealing Solutions | AR Hydraulics",
