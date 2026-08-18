@@ -14,8 +14,8 @@ export default function Logo({ dark = false }: { dark?: boolean }) {
         <span className={`text-[15px] font-bold tracking-tight ${dark ? "text-white" : "text-black"}`}>
           AR HYDRAULICS
         </span>
-        <span className={`text-[10px] font-medium uppercase tracking-[0.2em] ${dark ? "text-white/60" : "text-charcoal/70"}`}>
-          Sealing Solutions · DEV Group
+        <span className={`text-[10px] font-bold uppercase tracking-[0.2em] ${dark ? "text-white/60" : "text-charcoal/70"}`}>
+          &amp; Sealing Solutions
         </span>
       </span>
     </Link>
