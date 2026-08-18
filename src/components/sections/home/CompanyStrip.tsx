@@ -38,11 +38,11 @@ export default function CompanyStrip() {
 
         <div className="mt-10 flex justify-end">
           <Link
-            href="/about"
+            href="/contact"
             data-cursor="link"
             className="group inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.12em] text-black"
           >
-            More About Us
+            Get In Touch
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
           </Link>
         </div>
