@@ -141,7 +141,7 @@ export default async function ServiceDetailPage({
                   data-cursor="link"
                   className="inline-flex items-center gap-2 rounded-full border border-black/15 px-7 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-black"
                 >
-                  <MessageCircle className="h-4 w-4" /> WhatsApp Enquiry
+                  <MessageCircle className="h-4 w-4 shrink-0" /> WhatsApp Enquiry
                 </a>
               </div>
 

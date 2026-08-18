@@ -22,10 +22,10 @@ export default function Footer() {
             </p>
             <div className="flex flex-col gap-2 text-[13px] text-charcoal">
               <a href={buildTelUrl()} data-cursor="link" className="flex items-center gap-2 hover:text-orange">
-                <Phone className="h-4 w-4" /> {contact.phone}
+                <Phone className="h-4 w-4 shrink-0" /> {contact.phone}
               </a>
               <a href={`mailto:${contact.email}`} data-cursor="link" className="flex items-center gap-2 hover:text-orange">
-                <Mail className="h-4 w-4" /> {contact.email}
+                <Mail className="h-4 w-4 shrink-0" /> {contact.email}
               </a>
               <span className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" />

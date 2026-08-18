@@ -43,7 +43,7 @@ export default function MobileHydraulicCTA() {
                 data-cursor="link"
                 className="inline-flex items-center gap-2 rounded-full border border-black/30 bg-transparent px-7 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-black"
               >
-                <Phone className="h-4 w-4" /> Call Now
+                <Phone className="h-4 w-4 shrink-0" /> Call Now
               </a>
               <a
                 href={buildWhatsappUrl(service.whatsappMessage)}
@@ -52,7 +52,7 @@ export default function MobileHydraulicCTA() {
                 data-cursor="link"
                 className="inline-flex items-center gap-2 rounded-full border border-black/30 bg-transparent px-7 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-black"
               >
-                <MessageCircle className="h-4 w-4" /> WhatsApp
+                <MessageCircle className="h-4 w-4 shrink-0" /> WhatsApp
               </a>
             </div>
           </div>

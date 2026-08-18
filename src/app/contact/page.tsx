@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import PageHero from "@/components/sections/PageHero";
 import ContactForm from "@/components/forms/ContactForm";
 import CinematicMedia from "@/components/ui/CinematicMedia";
@@ -46,7 +46,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-10">
             <div className="flex flex-col gap-6 lg:col-span-4">
               <a href={buildTelUrl()} data-cursor="link" className="flex items-start gap-4 rounded-2xl border border-border bg-white p-6">
-                <Phone className="mt-0.5 h-5 w-5 text-orange" />
+                <Phone className="mt-0.5 h-5 w-5 shrink-0 text-orange" />
                 <div>
                   <span className="block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/60">Phone</span>
                   <span className="mt-1 block text-[15px] font-semibold text-black">{contact.phone}</span>
@@ -59,14 +59,14 @@ export default function ContactPage() {
                 data-cursor="link"
                 className="flex items-start gap-4 rounded-2xl border border-border bg-white p-6"
               >
-                <Mail className="mt-0.5 h-5 w-5 text-orange" />
+                <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-orange" />
                 <div>
                   <span className="block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/60">WhatsApp</span>
                   <span className="mt-1 block text-[15px] font-semibold text-black">{contact.phone}</span>
                 </div>
               </a>
               <a href={`mailto:${contact.email}`} data-cursor="link" className="flex items-start gap-4 rounded-2xl border border-border bg-white p-6">
-                <Mail className="mt-0.5 h-5 w-5 text-orange" />
+                <Mail className="mt-0.5 h-5 w-5 shrink-0 text-orange" />
                 <div>
                   <span className="block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/60">Email</span>
                   <span className="mt-1 block text-[15px] font-semibold text-black">{contact.email}</span>

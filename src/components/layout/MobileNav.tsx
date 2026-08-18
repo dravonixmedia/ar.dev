@@ -97,7 +97,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
             href={buildTelUrl()}
             className="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/10 px-5 py-3.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-white"
           >
-            <Phone className="h-4 w-4" /> Call Now
+            <Phone className="h-4 w-4 shrink-0" /> Call Now
           </a>
           <a
             href={buildWhatsappUrl()}
@@ -105,7 +105,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
             rel="noopener noreferrer"
             className="flex flex-1 items-center justify-center gap-2 rounded-full bg-yellow px-5 py-3.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-black"
           >
-            <Send className="h-4 w-4" /> WhatsApp
+            <Send className="h-4 w-4 shrink-0" /> WhatsApp
           </a>
         </div>
         <Link

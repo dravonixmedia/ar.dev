@@ -41,7 +41,7 @@ export default function QuotePage() {
                   Prefer To Talk Directly?
                 </h2>
                 <a href={buildTelUrl()} data-cursor="link" className="flex items-center gap-3 text-[14px] font-semibold text-black">
-                  <Phone className="h-5 w-5 text-orange" /> {contact.phone}
+                  <Phone className="h-5 w-5 shrink-0 text-orange" /> {contact.phone}
                 </a>
                 <a
                   href={buildWhatsappUrl()}
@@ -50,7 +50,7 @@ export default function QuotePage() {
                   data-cursor="link"
                   className="flex items-center gap-3 text-[14px] font-semibold text-black"
                 >
-                  <MessageCircle className="h-5 w-5 text-orange" /> WhatsApp Enquiry
+                  <MessageCircle className="h-5 w-5 shrink-0 text-orange" /> WhatsApp Enquiry
                 </a>
                 <p className="text-[13px] leading-relaxed text-charcoal">
                   {contact.address.line2}, {contact.address.line3},{" "}

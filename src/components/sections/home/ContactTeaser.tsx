@@ -94,14 +94,14 @@ export default function ContactTeaser() {
                   data-cursor="link"
                   className="flex items-center gap-3 text-[15px] font-semibold text-black"
                 >
-                  <Phone className="h-5 w-5 text-orange" /> {contact.phone}
+                  <Phone className="h-5 w-5 shrink-0 text-orange" /> {contact.phone}
                 </a>
                 <a
                   href={`mailto:${contact.email}`}
                   data-cursor="link"
                   className="flex items-center gap-3 text-[15px] font-semibold text-black"
                 >
-                  <Mail className="h-5 w-5 text-orange" /> {contact.email}
+                  <Mail className="h-5 w-5 shrink-0 text-orange" /> {contact.email}
                 </a>
                 <span className="flex items-start gap-3 text-[14px] text-charcoal">
                   <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-orange" />
