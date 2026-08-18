@@ -10,7 +10,7 @@ import { defaultOgImage } from "@/lib/data/seo";
 
 const title = "Contact AR Hydraulics | Kollam, Kerala";
 const description =
-  "Contact AR Hydraulics and Sealing Solutions at Edakkadu, Kollam, Kerala — call, WhatsApp, email or send an enquiry.";
+  "Contact AR Hydraulics and Sealing Solutions at East Kallada, Kollam, Kerala — call, WhatsApp, email or send an enquiry.";
 
 export const metadata: Metadata = {
   title: { absolute: title },

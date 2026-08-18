@@ -50,10 +50,11 @@ export default function AboutPage() {
                 className="mt-6 font-heading text-[7vw] font-semibold uppercase leading-[0.98] tracking-tight text-black sm:text-[4.5vw] lg:text-[2.4vw]"
               />
               <p className="mt-6 text-[15px] leading-relaxed text-charcoal">
-                We are positioned as a broader industrial engineering and workshop solutions
-                provider — supporting customers across hydraulics, mobile hydraulic works,
-                sealing, precision machining, structural fabrication and roofing works, so one
-                team can be approached for a wide range of workshop and site requirements.
+                We are positioned as a broader industrial hydraulic maintenance company and
+                workshop solutions provider — supporting customers across hydraulics (including
+                excavators and other construction equipment), mobile hydraulic works, sealing,
+                precision machining, structural fabrication and roofing works, so one team can be
+                approached for a wide range of workshop and site requirements.
               </p>
             </div>
           </div>

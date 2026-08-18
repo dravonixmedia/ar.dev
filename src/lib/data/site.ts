@@ -13,8 +13,8 @@ export const contact = {
   companyName: "AR Hydraulics and Sealing Solutions",
   address: {
     line1: "Building No. 7/628",
-    line2: "Edakkadu South",
-    line3: "Edakkadu P.O.",
+    line2: "East Kallada",
+    line3: "Kallada P.O.",
     city: "Kollam",
     state: "Kerala",
     country: "India",
@@ -23,7 +23,7 @@ export const contact = {
   phoneRaw: "918129741233",
   email: "arhydraulicssolutions@gmail.com",
   website: "www.arhydraulicssolutions.com",
-  mapEmbedQuery: "Edakkadu, Kollam, Kerala",
+  mapEmbedQuery: "East Kallada, Kollam, Kerala",
 } as const;
 
 export const credentials = {
