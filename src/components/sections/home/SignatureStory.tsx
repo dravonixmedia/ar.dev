@@ -74,7 +74,7 @@ export default function SignatureStory() {
         const st = ScrollTrigger.create({
           trigger: section,
           start: "top top",
-          end: "+=220%",
+          end: "+=340%",
           scrub: 0.6,
           onUpdate: (self) => {
             const progress = self.progress;
@@ -97,7 +97,7 @@ export default function SignatureStory() {
   const activeStep = processSteps[active];
 
   return (
-    <section ref={sectionRef} className="relative bg-yellow-soft lg:h-[320vh]">
+    <section ref={sectionRef} className="relative bg-yellow-soft lg:h-[440vh]">
       <div className="flex flex-col justify-center overflow-hidden py-20 lg:sticky lg:top-0 lg:min-h-screen lg:py-16">
         <div className="mx-auto w-full max-w-[1440px] px-6 lg:px-10">
           <SectionLabel>How We Work</SectionLabel>
