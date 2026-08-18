@@ -71,7 +71,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
         </button>
       </div>
 
-      <nav className="flex flex-1 flex-col justify-center gap-1 overflow-y-auto px-6 py-8">
+      <nav className="flex flex-1 flex-col justify-start gap-1 overflow-y-auto px-6 py-6">
         {primaryNav.map((link, i) => (
           <div key={link.href} className="reveal-line shrink-0 border-b border-white/10">
             <Link
@@ -80,7 +80,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
               }}
               href={link.href}
               onClick={onClose}
-              className="block py-3 text-[13vw] leading-[1] font-heading font-semibold uppercase tracking-tight text-white transition-colors hover:text-yellow xs:text-[44px]"
+              className="block py-2.5 text-[clamp(26px,8vw,38px)] leading-[1.05] font-heading font-semibold uppercase tracking-tight text-white transition-colors hover:text-yellow"
             >
               {link.label}
             </Link>
