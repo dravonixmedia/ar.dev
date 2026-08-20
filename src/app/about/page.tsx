@@ -6,7 +6,6 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import CompanyStrip from "@/components/sections/home/CompanyStrip";
 import { services } from "@/lib/data/services";
-import { credentials } from "@/lib/data/site";
 import { defaultOgImage } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
@@ -117,12 +116,6 @@ export default function AboutPage() {
       </section>
 
       <CompanyStrip />
-
-      <section className="bg-grey py-16">
-        <div className="mx-auto max-w-[1440px] px-6 text-[13px] text-charcoal/70 lg:px-10">
-          Company credentials — KLMSME: {credentials.klmsme} · UDYAM: {credentials.udyam}
-        </div>
-      </section>
     </>
   );
 }

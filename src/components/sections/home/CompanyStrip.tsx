@@ -18,7 +18,7 @@ export default function CompanyStrip() {
               Sister Concerns
             </h3>
             <p className="mt-2 text-[13px] text-charcoal/70">
-              KLMSME: {credentials.klmsme} · UDYAM: {credentials.udyam}
+              KLMSME: {credentials.klmsme} · UDYAM: {credentials.udyam} · GSTIN: {credentials.gstin}
             </p>
           </div>
 
