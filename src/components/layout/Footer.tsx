@@ -11,7 +11,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-yellow-soft">
+    <footer className="bg-yellow-soft pb-16 lg:pb-0">
       <div className="mx-auto max-w-[1440px] px-6 pb-10 pt-20 lg:px-10">
         <div className="grid gap-14 border-b border-black/10 pb-14 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div className="flex flex-col gap-6">
@@ -124,12 +124,22 @@ export default function Footer() {
           <span>
             © {year} {siteInfo.name}. All rights reserved.
           </span>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <DevGroupLogo size={22} />
             <span>{siteInfo.group}</span>
             <Link href="/privacy-policy" className="hover:text-orange">
               Privacy Policy
             </Link>
+            <span className="text-charcoal/30">·</span>
+            <a
+              href="https://dravonixmedia.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="link"
+              className="hover:text-orange"
+            >
+              SEO &amp; Web Design by Dravonix Media Pvt. Ltd.
+            </a>
           </div>
         </div>
       </div>
