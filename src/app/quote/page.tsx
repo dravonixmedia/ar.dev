@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/sections/PageHero";
 import QuoteForm from "@/components/forms/QuoteForm";
-import { contact } from "@/lib/data/site";
-import { Phone, MessageCircle } from "lucide-react";
+import { contact, formatAddress } from "@/lib/data/site";
+import { Phone, MessageCircle, MapPin } from "lucide-react";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
 import { defaultOgImage } from "@/lib/data/seo";
 
@@ -52,10 +52,17 @@ export default function QuotePage() {
                 >
                   <MessageCircle className="h-5 w-5 shrink-0 text-orange" /> WhatsApp Enquiry
                 </a>
-                <p className="text-[13px] leading-relaxed text-charcoal">
-                  {contact.address.line2}, {contact.address.line3},{" "}
-                  {contact.address.city}, {contact.address.state}
-                </p>
+                <div className="flex flex-col gap-3">
+                  {contact.addresses.map((address) => (
+                    <div key={address.key} className="flex items-start gap-3">
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-orange" />
+                      <p className="text-[13px] leading-relaxed text-charcoal">
+                        <span className="font-semibold text-black">{address.label}: </span>
+                        {formatAddress(address)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

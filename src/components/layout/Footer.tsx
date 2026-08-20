@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, ArrowUpRight } from "lucide-react";
 import Logo from "./Logo";
 import DevGroupLogo from "./DevGroupLogo";
-import { contact, credentials, sisterConcerns, siteInfo } from "@/lib/data/site";
+import { contact, credentials, sisterConcerns, siteInfo, formatAddress } from "@/lib/data/site";
 import { footerServiceLinks } from "@/lib/data/nav";
 import { productFamilies } from "@/lib/data/products";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
@@ -27,11 +27,15 @@ export default function Footer() {
               <a href={`mailto:${contact.email}`} data-cursor="link" className="flex items-center gap-2 hover:text-orange">
                 <Mail className="h-4 w-4 shrink-0" /> {contact.email}
               </a>
-              <span className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                {contact.address.line2}, {contact.address.line3},{" "}
-                {contact.address.city}, {contact.address.state}
-              </span>
+              {contact.addresses.map((address) => (
+                <span key={address.key} className="flex items-start gap-2">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>
+                    <span className="font-semibold text-black">{address.label}: </span>
+                    {formatAddress(address)}
+                  </span>
+                </span>
+              ))}
             </div>
           </div>
 
@@ -110,7 +114,7 @@ export default function Footer() {
 
         <div className="flex flex-col gap-3 pt-8 text-[12px] text-charcoal/70">
           <p>
-            KLMSME: {credentials.klmsme} · UDYAM: {credentials.udyam}
+            KLMSME: {credentials.klmsme} · UDYAM: {credentials.udyam} · GSTIN: {credentials.gstin}
           </p>
         </div>
       </div>

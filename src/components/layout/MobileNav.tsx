@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { X, Phone, Send } from "lucide-react";
 import { primaryNav } from "@/lib/data/nav";
-import { contact } from "@/lib/data/site";
+import { contact, formatAddressShort } from "@/lib/data/site";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
 import { gsap } from "@/lib/gsapConfig";
 import Logo from "./Logo";
@@ -89,8 +89,13 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
       </nav>
 
       <div className="flex flex-col gap-4 border-t border-white/10 px-6 py-6">
-        <div className="text-[13px] text-white/60">
-          {contact.address.line2}, {contact.address.city}, {contact.address.state}
+        <div className="flex flex-col gap-1 text-[13px] text-white/60">
+          {contact.addresses.map((address) => (
+            <div key={address.key}>
+              <span className="text-white/40">{address.label}: </span>
+              {formatAddressShort(address)}
+            </div>
+          ))}
         </div>
         <div className="flex flex-wrap gap-3">
           <a

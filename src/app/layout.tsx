@@ -7,7 +7,7 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import MobileActionBar from "@/components/layout/MobileActionBar";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
-import { siteInfo, contact } from "@/lib/data/site";
+import { siteInfo, contact, credentials } from "@/lib/data/site";
 import { defaultSeo, defaultOgImage } from "@/lib/data/seo";
 
 // Premium industrial-editorial pairing: Manrope for display/headings
@@ -60,6 +60,12 @@ export const metadata: Metadata = {
 // back to this same entity via @id rather than duplicating a bare
 // LocalBusiness object, and set their own areaServed to reflect that
 // services are marketed to customers across Kerala.
+//
+// The GST-registered address is used here rather than the delivery
+// address — schema.org LocalBusiness represents one principal location,
+// and this is the one that matches the business's GST registration.
+const registeredAddress = contact.addresses[0];
+
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -69,11 +75,13 @@ const organizationSchema = {
   url: siteInfo.url,
   telephone: contact.phone,
   email: contact.email,
+  taxID: credentials.gstin,
   address: {
     "@type": "PostalAddress",
-    streetAddress: `${contact.address.line2}, ${contact.address.line3}`,
-    addressLocality: contact.address.city,
-    addressRegion: contact.address.state,
+    streetAddress: registeredAddress.lines.join(", "),
+    addressLocality: registeredAddress.city,
+    addressRegion: registeredAddress.state,
+    postalCode: registeredAddress.pincode,
     addressCountry: "IN",
   },
   parentOrganization: {

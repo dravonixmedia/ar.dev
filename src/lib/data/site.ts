@@ -11,23 +11,58 @@ export const siteInfo = {
 
 export const contact = {
   companyName: "AR Hydraulics and Sealing Solutions",
-  address: {
-    line2: "East Kallada",
-    line3: "Kallada P.O.",
-    city: "Kollam",
-    state: "Kerala",
-    country: "India",
-  },
+  addresses: [
+    {
+      key: "registered",
+      label: "Registered Address",
+      lines: ["Building No. 5/514", "East Kallada Town Ward, East Kallada P.O."],
+      area: "East Kallada",
+      city: "Kollam",
+      state: "Kerala",
+      pincode: "691502",
+      country: "India",
+    },
+    {
+      key: "delivery",
+      label: "Delivery Address",
+      lines: [
+        "7/628, Sathyalayam, Unnamed Road",
+        "Near St. Thomas Residential Central School, Edakkad South, Poruvazhy",
+      ],
+      area: "Poruvazhy",
+      city: "Kollam",
+      state: "Kerala",
+      pincode: "690520",
+      country: "India",
+    },
+  ],
   phone: "+91 81297 41233",
   phoneRaw: "918129741233",
   email: "arhydraulicssolutions@gmail.com",
   website: "www.arhydraulicssolutions.com",
-  mapEmbedQuery: "East Kallada, Kollam, Kerala",
 } as const;
+
+export type Address = (typeof contact.addresses)[number];
+
+// Full postal string, most-specific line first — for address cards and maps.
+export function formatAddress(address: Address) {
+  return [...address.lines, `${address.city} - ${address.pincode}`, address.state, address.country].join(", ");
+}
+
+// Locality-only, for compact UI (mobile nav, home teaser) where a full
+// multi-line postal address would overflow the available space.
+export function formatAddressShort(address: Address) {
+  return `${address.area}, ${address.city}, ${address.state}`;
+}
+
+export function addressMapQuery(address: Address) {
+  return encodeURIComponent([...address.lines, address.city, address.state, address.pincode].join(", "));
+}
 
 export const credentials = {
   klmsme: "6932/2025",
   udyam: "UDYAM-KL-06-0057785",
+  gstin: "32GXZPS5553J1ZH",
 } as const;
 
 export const sisterConcerns = [
