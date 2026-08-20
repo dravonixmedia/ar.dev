@@ -115,15 +115,15 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="bg-black" data-cursor-theme="dark">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-2 px-6 py-5 text-[12px] text-white/60 lg:flex-row lg:px-10">
+      <div className="border-t border-black/10 bg-cream">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-2 px-6 py-5 text-[12px] text-charcoal/70 lg:flex-row lg:px-10">
           <span>
             © {year} {siteInfo.name}. All rights reserved.
           </span>
           <div className="flex items-center gap-3">
-            <DevGroupLogo size={22} onDark />
+            <DevGroupLogo size={22} />
             <span>{siteInfo.group}</span>
-            <Link href="/privacy-policy" className="hover:text-white">
+            <Link href="/privacy-policy" className="hover:text-orange">
               Privacy Policy
             </Link>
           </div>

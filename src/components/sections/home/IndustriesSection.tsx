@@ -42,9 +42,9 @@ export default function IndustriesSection() {
   const isFinePointer = useIsFinePointer();
 
   return (
-    <section className="bg-black py-24 text-white lg:py-32" data-cursor-theme="dark">
+    <section className="bg-cream py-24 text-black lg:py-32">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
-        <SectionLabel light>Industries We Serve</SectionLabel>
+        <SectionLabel>Industries We Serve</SectionLabel>
         <TextReveal
           as="h2"
           lines={["EQUIPMENT ACROSS", "EVERY HEAVY INDUSTRY."]}
@@ -81,18 +81,18 @@ export default function IndustriesSection() {
                   onClick={() => setActive(i)}
                   aria-pressed={active === i}
                   data-cursor="link"
-                  className="relative flex items-start gap-4 border-t border-white/10 py-6 text-left last:border-b"
+                  className="relative flex items-start gap-4 border-t border-black/10 py-6 text-left last:border-b"
                 >
                   {active === i && (
                     <span
                       aria-hidden="true"
-                      className="absolute inset-x-0 top-0 h-px origin-left bg-yellow"
+                      className="absolute inset-x-0 top-0 h-px origin-left bg-orange"
                     />
                   )}
                   <span
                     className={cn(
                       "mt-1 font-heading text-[13px] font-semibold transition-colors duration-300",
-                      active === i ? "text-yellow" : "text-white/25"
+                      active === i ? "text-orange" : "text-black/25"
                     )}
                   >
                     0{i + 1}
@@ -101,7 +101,7 @@ export default function IndustriesSection() {
                     <span
                       className={cn(
                         "block font-heading text-[16px] font-semibold uppercase tracking-tight transition-colors duration-300 sm:text-[19px]",
-                        active === i ? "text-white" : "text-white/40"
+                        active === i ? "text-black" : "text-black/40"
                       )}
                     >
                       {group.category}
@@ -112,7 +112,7 @@ export default function IndustriesSection() {
                         active === i ? "mt-2 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                       )}
                     >
-                      <p className="flex min-h-0 flex-wrap gap-x-1.5 gap-y-1 text-[13px] leading-relaxed text-white/50">
+                      <p className="flex min-h-0 flex-wrap gap-x-1.5 gap-y-1 text-[13px] leading-relaxed text-black/50">
                         {group.items.map((item, idx) => (
                           <span key={item.name}>
                             {item.name}
@@ -125,7 +125,7 @@ export default function IndustriesSection() {
                   <span
                     className={cn(
                       "mt-2 h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-300",
-                      active === i ? "bg-yellow" : "bg-transparent"
+                      active === i ? "bg-orange" : "bg-transparent"
                     )}
                   />
                 </button>
@@ -134,7 +134,7 @@ export default function IndustriesSection() {
           </div>
         </div>
 
-        <p className="mt-16 max-w-2xl text-[13px] leading-relaxed text-white/40">
+        <p className="mt-16 max-w-2xl text-[13px] leading-relaxed text-black/40">
           {legalDisclaimers.manufacturers}
         </p>
       </div>

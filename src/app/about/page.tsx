@@ -61,24 +61,24 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-black py-20 text-white lg:py-28" data-cursor-theme="dark">
+      <section className="bg-cream py-20 text-black lg:py-28">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 p-8">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-yellow">
+            <div className="rounded-2xl border border-black/10 p-8">
+              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-orange">
                 Mission
               </span>
-              <p className="mt-4 text-[15px] leading-relaxed text-white/70">
+              <p className="mt-4 text-[15px] leading-relaxed text-charcoal">
                 To provide dependable, technically sound hydraulic, sealing, machining,
                 fabrication and roofing support that keeps customer equipment and operations
                 running.
               </p>
             </div>
-            <div className="rounded-2xl border border-white/10 p-8">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-yellow">
+            <div className="rounded-2xl border border-black/10 p-8">
+              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-orange">
                 Vision
               </span>
-              <p className="mt-4 text-[15px] leading-relaxed text-white/70">
+              <p className="mt-4 text-[15px] leading-relaxed text-charcoal">
                 To be the workshop customers turn to first for integrated industrial engineering
                 support — from a single component to a complete fabrication requirement.
               </p>
