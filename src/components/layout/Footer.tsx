@@ -53,7 +53,7 @@ export default function Footer() {
               ))}
               <li>
                 <Link href="/sealing-solutions" data-cursor="link" className="text-[14px] font-semibold text-black hover:text-orange">
-                  Hydraulic Seals in Kollam
+                  Hydraulic Seals in Kerala
                 </Link>
               </li>
             </ul>

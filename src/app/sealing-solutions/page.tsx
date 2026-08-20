@@ -40,7 +40,7 @@ export default function SealingSolutionsPage() {
 
       <PageHero
         crumbs={[{ label: "Home", href: "/" }, { label: "Sealing Solutions" }]}
-        label="Hydraulic Seals in Kollam"
+        label="Hydraulic Seals in Kerala"
         lines={["HYDRAULIC & INDUSTRIAL", "SEALING SOLUTIONS."]}
         intro="Looking for hydraulic seals in Kollam? AR Hydraulics and Sealing Solutions supports hydraulic, pneumatic and industrial sealing requirements including O-rings, seal kits, piston seals, rod seals, hydraulic wipers, backup rings and specialised sealing components."
       >
