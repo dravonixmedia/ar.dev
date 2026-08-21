@@ -13,18 +13,8 @@ export const contact = {
   companyName: "AR Hydraulics and Sealing Solutions",
   addresses: [
     {
-      key: "registered",
-      label: "Registered Address",
-      lines: ["Building No. 5/514", "East Kallada Town Ward, East Kallada P.O."],
-      area: "East Kallada",
-      city: "Kollam",
-      state: "Kerala",
-      pincode: "691502",
-      country: "India",
-    },
-    {
       key: "delivery",
-      label: "Delivery Address",
+      label: "Address 01",
       lines: [
         "7/628, Sathyalayam, Unnamed Road",
         "Near St. Thomas Residential Central School, Edakkad South, Poruvazhy",
@@ -33,6 +23,16 @@ export const contact = {
       city: "Kollam",
       state: "Kerala",
       pincode: "690520",
+      country: "India",
+    },
+    {
+      key: "registered",
+      label: "Address 02",
+      lines: ["Building No. 5/514", "East Kallada Town Ward, East Kallada P.O."],
+      area: "East Kallada",
+      city: "Kollam",
+      state: "Kerala",
+      pincode: "691502",
       country: "India",
     },
   ],

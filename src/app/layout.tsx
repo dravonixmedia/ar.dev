@@ -64,7 +64,9 @@ export const metadata: Metadata = {
 // The GST-registered address is used here rather than the delivery
 // address — schema.org LocalBusiness represents one principal location,
 // and this is the one that matches the business's GST registration.
-const registeredAddress = contact.addresses[0];
+// Looked up by key, not array position — contact.addresses is ordered
+// for on-page display (Address 01/02), not by which one is registered.
+const registeredAddress = contact.addresses.find((a) => a.key === "registered")!;
 
 const organizationSchema = {
   "@context": "https://schema.org",
