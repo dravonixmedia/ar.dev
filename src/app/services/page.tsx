@@ -51,10 +51,10 @@ export default function ServicesPage() {
                 key={service.slug}
                 href={`/services/${service.slug}`}
                 data-cursor="link"
-                className="group flex flex-col justify-between gap-8 rounded-2xl border border-border bg-white p-9 transition-colors hover:bg-black"
+                className="group flex flex-col justify-between gap-8 rounded-2xl border border-border bg-white p-9 transition-colors hover:bg-olive-deep"
               >
                 <div className="flex items-start justify-between">
-                  <span className="font-heading text-[15px] font-semibold text-orange">
+                  <span className="font-heading text-[15px] font-semibold text-blue">
                     {service.number}
                   </span>
                   <div className="h-14 w-14 text-black/30 transition-colors group-hover:text-yellow">

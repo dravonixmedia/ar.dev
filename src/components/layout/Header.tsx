@@ -75,8 +75,8 @@ export default function Header() {
                   >
                     <button
                       className={cn(
-                        "flex items-center gap-1 text-[13px] font-semibold uppercase tracking-[0.06em] text-black transition-colors hover:text-orange",
-                        pathname.startsWith(link.href) && "text-orange"
+                        "flex items-center gap-1 text-[13px] font-semibold uppercase tracking-[0.06em] text-black transition-colors hover:text-blue",
+                        pathname.startsWith(link.href) && "text-blue"
                       )}
                       data-cursor="link"
                       aria-expanded={servicesOpen}
@@ -109,7 +109,7 @@ export default function Header() {
                                 {child.description}
                               </span>
                             </span>
-                            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-orange opacity-0 transition-opacity group-hover:opacity-100" />
+                            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-blue opacity-0 transition-opacity group-hover:opacity-100" />
                           </Link>
                         ))}
                       </div>
@@ -121,8 +121,8 @@ export default function Header() {
                     href={link.href}
                     data-cursor="link"
                     className={cn(
-                      "text-[13px] font-semibold uppercase tracking-[0.06em] text-black transition-colors hover:text-orange",
-                      pathname === link.href && "text-orange"
+                      "text-[13px] font-semibold uppercase tracking-[0.06em] text-black transition-colors hover:text-blue",
+                      pathname === link.href && "text-blue"
                     )}
                   >
                     {link.label}

@@ -41,7 +41,7 @@ export default function ProductsSection() {
               key={family.slug}
               href={`/products#${family.slug}`}
               data-cursor="link"
-              className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:bg-black"
+              className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:bg-olive-deep"
             >
               <CinematicMedia
                 asset={mediaConfig.products[productMediaKey[family.slug]]}
@@ -51,7 +51,7 @@ export default function ProductsSection() {
               />
               <div className="flex flex-1 flex-col justify-between p-8">
                 <div>
-                  <span className="font-heading text-[13px] font-semibold text-orange group-hover:text-yellow">
+                  <span className="font-heading text-[13px] font-semibold text-blue group-hover:text-yellow">
                     0{i + 1}
                   </span>
                   <h3 className="mt-4 font-heading text-[24px] font-semibold uppercase leading-tight text-black group-hover:text-white">

@@ -64,7 +64,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
             <div className="rounded-2xl border border-black/10 p-8">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-orange">
+              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-blue">
                 Mission
               </span>
               <p className="mt-4 text-[15px] leading-relaxed text-charcoal">
@@ -74,7 +74,7 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="rounded-2xl border border-black/10 p-8">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-orange">
+              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-blue">
                 Vision
               </span>
               <p className="mt-4 text-[15px] leading-relaxed text-charcoal">
@@ -97,7 +97,7 @@ export default function AboutPage() {
           <div className="mt-14 grid grid-cols-1 divide-y divide-border border-t border-border sm:grid-cols-2 lg:grid-cols-3 lg:divide-x">
             {services.map((service) => (
               <div key={service.slug} className="flex flex-col gap-3 px-1 py-8 lg:px-8">
-                <span className="font-heading text-[13px] font-semibold text-orange">
+                <span className="font-heading text-[13px] font-semibold text-blue">
                   {service.number}
                 </span>
                 <h3 className="font-heading text-[18px] font-semibold uppercase text-black">

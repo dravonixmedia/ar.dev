@@ -52,7 +52,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
   return (
     <div
       ref={panelRef}
-      className="fixed inset-0 z-[100] hidden flex-col bg-black text-white"
+      className="fixed inset-0 z-[100] hidden flex-col bg-olive-deep text-white"
       style={{ display: "none" }}
       data-cursor-theme="dark"
       role="dialog"

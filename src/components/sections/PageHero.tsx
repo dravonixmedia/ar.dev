@@ -22,7 +22,7 @@ export default function PageHero({
       <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
         <Breadcrumbs items={crumbs} />
         <div className="mt-8 flex items-center gap-3">
-          <span className="h-1.5 w-1.5 rounded-full bg-orange" />
+          <span className="h-1.5 w-1.5 rounded-full bg-blue" />
           <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-charcoal">
             {label}
           </span>

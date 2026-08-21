@@ -86,13 +86,13 @@ export default function IndustriesSection() {
                   {active === i && (
                     <span
                       aria-hidden="true"
-                      className="absolute inset-x-0 top-0 h-px origin-left bg-orange"
+                      className="absolute inset-x-0 top-0 h-px origin-left bg-blue"
                     />
                   )}
                   <span
                     className={cn(
                       "mt-1 font-heading text-[13px] font-semibold transition-colors duration-300",
-                      active === i ? "text-orange" : "text-black/25"
+                      active === i ? "text-blue" : "text-black/25"
                     )}
                   >
                     0{i + 1}
@@ -125,7 +125,7 @@ export default function IndustriesSection() {
                   <span
                     className={cn(
                       "mt-2 h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-300",
-                      active === i ? "bg-orange" : "bg-transparent"
+                      active === i ? "bg-blue" : "bg-transparent"
                     )}
                   />
                 </button>

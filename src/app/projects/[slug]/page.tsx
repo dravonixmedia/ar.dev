@@ -56,7 +56,7 @@ export default async function ProjectDetailPage({
 
         <div className="mt-8 grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-6">
-            <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-orange">
+            <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-blue">
               {project.category}
             </span>
             <h1 className="mt-4 font-heading text-[9vw] font-semibold uppercase leading-[0.96] tracking-tight text-black sm:text-[5.5vw] lg:text-[3vw]">
@@ -64,8 +64,8 @@ export default async function ProjectDetailPage({
             </h1>
 
             {project.isPlaceholder && (
-              <div className="mt-6 flex items-start gap-3 rounded-xl border border-orange/30 bg-yellow-soft px-5 py-4">
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-orange" />
+              <div className="mt-6 flex items-start gap-3 rounded-xl border border-error/30 bg-yellow-soft px-5 py-4">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-error" />
                 <p className="text-[13px] leading-relaxed text-charcoal">
                   This project entry is a placeholder illustrating the type of work carried out.
                   Real project details, images and outcomes will be added once confirmed.
@@ -117,7 +117,7 @@ export default async function ProjectDetailPage({
           <Link
             href="/projects"
             data-cursor="link"
-            className="text-[13px] font-semibold uppercase tracking-[0.12em] text-black hover:text-orange"
+            className="text-[13px] font-semibold uppercase tracking-[0.12em] text-black hover:text-blue"
           >
             ← Back to Our Work
           </Link>

@@ -45,7 +45,7 @@ export default function WhatWeDo() {
                   <span
                     className={cn(
                       "font-heading text-[15px] font-semibold transition-colors",
-                      active === i ? "text-orange" : "text-black/30"
+                      active === i ? "text-blue" : "text-black/30"
                     )}
                   >
                     {service.number}
@@ -62,7 +62,7 @@ export default function WhatWeDo() {
                 <ArrowUpRight
                   className={cn(
                     "h-6 w-6 shrink-0 transition-all duration-300",
-                    active === i ? "translate-x-0 translate-y-0 text-orange opacity-100" : "-translate-x-2 translate-y-2 text-black/30 opacity-0 group-hover:opacity-100"
+                    active === i ? "translate-x-0 translate-y-0 text-blue opacity-100" : "-translate-x-2 translate-y-2 text-black/30 opacity-0 group-hover:opacity-100"
                   )}
                 />
               </Link>
@@ -86,7 +86,7 @@ export default function WhatWeDo() {
               <Link
                 href={`/services/${activeService.slug}`}
                 data-cursor="link"
-                className="mt-6 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-orange"
+                className="mt-6 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-blue"
               >
                 Explore Service <ArrowUpRight className="h-4 w-4" />
               </Link>

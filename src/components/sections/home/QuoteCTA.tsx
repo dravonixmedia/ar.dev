@@ -9,7 +9,7 @@ export default function QuoteCTA() {
       <TechLine className="pointer-events-none absolute inset-x-0 bottom-10 h-8 w-full text-black/10" />
 
       <div className="relative mx-auto max-w-[1440px] px-6 text-center lg:px-10">
-        <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-orange">
+        <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-blue">
           Get Started
         </span>
         <TextReveal

@@ -111,7 +111,7 @@ export default async function ServiceDetailPage({
           <div className="mt-8 grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-10">
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3">
-                <span className="h-1.5 w-1.5 rounded-full bg-orange" />
+                <span className="h-1.5 w-1.5 rounded-full bg-blue" />
                 <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-charcoal">
                   {service.number} · {service.title}
                 </span>
@@ -122,7 +122,7 @@ export default async function ServiceDetailPage({
                 className="mt-6 font-heading text-[10vw] font-semibold uppercase leading-[0.94] tracking-tight text-black sm:text-[6vw] lg:text-[3.6vw]"
               />
               {service.supportingHeadline && (
-                <p className="mt-4 text-[16px] font-semibold uppercase tracking-[0.06em] text-orange">
+                <p className="mt-4 text-[16px] font-semibold uppercase tracking-[0.06em] text-blue">
                   {service.supportingHeadline}
                 </p>
               )}
@@ -172,7 +172,7 @@ export default async function ServiceDetailPage({
           <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-4 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-3">
             {service.items.map((item) => (
               <div key={item} className="flex items-center gap-3 border-b border-border py-3">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue" />
                 <span className="text-[14px] text-charcoal">{item}</span>
               </div>
             ))}

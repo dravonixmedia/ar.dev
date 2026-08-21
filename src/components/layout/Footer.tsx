@@ -21,10 +21,10 @@ export default function Footer() {
               sealing, precision machining, structural fabrication and roofing works.
             </p>
             <div className="flex flex-col gap-2 text-[13px] text-charcoal">
-              <a href={buildTelUrl()} data-cursor="link" className="flex items-center gap-2 hover:text-orange">
+              <a href={buildTelUrl()} data-cursor="link" className="flex items-center gap-2 hover:text-blue">
                 <Phone className="h-4 w-4 shrink-0" /> {contact.phone}
               </a>
-              <a href={`mailto:${contact.email}`} data-cursor="link" className="flex items-center gap-2 hover:text-orange">
+              <a href={`mailto:${contact.email}`} data-cursor="link" className="flex items-center gap-2 hover:text-blue">
                 <Mail className="h-4 w-4 shrink-0" /> {contact.email}
               </a>
               {contact.addresses.map((address) => (
@@ -46,13 +46,13 @@ export default function Footer() {
             <ul className="flex flex-col gap-3">
               {footerServiceLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} data-cursor="link" className="text-[14px] text-black hover:text-orange">
+                  <Link href={link.href} data-cursor="link" className="text-[14px] text-black hover:text-blue">
                     {link.label}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/sealing-solutions" data-cursor="link" className="text-[14px] font-semibold text-black hover:text-orange">
+                <Link href="/sealing-solutions" data-cursor="link" className="text-[14px] font-semibold text-black hover:text-blue">
                   Hydraulic Seals in Kerala
                 </Link>
               </li>
@@ -66,18 +66,18 @@ export default function Footer() {
             <ul className="flex flex-col gap-3">
               {productFamilies.map((family) => (
                 <li key={family.slug}>
-                  <Link href={`/products#${family.slug}`} data-cursor="link" className="text-[14px] text-black hover:text-orange">
+                  <Link href={`/products#${family.slug}`} data-cursor="link" className="text-[14px] text-black hover:text-blue">
                     {family.title}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/industries" data-cursor="link" className="text-[14px] text-black hover:text-orange">
+                <Link href="/industries" data-cursor="link" className="text-[14px] text-black hover:text-blue">
                   Industries We Serve
                 </Link>
               </li>
               <li>
-                <Link href="/projects" data-cursor="link" className="text-[14px] text-black hover:text-orange">
+                <Link href="/projects" data-cursor="link" className="text-[14px] text-black hover:text-blue">
                   Our Work
                 </Link>
               </li>
@@ -104,7 +104,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               data-cursor="link"
               data-cursor-surface="dark"
-              className="group inline-flex w-fit items-center gap-2 rounded-full bg-black px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.1em] text-yellow"
+              className="group inline-flex w-fit items-center gap-2 rounded-full bg-olive-deep px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.1em] text-yellow"
             >
               WhatsApp Enquiry
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
@@ -127,7 +127,7 @@ export default function Footer() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <DevGroupLogo size={22} />
             <span>{siteInfo.group}</span>
-            <Link href="/privacy-policy" className="hover:text-orange">
+            <Link href="/privacy-policy" className="hover:text-blue">
               Privacy Policy
             </Link>
             <span className="text-charcoal/30">·</span>
@@ -136,7 +136,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="link"
-              className="hover:text-orange"
+              className="hover:text-blue"
             >
               SEO &amp; Web Design by Dravonix Media Pvt. Ltd.
             </a>

@@ -95,7 +95,7 @@ export default function AboutIntro() {
             {["Hydraulics", "Sealing", "Machining", "Fabrication", "Roofing", "Mobile Works"].map(
               (item, i) => (
                 <div key={item} className="flex items-center gap-2">
-                  <span className="font-heading text-[13px] font-semibold text-orange">
+                  <span className="font-heading text-[13px] font-semibold text-blue">
                     0{i + 1}
                   </span>
                   <span className="text-[13px] font-semibold uppercase tracking-[0.06em] text-black">

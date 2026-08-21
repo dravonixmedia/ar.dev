@@ -34,7 +34,7 @@ export default function MobileHydraulicCTA() {
                 rel="noopener noreferrer"
                 data-cursor="link"
                 data-cursor-surface="dark"
-                className="inline-flex items-center gap-2 rounded-full bg-black px-7 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow"
+                className="inline-flex items-center gap-2 rounded-full bg-olive-deep px-7 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow"
               >
                 <Wrench className="h-4 w-4" /> Request Mobile Service
               </a>

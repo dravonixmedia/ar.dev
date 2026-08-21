@@ -51,7 +51,7 @@ export default function IndustriesPage() {
                   .map((i) => (
                     <span
                       key={i.name}
-                      className="font-heading text-[6vw] font-semibold uppercase leading-none tracking-tight text-black transition-colors hover:text-orange sm:text-[3.4vw] lg:text-[1.9vw]"
+                      className="font-heading text-[6vw] font-semibold uppercase leading-none tracking-tight text-black transition-colors hover:text-blue sm:text-[3.4vw] lg:text-[1.9vw]"
                     >
                       {i.name}
                     </span>

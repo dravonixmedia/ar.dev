@@ -77,7 +77,7 @@ export default function SealingSolutionsPage() {
               <div className="mt-9 grid grid-cols-1 gap-x-8 gap-y-3 border-t border-border pt-8 sm:grid-cols-2">
                 {service.items.map((item) => (
                   <div key={item} className="flex items-center gap-3 border-b border-border py-3">
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue" />
                     <span className="text-[14px] text-charcoal">{item}</span>
                   </div>
                 ))}
