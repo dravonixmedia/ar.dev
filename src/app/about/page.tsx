@@ -6,7 +6,7 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import CompanyStrip from "@/components/sections/home/CompanyStrip";
 import { services } from "@/lib/data/services";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
 const title = "About AR Hydraulics | Industrial Solutions in Kollam, Kerala";
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: "/about" },
-  openGraph: { title, description, images: [defaultOgImage] },
+  openGraph: buildOpenGraph({ path: "/about", title, description }),
 };
 
 export default function AboutPage() {

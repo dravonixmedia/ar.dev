@@ -9,7 +9,7 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { services, getServiceBySlug } from "@/lib/data/services";
 import { legalDisclaimers, siteInfo } from "@/lib/data/site";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { mediaConfig, type ServiceMediaKey } from "@/config/media";
 
@@ -68,7 +68,7 @@ export async function generateMetadata({
     title: { absolute: seo.title },
     description: seo.description,
     alternates: { canonical: `/services/${service.slug}` },
-    openGraph: { title: seo.title, description: seo.description, images: [defaultOgImage] },
+    openGraph: buildOpenGraph({ path: `/services/${service.slug}`, title: seo.title, description: seo.description }),
   };
 }
 

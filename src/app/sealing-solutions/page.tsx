@@ -5,7 +5,7 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { getServiceBySlug } from "@/lib/data/services";
 import { siteInfo } from "@/lib/data/site";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
 const title = "Hydraulic Seals in Kollam, Kerala | AR Hydraulics";
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: "/sealing-solutions" },
-  openGraph: { title, description, images: [defaultOgImage] },
+  openGraph: buildOpenGraph({ path: "/sealing-solutions", title, description }),
 };
 
 export default function SealingSolutionsPage() {

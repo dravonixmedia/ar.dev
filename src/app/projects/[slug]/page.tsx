@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button";
 import { projects, getProjectBySlug } from "@/lib/data/projects";
 import { getServiceBySlug } from "@/lib/data/services";
 import { getProjectMedia } from "@/config/media";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -28,7 +28,7 @@ export async function generateMetadata({
     title: project.title,
     description,
     alternates: { canonical: `/projects/${project.slug}` },
-    openGraph: { title: project.title, description, images: [defaultOgImage] },
+    openGraph: buildOpenGraph({ path: `/projects/${project.slug}`, title: project.title, description }),
   };
 }
 

@@ -78,6 +78,7 @@ export default function QuoteForm() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (status === "redirecting") return;
     if (!validate()) return;
 
     setStatus("redirecting");
@@ -108,6 +109,11 @@ export default function QuoteForm() {
     const subject = encodeURIComponent(`Quote Request — ${form.fullName}`);
     const body = encodeURIComponent(lines);
     window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+
+    // If no mail client is configured, the browser never navigates away and
+    // the button would otherwise stay disabled/stuck forever — reset after
+    // a few seconds so the form is usable again either way.
+    window.setTimeout(() => setStatus("idle"), 3000);
   };
 
   return (
@@ -264,16 +270,20 @@ export default function QuoteForm() {
           using the details provided above.
         </label>
       </div>
-      {errors.consent && <p className="sm:col-span-2 -mt-3 text-[12px] text-error">{errors.consent}</p>}
+      {errors.consent && <p role="alert" className="sm:col-span-2 -mt-3 text-[12px] text-error">{errors.consent}</p>}
 
       <div className="sm:col-span-2">
         <button
           type="submit"
           data-cursor="link"
-          className="inline-flex items-center gap-3 rounded-full bg-olive-deep px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow transition-colors hover:bg-yellow hover:text-black"
+          disabled={status === "redirecting"}
+          className="inline-flex items-center gap-3 rounded-full bg-olive-deep px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow transition-colors hover:bg-yellow hover:text-black disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-olive-deep disabled:hover:text-yellow"
         >
           {status === "redirecting" ? "Opening Your Email App…" : "Submit Enquiry"}
         </button>
+        <span role="status" aria-live="polite" className="sr-only">
+          {status === "redirecting" ? "Opening your email app…" : ""}
+        </span>
         <p className="mt-4 max-w-lg text-[12px] leading-relaxed text-charcoal/60">
           Submitting opens your email app with the enquiry pre-filled to {contact.email}, since a
           server-side form endpoint is not yet configured for this site. For a faster response,
@@ -301,7 +311,7 @@ function Field({
         {label} {required && <span className="text-error">*</span>}
       </label>
       {children}
-      {error && <p className="mt-1.5 text-[12px] text-error">{error}</p>}
+      {error && <p role="alert" className="mt-1.5 text-[12px] text-error">{error}</p>}
     </div>
   );
 }

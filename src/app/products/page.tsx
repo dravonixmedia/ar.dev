@@ -4,7 +4,7 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import CinematicMedia from "@/components/ui/CinematicMedia";
 import { productFamilies, technicalSpecFields } from "@/lib/data/products";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { mediaConfig, type ProductMediaKey } from "@/config/media";
 
 const productMediaKey: Record<string, ProductMediaKey> = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: "/products" },
-  openGraph: { title, description, images: [defaultOgImage] },
+  openGraph: buildOpenGraph({ path: "/products", title, description }),
 };
 
 export default function ProductsPage() {

@@ -6,7 +6,7 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import { contact, formatAddress, addressMapQuery } from "@/lib/data/site";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
 import { mediaConfig } from "@/config/media";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 
 const title = "Contact AR Hydraulics | Kollam, Kerala";
 const description =
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: "/contact" },
-  openGraph: { title, description, images: [defaultOgImage] },
+  openGraph: buildOpenGraph({ path: "/contact", title, description }),
 };
 
 export default function ContactPage() {

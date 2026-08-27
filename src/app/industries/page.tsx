@@ -4,7 +4,7 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import CinematicMedia from "@/components/ui/CinematicMedia";
 import { industries, equipmentManufacturers } from "@/lib/data/industries";
 import { legalDisclaimers } from "@/lib/data/site";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
 const title = "Industries We Serve | AR Hydraulics Kerala";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: "/industries" },
-  openGraph: { title, description, images: [defaultOgImage] },
+  openGraph: buildOpenGraph({ path: "/industries", title, description }),
 };
 
 export default function IndustriesPage() {

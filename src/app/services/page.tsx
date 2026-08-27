@@ -5,7 +5,7 @@ import PageHero from "@/components/sections/PageHero";
 import ServiceGraphic from "@/components/graphics/ServiceGraphic";
 import { services } from "@/lib/data/services";
 import { faqs } from "@/lib/data/faqs";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: "/services" },
-  openGraph: { title, description, images: [defaultOgImage] },
+  openGraph: buildOpenGraph({ path: "/services", title, description }),
 };
 
 export default function ServicesPage() {
@@ -54,7 +54,7 @@ export default function ServicesPage() {
                 className="group flex flex-col justify-between gap-8 rounded-2xl border border-border bg-white p-9 transition-colors hover:bg-olive-deep"
               >
                 <div className="flex items-start justify-between">
-                  <span className="font-heading text-[15px] font-semibold text-blue">
+                  <span className="font-heading text-[15px] font-semibold text-blue group-hover:text-yellow">
                     {service.number}
                   </span>
                   <div className="h-14 w-14 text-black/30 transition-colors group-hover:text-yellow">

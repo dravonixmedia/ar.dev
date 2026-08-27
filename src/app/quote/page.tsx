@@ -4,7 +4,7 @@ import QuoteForm from "@/components/forms/QuoteForm";
 import { contact, formatAddress } from "@/lib/data/site";
 import { Phone, MessageCircle, MapPin } from "lucide-react";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 
 const title = "Request a Hydraulic Service Quote";
 const description =
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: "/quote" },
-  openGraph: { title, description, images: [defaultOgImage] },
+  openGraph: buildOpenGraph({ path: "/quote", title, description }),
 };
 
 export default function QuotePage() {

@@ -6,7 +6,7 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import { projects } from "@/lib/data/projects";
 import { getServiceBySlug } from "@/lib/data/services";
 import { getProjectMedia } from "@/config/media";
-import { defaultOgImage } from "@/lib/data/seo";
+import { buildOpenGraph } from "@/lib/data/seo";
 
 const title = "Our Work";
 const description =
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: "/projects" },
-  openGraph: { title, description, images: [defaultOgImage] },
+  openGraph: buildOpenGraph({ path: "/projects", title, description }),
 };
 
 export default function ProjectsPage() {

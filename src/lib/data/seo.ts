@@ -36,8 +36,36 @@ export const defaultSeo = {
 // have a consistent, real photo instead of the previously-broken
 // /og-image.jpg reference (that file was never actually supplied).
 export const defaultOgImage = {
-  url: `${siteInfo.url}/media/company/contact-workshop-exterior.png`,
+  url: `${siteInfo.url}/media/company/contact-workshop-exterior.webp`,
   width: 1672,
   height: 941,
   alt: "AR Hydraulics and Sealing Solutions workshop exterior in Kollam, Kerala",
 } as const;
+
+// Every page previously built its own `openGraph: { title, description,
+// images }` object, which silently dropped url/siteName/locale/type —
+// those aren't inherited from the root layout's openGraph once a page
+// defines its own. This is the single place that composes a complete,
+// correct Open Graph object per page, from the same title/description/
+// path each page already has for its own <title> and canonical.
+export function buildOpenGraph({
+  path,
+  title,
+  description,
+  image = defaultOgImage,
+}: {
+  path: string;
+  title: string;
+  description: string;
+  image?: typeof defaultOgImage;
+}) {
+  return {
+    type: "website" as const,
+    locale: siteInfo.locale,
+    siteName: siteInfo.name,
+    url: `${siteInfo.url}${path}`,
+    title,
+    description,
+    images: [image],
+  };
+}
