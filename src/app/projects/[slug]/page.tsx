@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AlertTriangle } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import BreadcrumbSchema from "@/components/ui/BreadcrumbSchema";
 import CinematicMedia from "@/components/ui/CinematicMedia";
@@ -62,16 +61,6 @@ export default async function ProjectDetailPage({
             <h1 className="mt-4 font-heading text-[9vw] font-semibold uppercase leading-[0.96] tracking-tight text-black sm:text-[5.5vw] lg:text-[3vw]">
               {project.title}
             </h1>
-
-            {project.isPlaceholder && (
-              <div className="mt-6 flex items-start gap-3 rounded-xl border border-error/30 bg-yellow-soft px-5 py-4">
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-error" />
-                <p className="text-[13px] leading-relaxed text-charcoal">
-                  This project entry is a placeholder illustrating the type of work carried out.
-                  Real project details, images and outcomes will be added once confirmed.
-                </p>
-              </div>
-            )}
 
             <div className="mt-10 flex flex-col gap-8 border-t border-border pt-8">
               <div>
