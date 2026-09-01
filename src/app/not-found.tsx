@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 export default function NotFound() {
   return (
     <section className="flex min-h-[80svh] flex-col items-center justify-center bg-warm px-6 pt-[84px] text-center">
-      <span className="text-[13px] font-semibold uppercase tracking-[0.22em] text-orange">
+      <span className="text-[13px] font-semibold uppercase tracking-[0.22em] text-blue">
         404
       </span>
       <h1 className="mt-5 font-heading text-[16vw] font-semibold uppercase leading-[0.9] tracking-tight text-black sm:text-[10vw] lg:text-[7vw]">
@@ -22,7 +22,7 @@ export default function NotFound() {
           Explore Services
         </Button>
       </div>
-      <Link href="/contact" className="mt-8 text-[13px] font-semibold uppercase tracking-[0.1em] text-charcoal/60 hover:text-orange">
+      <Link href="/contact" className="mt-8 text-[13px] font-semibold uppercase tracking-[0.1em] text-charcoal/60 hover:text-blue">
         Or Contact Us
       </Link>
     </section>

@@ -26,8 +26,8 @@ const initialState: FormState = {
 type Errors = Partial<Record<keyof FormState, string>>;
 
 function inputClass(hasError?: boolean) {
-  return `w-full rounded-xl border bg-white px-4 py-3.5 text-[14px] text-black placeholder:text-charcoal/40 focus:outline-none focus:ring-2 focus:ring-orange/40 ${
-    hasError ? "border-orange" : "border-border"
+  return `w-full rounded-xl border bg-white px-4 py-3.5 text-[14px] text-black placeholder:text-charcoal/40 focus:outline-none focus:ring-2 focus:ring-error/40 ${
+    hasError ? "border-error" : "border-border"
   }`;
 }
 
@@ -57,6 +57,7 @@ export default function ContactForm() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (status === "redirecting") return;
     if (!validate()) return;
     setStatus("redirecting");
 
@@ -77,6 +78,11 @@ export default function ContactForm() {
     const subject = encodeURIComponent(`Contact Enquiry — ${form.name}`);
     const body = encodeURIComponent(lines);
     window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+
+    // If no mail client is configured, the browser never navigates away and
+    // the button would otherwise stay disabled/stuck forever — reset after
+    // a few seconds so the form is usable again either way.
+    window.setTimeout(() => setStatus("idle"), 3000);
   };
 
   return (
@@ -84,26 +90,26 @@ export default function ContactForm() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div>
           <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
-            Name <span className="text-orange">*</span>
+            Name <span className="text-error">*</span>
           </label>
           <input className={inputClass(!!errors.name)} value={form.name} onChange={(e) => update("name", e.target.value)} />
-          {errors.name && <p className="mt-1.5 text-[12px] text-orange">{errors.name}</p>}
+          {errors.name && <p role="alert" className="mt-1.5 text-[12px] text-error">{errors.name}</p>}
         </div>
         <div>
           <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
-            Phone <span className="text-orange">*</span>
+            Phone <span className="text-error">*</span>
           </label>
           <input className={inputClass(!!errors.phone)} value={form.phone} onChange={(e) => update("phone", e.target.value)} type="tel" />
-          {errors.phone && <p className="mt-1.5 text-[12px] text-orange">{errors.phone}</p>}
+          {errors.phone && <p role="alert" className="mt-1.5 text-[12px] text-error">{errors.phone}</p>}
         </div>
       </div>
 
       <div>
         <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
-          Email <span className="text-orange">*</span>
+          Email <span className="text-error">*</span>
         </label>
         <input className={inputClass(!!errors.email)} value={form.email} onChange={(e) => update("email", e.target.value)} type="email" />
-        {errors.email && <p className="mt-1.5 text-[12px] text-orange">{errors.email}</p>}
+        {errors.email && <p role="alert" className="mt-1.5 text-[12px] text-error">{errors.email}</p>}
       </div>
 
       <div>
@@ -126,10 +132,10 @@ export default function ContactForm() {
 
       <div>
         <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
-          Message <span className="text-orange">*</span>
+          Message <span className="text-error">*</span>
         </label>
         <textarea className={inputClass(!!errors.message)} value={form.message} onChange={(e) => update("message", e.target.value)} rows={5} />
-        {errors.message && <p className="mt-1.5 text-[12px] text-orange">{errors.message}</p>}
+        {errors.message && <p role="alert" className="mt-1.5 text-[12px] text-error">{errors.message}</p>}
       </div>
 
       <div className="flex items-start gap-3">
@@ -138,22 +144,26 @@ export default function ContactForm() {
           type="checkbox"
           checked={form.consent}
           onChange={(e) => update("consent", e.target.checked)}
-          className="mt-1 h-4 w-4 shrink-0 rounded border-border accent-orange"
+          className="mt-1 h-4 w-4 shrink-0 rounded border-border accent-blue"
         />
         <label htmlFor="contact-consent" className="text-[13px] leading-relaxed text-charcoal">
           I consent to AR Hydraulics and Sealing Solutions contacting me regarding this enquiry.
         </label>
-        {errors.consent && <p className="text-[12px] text-orange">{errors.consent}</p>}
+        {errors.consent && <p role="alert" className="text-[12px] text-error">{errors.consent}</p>}
       </div>
 
       <div>
         <button
           type="submit"
           data-cursor="link"
-          className="inline-flex items-center gap-3 rounded-full bg-black px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow transition-colors hover:bg-yellow hover:text-black"
+          disabled={status === "redirecting"}
+          className="inline-flex items-center gap-3 rounded-full bg-olive-deep px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow transition-colors hover:bg-yellow hover:text-black disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-olive-deep disabled:hover:text-yellow"
         >
           {status === "redirecting" ? "Opening Your Email App…" : "Send Message"}
         </button>
+        <span role="status" aria-live="polite" className="sr-only">
+          {status === "redirecting" ? "Opening your email app…" : ""}
+        </span>
       </div>
     </form>
   );

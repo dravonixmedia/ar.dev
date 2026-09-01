@@ -6,7 +6,7 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import TextReveal from "@/components/ui/TextReveal";
 import Button from "@/components/ui/Button";
 import CinematicMedia from "@/components/ui/CinematicMedia";
-import { contact } from "@/lib/data/site";
+import { contact, formatAddressShort } from "@/lib/data/site";
 import { mediaConfig } from "@/config/media";
 import { ensureGsapRegistered, gsap } from "@/lib/gsapConfig";
 import { usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
@@ -94,20 +94,24 @@ export default function ContactTeaser() {
                   data-cursor="link"
                   className="flex items-center gap-3 text-[15px] font-semibold text-black"
                 >
-                  <Phone className="h-5 w-5 text-orange" /> {contact.phone}
+                  <Phone className="h-5 w-5 shrink-0 text-blue" /> {contact.phone}
                 </a>
                 <a
                   href={`mailto:${contact.email}`}
                   data-cursor="link"
                   className="flex items-center gap-3 text-[15px] font-semibold text-black"
                 >
-                  <Mail className="h-5 w-5 text-orange" /> {contact.email}
+                  <Mail className="h-5 w-5 shrink-0 text-blue" /> {contact.email}
                 </a>
-                <span className="flex items-start gap-3 text-[14px] text-charcoal">
-                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-orange" />
-                  {contact.address.line1}, {contact.address.line2}, {contact.address.line3},{" "}
-                  {contact.address.city}, {contact.address.state}
-                </span>
+                {contact.addresses.map((address) => (
+                  <span key={address.key} className="flex items-start gap-3 text-[14px] text-charcoal">
+                    <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue" />
+                    <span>
+                      <span className="font-semibold text-black">{address.label}: </span>
+                      {formatAddressShort(address)}
+                    </span>
+                  </span>
+                ))}
               </div>
             </div>
           </div>

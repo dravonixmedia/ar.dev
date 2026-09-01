@@ -6,12 +6,17 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import { projects } from "@/lib/data/projects";
 import { getServiceBySlug } from "@/lib/data/services";
 import { getProjectMedia } from "@/config/media";
+import { buildOpenGraph } from "@/lib/data/seo";
+
+const title = "Our Work";
+const description =
+  "Engineering in action — hydraulic repair, cylinder works, mobile hydraulic works, machining, fabrication and roofing projects.";
 
 export const metadata: Metadata = {
-  title: "Our Work",
-  description:
-    "Engineering in action — hydraulic repair, cylinder works, mobile hydraulic works, machining, fabrication and roofing projects.",
+  title,
+  description,
   alternates: { canonical: "/projects" },
+  openGraph: buildOpenGraph({ path: "/projects", title, description }),
 };
 
 export default function ProjectsPage() {
@@ -40,7 +45,7 @@ export default function ProjectsPage() {
                   />
                   <div className="mt-5 flex items-start justify-between gap-4">
                     <div data-cursor="link">
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue">
                         {project.category}
                       </span>
                       <h2 className="mt-1 font-heading text-[18px] font-semibold uppercase tracking-tight text-black transition-transform duration-300 group-hover:translate-x-1">

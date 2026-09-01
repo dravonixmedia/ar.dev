@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { useIsFinePointer, usePrefersReducedMotion } from "@/lib/hooks/useIsTouchDevice";
 
 // Only large-visual targets (images, showcase areas, draggable zones) get
@@ -24,9 +25,15 @@ export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement | null>(null);
   const ringRef = useRef<HTMLDivElement | null>(null);
   const labelRef = useRef<HTMLSpanElement | null>(null);
+  // Set by the effect below to whatever its current resetCursorState
+  // closure is — the pathname effect calls through this ref rather than
+  // depending on state directly, so a route change never has to re-run
+  // (and re-bind all the listeners of) the main effect.
+  const resetRef = useRef<() => void>(() => {});
   const isFinePointer = useIsFinePointer();
   const reducedMotion = usePrefersReducedMotion();
   const enabled = isFinePointer && !reducedMotion;
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!enabled) {
@@ -52,6 +59,12 @@ export default function CustomCursor() {
     let isLarge = false;
     let currentSurface = "";
     let rafId = 0;
+    // The element currently driving the cursor's label/state. Tracked
+    // separately from the native mouseover/mouseout pair because a route
+    // change (or any DOM removal) unmounts this element without the
+    // browser ever firing a mouseout for it — the pointer hasn't moved,
+    // there's just nothing left where it's hovering.
+    let activeCursorEl: HTMLElement | null = null;
 
     // The dot only fades out for the large filled state (view/explore/
     // drag) — the small default and compact link rings keep it, since a
@@ -85,6 +98,28 @@ export default function CustomCursor() {
       if (hasMoved) setVisible(true);
     };
 
+    const applyState = (state: string, customLabel: string | null) => {
+      isLarge = LARGE_STATES.has(state);
+      const isCompactLink = Boolean(state) && !isLarge;
+      ring.classList.toggle("is-active", isLarge);
+      ring.classList.toggle("is-link", isCompactLink);
+      label.textContent = isLarge ? customLabel || CURSOR_LABELS[state] || "" : "";
+      syncDotOpacity();
+    };
+
+    // The single centralized clear: drops the active target, the label,
+    // the active/link classes, and forces the surface/theme override to
+    // be freshly re-read on the next frame instead of trusting a value
+    // computed against the page that just went away. Called on route
+    // change (see the pathname effect below) and whenever the currently
+    // hovered target is found to have vanished from the DOM.
+    const resetCursorState = () => {
+      activeCursorEl = null;
+      currentSurface = "";
+      applyState("", null);
+    };
+    resetRef.current = resetCursorState;
+
     const loop = () => {
       if (hasMoved) {
         dotX += (mouseX - dotX) * 0.35;
@@ -111,17 +146,16 @@ export default function CustomCursor() {
           ring.classList.toggle("cc-on-dark", onDark);
           dot.classList.toggle("cc-on-dark", onDark);
         }
+
+        // The active target can vanish without ever firing a mouseout —
+        // a route change or any conditional unmount just removes it from
+        // under a pointer that never moved. Catch that here so the label
+        // never survives into a page/state that no longer has it.
+        if (activeCursorEl && !document.contains(activeCursorEl)) {
+          resetCursorState();
+        }
       }
       rafId = requestAnimationFrame(loop);
-    };
-
-    const applyState = (state: string, customLabel: string | null) => {
-      isLarge = LARGE_STATES.has(state);
-      const isCompactLink = Boolean(state) && !isLarge;
-      ring.classList.toggle("is-active", isLarge);
-      ring.classList.toggle("is-link", isCompactLink);
-      label.textContent = isLarge ? customLabel || CURSOR_LABELS[state] || "" : "";
-      syncDotOpacity();
     };
 
     const handleOver = (e: MouseEvent) => {
@@ -136,6 +170,7 @@ export default function CustomCursor() {
 
       const cursorEl = target.closest("[data-cursor]") as HTMLElement | null;
       if (!cursorEl) return;
+      activeCursorEl = cursorEl;
       applyState(cursorEl.getAttribute("data-cursor") || "", cursorEl.getAttribute("data-cursor-label"));
     };
 
@@ -156,6 +191,7 @@ export default function CustomCursor() {
       // Ignore the "out" if we moved to a descendant still inside the same
       // data-cursor element — prevents flicker on nested hover targets.
       if (related && cursorEl.contains(related)) return;
+      if (activeCursorEl === cursorEl) activeCursorEl = null;
       applyState("", null);
     };
 
@@ -176,6 +212,16 @@ export default function CustomCursor() {
       document.documentElement.classList.remove("cursor-active");
     };
   }, [enabled]);
+
+  // Route changes are the main real-world trigger for a vanished target —
+  // force the clear immediately here rather than waiting for the next
+  // animation frame's DOM-containment check, so a stale VIEW/EXPLORE
+  // label from the previous page never has a chance to paint on the new
+  // one. This runs for every navigation regardless of which component
+  // triggered it — no per-section onClick/onMouseLeave patches needed.
+  useEffect(() => {
+    resetRef.current();
+  }, [pathname]);
 
   if (!enabled) return null;
 

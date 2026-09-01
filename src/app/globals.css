@@ -4,17 +4,37 @@
   --font-heading: var(--font-manrope);
   --font-body: var(--font-inter);
 
+  /* Aegean palette — approved client colors (Sunflower Yellow, Aegean
+     Blue, Olive Green, Santorini White) replacing the previous
+     orange/yellow/warm-white identity. --color-black stays literal
+     near-black: it is the site's body/heading ink and hairline-divider
+     color, never a decorative surface, so it is untouched by the
+     rebrand. --color-olive-deep is the new token for solid dark
+     surfaces that used to be plain black (buttons, badges, the mobile
+     nav overlay) — the one place the palette needs a color darker than
+     Olive Green itself. --color-cream is a separate, slightly deeper
+     warm tone (not from the reference palette) used only for the
+     sections that were converted from black to a light "stage" color;
+     kept as-is since it already harmonizes with the new palette. */
   --color-white: #ffffff;
-  --color-warm: #fffdf7;
-  --color-yellow: #f6c515;
-  --color-yellow-light: #fff4bf;
-  --color-yellow-soft: #fff9e3;
-  --color-orange: #f0411e;
+  --color-warm: #f7f4ec;
+  --color-yellow: #f2c400;
+  --color-yellow-light: #fcf1c4;
+  --color-yellow-soft: #fef9e3;
+  --color-cream: #f0e6d2;
+  --color-blue: #0077c8;
+  --color-olive: #486b1f;
+  --color-olive-deep: #335012;
+  /* The old brand orange doubled as the form-validation/warning color.
+     Blue can't do that job (it doesn't read as "error"), so that hex is
+     kept here under its own semantic name for required-field markers,
+     validation errors, and warning callouts specifically. */
+  --color-error: #f0411e;
   --color-black: #100f0d;
   --color-charcoal: #34363a;
   --color-grey: #f4f5f6;
   --color-border: #e2e5e8;
-  --color-blue-soft: #eaf7fc;
+  --color-blue-soft: #e8f3fb;
 
   --breakpoint-xs: 30rem;
 }
@@ -94,7 +114,7 @@ button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--color-orange);
+  outline: 2px solid var(--color-blue);
   outline-offset: 3px;
 }
 

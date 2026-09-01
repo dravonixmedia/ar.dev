@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { X, Phone, Send } from "lucide-react";
 import { primaryNav } from "@/lib/data/nav";
-import { contact } from "@/lib/data/site";
+import { contact, formatAddressShort } from "@/lib/data/site";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
 import { gsap } from "@/lib/gsapConfig";
 import Logo from "./Logo";
@@ -52,7 +52,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
   return (
     <div
       ref={panelRef}
-      className="fixed inset-0 z-[100] hidden flex-col bg-black text-white"
+      className="fixed inset-0 z-[100] hidden flex-col bg-olive-deep text-white"
       style={{ display: "none" }}
       data-cursor-theme="dark"
       role="dialog"
@@ -71,7 +71,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
         </button>
       </div>
 
-      <nav className="flex flex-1 flex-col justify-center gap-1 overflow-y-auto px-6 py-8">
+      <nav className="flex flex-1 flex-col justify-start gap-1 overflow-y-auto px-6 py-6">
         {primaryNav.map((link, i) => (
           <div key={link.href} className="reveal-line shrink-0 border-b border-white/10">
             <Link
@@ -80,7 +80,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
               }}
               href={link.href}
               onClick={onClose}
-              className="block py-3 text-[13vw] leading-[1] font-heading font-semibold uppercase tracking-tight text-white transition-colors hover:text-yellow xs:text-[44px]"
+              className="block py-2.5 text-[clamp(26px,8vw,38px)] leading-[1.05] font-heading font-semibold uppercase tracking-tight text-white transition-colors hover:text-yellow"
             >
               {link.label}
             </Link>
@@ -89,15 +89,20 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
       </nav>
 
       <div className="flex flex-col gap-4 border-t border-white/10 px-6 py-6">
-        <div className="text-[13px] text-white/60">
-          {contact.address.line1}, {contact.address.line2}, {contact.address.city}, {contact.address.state}
+        <div className="flex flex-col gap-1 text-[13px] text-white/60">
+          {contact.addresses.map((address) => (
+            <div key={address.key}>
+              <span className="text-white/40">{address.label}: </span>
+              {formatAddressShort(address)}
+            </div>
+          ))}
         </div>
         <div className="flex flex-wrap gap-3">
           <a
             href={buildTelUrl()}
             className="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/10 px-5 py-3.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-white"
           >
-            <Phone className="h-4 w-4" /> Call Now
+            <Phone className="h-4 w-4 shrink-0" /> Call Now
           </a>
           <a
             href={buildWhatsappUrl()}
@@ -105,7 +110,7 @@ export default function MobileNav({ open, onClose }: { open: boolean; onClose: (
             rel="noopener noreferrer"
             className="flex flex-1 items-center justify-center gap-2 rounded-full bg-yellow px-5 py-3.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-black"
           >
-            <Send className="h-4 w-4" /> WhatsApp
+            <Send className="h-4 w-4 shrink-0" /> WhatsApp
           </a>
         </div>
         <Link

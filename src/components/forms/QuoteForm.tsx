@@ -45,8 +45,8 @@ const initialState: FormState = {
 type Errors = Partial<Record<keyof FormState, string>>;
 
 function inputClass(hasError?: boolean) {
-  return `w-full rounded-xl border bg-white px-4 py-3.5 text-[14px] text-black placeholder:text-charcoal/40 focus:outline-none focus:ring-2 focus:ring-orange/40 ${
-    hasError ? "border-orange" : "border-border"
+  return `w-full rounded-xl border bg-white px-4 py-3.5 text-[14px] text-black placeholder:text-charcoal/40 focus:outline-none focus:ring-2 focus:ring-error/40 ${
+    hasError ? "border-error" : "border-border"
   }`;
 }
 
@@ -78,6 +78,7 @@ export default function QuoteForm() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (status === "redirecting") return;
     if (!validate()) return;
 
     setStatus("redirecting");
@@ -108,6 +109,11 @@ export default function QuoteForm() {
     const subject = encodeURIComponent(`Quote Request — ${form.fullName}`);
     const body = encodeURIComponent(lines);
     window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+
+    // If no mail client is configured, the browser never navigates away and
+    // the button would otherwise stay disabled/stuck forever — reset after
+    // a few seconds so the form is usable again either way.
+    window.setTimeout(() => setStatus("idle"), 3000);
   };
 
   return (
@@ -246,7 +252,7 @@ export default function QuoteForm() {
                 : ""
             )
           }
-          className="block w-full text-[13px] text-charcoal file:mr-4 file:rounded-full file:border-0 file:bg-black file:px-5 file:py-2.5 file:text-[12px] file:font-semibold file:uppercase file:tracking-[0.08em] file:text-yellow"
+          className="block w-full text-[13px] text-charcoal file:mr-4 file:rounded-full file:border-0 file:bg-olive-deep file:px-5 file:py-2.5 file:text-[12px] file:font-semibold file:uppercase file:tracking-[0.08em] file:text-yellow"
         />
         {fileNote && <p className="mt-2 text-[12px] text-charcoal/60">{fileNote}</p>}
       </div>
@@ -257,23 +263,27 @@ export default function QuoteForm() {
           type="checkbox"
           checked={form.consent}
           onChange={(e) => update("consent", e.target.checked)}
-          className="mt-1 h-4 w-4 shrink-0 rounded border-border accent-orange"
+          className="mt-1 h-4 w-4 shrink-0 rounded border-border accent-blue"
         />
         <label htmlFor="consent" className="text-[13px] leading-relaxed text-charcoal">
           I consent to AR Hydraulics and Sealing Solutions contacting me regarding this enquiry
           using the details provided above.
         </label>
       </div>
-      {errors.consent && <p className="sm:col-span-2 -mt-3 text-[12px] text-orange">{errors.consent}</p>}
+      {errors.consent && <p role="alert" className="sm:col-span-2 -mt-3 text-[12px] text-error">{errors.consent}</p>}
 
       <div className="sm:col-span-2">
         <button
           type="submit"
           data-cursor="link"
-          className="inline-flex items-center gap-3 rounded-full bg-black px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow transition-colors hover:bg-yellow hover:text-black"
+          disabled={status === "redirecting"}
+          className="inline-flex items-center gap-3 rounded-full bg-olive-deep px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow transition-colors hover:bg-yellow hover:text-black disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-olive-deep disabled:hover:text-yellow"
         >
           {status === "redirecting" ? "Opening Your Email App…" : "Submit Enquiry"}
         </button>
+        <span role="status" aria-live="polite" className="sr-only">
+          {status === "redirecting" ? "Opening your email app…" : ""}
+        </span>
         <p className="mt-4 max-w-lg text-[12px] leading-relaxed text-charcoal/60">
           Submitting opens your email app with the enquiry pre-filled to {contact.email}, since a
           server-side form endpoint is not yet configured for this site. For a faster response,
@@ -298,10 +308,10 @@ function Field({
   return (
     <div className="mb-6 sm:mb-0">
       <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
-        {label} {required && <span className="text-orange">*</span>}
+        {label} {required && <span className="text-error">*</span>}
       </label>
       {children}
-      {error && <p className="mt-1.5 text-[12px] text-orange">{error}</p>}
+      {error && <p role="alert" className="mt-1.5 text-[12px] text-error">{error}</p>}
     </div>
   );
 }

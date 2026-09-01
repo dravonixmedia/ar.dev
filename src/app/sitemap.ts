@@ -9,6 +9,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteInfo.url;
   const now = new Date();
 
+  // /privacy-policy is deliberately excluded — its page metadata sets
+  // `robots: { index: false }`, and listing a noindex page in the
+  // sitemap sends crawlers a conflicting signal.
   const staticRoutes = [
     "",
     "/about",
@@ -19,7 +22,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/projects",
     "/quote",
     "/contact",
-    "/privacy-policy",
   ].map((path) => ({
     url: `${base}${path}`,
     lastModified: now,

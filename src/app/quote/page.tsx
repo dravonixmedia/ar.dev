@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/sections/PageHero";
 import QuoteForm from "@/components/forms/QuoteForm";
-import { contact } from "@/lib/data/site";
-import { Phone, MessageCircle } from "lucide-react";
+import { contact, formatAddress } from "@/lib/data/site";
+import { Phone, MessageCircle, MapPin } from "lucide-react";
 import { buildTelUrl, buildWhatsappUrl } from "@/lib/whatsapp";
+import { buildOpenGraph } from "@/lib/data/seo";
+
+const title = "Request a Hydraulic Service Quote";
+const description =
+  "Request a quote from AR Hydraulics for hydraulic repair, sealing, machining, fabrication or roofing requirements across Kerala.";
 
 export const metadata: Metadata = {
-  title: "Request a Quote",
-  description:
-    "Request a quote from AR Hydraulics and Sealing Solutions for hydraulic, sealing, machining, fabrication or roofing requirements.",
+  title,
+  description,
   alternates: { canonical: "/quote" },
+  openGraph: buildOpenGraph({ path: "/quote", title, description }),
 };
 
 export default function QuotePage() {
@@ -36,7 +41,7 @@ export default function QuotePage() {
                   Prefer To Talk Directly?
                 </h2>
                 <a href={buildTelUrl()} data-cursor="link" className="flex items-center gap-3 text-[14px] font-semibold text-black">
-                  <Phone className="h-5 w-5 text-orange" /> {contact.phone}
+                  <Phone className="h-5 w-5 shrink-0 text-blue" /> {contact.phone}
                 </a>
                 <a
                   href={buildWhatsappUrl()}
@@ -45,12 +50,19 @@ export default function QuotePage() {
                   data-cursor="link"
                   className="flex items-center gap-3 text-[14px] font-semibold text-black"
                 >
-                  <MessageCircle className="h-5 w-5 text-orange" /> WhatsApp Enquiry
+                  <MessageCircle className="h-5 w-5 shrink-0 text-blue" /> WhatsApp Enquiry
                 </a>
-                <p className="text-[13px] leading-relaxed text-charcoal">
-                  {contact.address.line1}, {contact.address.line2}, {contact.address.line3},{" "}
-                  {contact.address.city}, {contact.address.state}
-                </p>
+                <div className="flex flex-col gap-3">
+                  {contact.addresses.map((address) => (
+                    <div key={address.key} className="flex items-start gap-3">
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-blue" />
+                      <p className="text-[13px] leading-relaxed text-charcoal">
+                        <span className="font-semibold text-black">{address.label}: </span>
+                        {formatAddress(address)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

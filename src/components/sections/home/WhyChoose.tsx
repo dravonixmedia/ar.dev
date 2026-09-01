@@ -33,14 +33,14 @@ export default function WhyChoose() {
                 data-cursor="link"
                 className={cn(
                   "flex items-center justify-between gap-4 border-t border-border py-5 text-left transition-colors last:border-b",
-                  active === i && "text-orange"
+                  active === i && "text-blue"
                 )}
               >
                 <span className="flex items-center gap-4">
                   <span
                     className={cn(
                       "font-heading text-[13px] font-semibold transition-colors",
-                      active === i ? "text-orange" : "text-charcoal/30"
+                      active === i ? "text-blue" : "text-charcoal/30"
                     )}
                   >
                     0{i + 1}
@@ -57,7 +57,7 @@ export default function WhyChoose() {
                 <span
                   className={cn(
                     "h-2 w-2 shrink-0 rounded-full transition-colors",
-                    active === i ? "bg-orange" : "bg-transparent"
+                    active === i ? "bg-blue" : "bg-transparent"
                   )}
                 />
               </button>

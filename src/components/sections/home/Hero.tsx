@@ -240,7 +240,7 @@ export default function Hero() {
         }}
       >
         <div ref={eyebrowRef} className="mb-4 flex items-center gap-2.5 lg:mb-5">
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue" />
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-charcoal lg:text-[11px]">
             Hydraulics · Sealing · Engineering
           </span>
@@ -268,7 +268,7 @@ export default function Hero() {
           delay={0.5}
           duration={0.45}
           lines={["From hydraulics to fabrication."]}
-          className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-orange lg:text-[14px]"
+          className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-blue lg:text-[14px]"
         />
 
         <p
@@ -278,7 +278,7 @@ export default function Hero() {
           AR Hydraulics and Sealing Solutions provides hydraulic repair, mobile hydraulic
           services, sealing solutions, hydraulic testing, component support, precision
           machining, structural fabrication and roofing solutions for industrial and
-          heavy-equipment requirements.
+          heavy-equipment requirements across Kerala.
         </p>
 
         <div ref={ctaRef} className="mt-7 flex flex-wrap items-center gap-3 lg:gap-4">

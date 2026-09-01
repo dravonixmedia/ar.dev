@@ -4,6 +4,7 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import CinematicMedia from "@/components/ui/CinematicMedia";
 import { productFamilies, technicalSpecFields } from "@/lib/data/products";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { mediaConfig, type ProductMediaKey } from "@/config/media";
 
 const productMediaKey: Record<string, ProductMediaKey> = {
@@ -12,11 +13,15 @@ const productMediaKey: Record<string, ProductMediaKey> = {
   "industrial-components": "industrial",
 };
 
+const title = "Hydraulic & Sealing Products | AR Hydraulics Kerala";
+const description =
+  "Sealing products, hydraulic products and industrial components supplied by AR Hydraulics, serving customers across Kerala from Kollam.";
+
 export const metadata: Metadata = {
-  title: "Products",
-  description:
-    "Sealing products, hydraulic products and industrial components supplied by AR Hydraulics and Sealing Solutions, Kollam.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/products" },
+  openGraph: buildOpenGraph({ path: "/products", title, description }),
 };
 
 export default function ProductsPage() {
@@ -60,7 +65,7 @@ export default function ProductsPage() {
                 <div className="mt-10 grid grid-cols-1 gap-x-8 gap-y-4 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-3">
                   {family.items.map((item) => (
                     <div key={item} className="flex items-center gap-3 border-b border-border py-3">
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue" />
                       <span className="text-[14px] text-charcoal">{item}</span>
                     </div>
                   ))}
@@ -71,13 +76,13 @@ export default function ProductsPage() {
         </section>
       ))}
 
-      <section className="bg-black py-20 text-white lg:py-24" data-cursor-theme="dark">
+      <section className="bg-cream py-20 text-black lg:py-24">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
-          <SectionLabel light>Technical Specifications</SectionLabel>
+          <SectionLabel>Technical Specifications</SectionLabel>
           <h2 className="mt-6 max-w-2xl font-heading text-[7vw] font-semibold uppercase leading-[0.98] tracking-tight sm:text-[4vw] lg:text-[2.2vw]">
             Share Your Component Details
           </h2>
-          <p className="mt-5 max-w-xl text-[14px] leading-relaxed text-white/60">
+          <p className="mt-5 max-w-xl text-[14px] leading-relaxed text-charcoal">
             For an accurate quotation, share the relevant specifications for your requirement —
             our team will confirm suitability against your application.
           </p>
@@ -85,7 +90,7 @@ export default function ProductsPage() {
             {technicalSpecFields.map((field) => (
               <span
                 key={field}
-                className="rounded-full border border-white/15 px-4 py-2 text-[12px] uppercase tracking-[0.06em] text-white/70"
+                className="rounded-full border border-black/15 px-4 py-2 text-[12px] uppercase tracking-[0.06em] text-charcoal"
               >
                 {field}
               </span>

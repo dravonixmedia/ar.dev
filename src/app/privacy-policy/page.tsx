@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <p className="mt-6">
             For any privacy-related questions or requests, contact us at{" "}
-            <a href={`mailto:${contact.email}`} className="text-orange underline">
+            <a href={`mailto:${contact.email}`} className="text-blue underline">
               {contact.email}
             </a>{" "}
             or {contact.phone}.

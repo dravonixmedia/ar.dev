@@ -4,12 +4,12 @@ import TechLine from "@/components/graphics/TechLine";
 
 export default function QuoteCTA() {
   return (
-    <section className="relative overflow-hidden bg-black py-24 text-white lg:py-32" data-cursor-theme="dark">
-      <TechLine className="pointer-events-none absolute inset-x-0 top-10 h-8 w-full text-white/10" />
-      <TechLine className="pointer-events-none absolute inset-x-0 bottom-10 h-8 w-full text-white/10" />
+    <section className="relative overflow-hidden bg-cream py-24 text-black lg:py-32">
+      <TechLine className="pointer-events-none absolute inset-x-0 top-10 h-8 w-full text-black/10" />
+      <TechLine className="pointer-events-none absolute inset-x-0 bottom-10 h-8 w-full text-black/10" />
 
       <div className="relative mx-auto max-w-[1440px] px-6 text-center lg:px-10">
-        <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-yellow">
+        <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-blue">
           Get Started
         </span>
         <TextReveal
@@ -17,7 +17,7 @@ export default function QuoteCTA() {
           lines={["READY TO SOLVE YOUR", "INDUSTRIAL REQUIREMENT?"]}
           className="mx-auto mt-6 max-w-3xl font-heading text-[9vw] font-semibold uppercase leading-[0.96] tracking-tight sm:text-[6vw] lg:text-[3.6vw]"
         />
-        <p className="mx-auto mt-7 max-w-xl text-[15px] leading-relaxed text-white/60">
+        <p className="mx-auto mt-7 max-w-xl text-[15px] leading-relaxed text-charcoal">
           Share your requirement — hydraulic, sealing, machining, fabrication or roofing — and our
           team will get back with the right solution.
         </p>
@@ -25,7 +25,7 @@ export default function QuoteCTA() {
           <Button href="/quote" variant="secondary">
             Request a Quote
           </Button>
-          <Button href="/contact" variant="outlineLight" magnetic={false}>
+          <Button href="/contact" variant="outline" magnetic={false}>
             Contact Us
           </Button>
         </div>

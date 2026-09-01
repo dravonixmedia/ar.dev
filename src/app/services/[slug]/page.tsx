@@ -9,12 +9,49 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { services, getServiceBySlug } from "@/lib/data/services";
 import { legalDisclaimers, siteInfo } from "@/lib/data/site";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { mediaConfig, type ServiceMediaKey } from "@/config/media";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
 }
+
+// SEO-specific title/description per service, kept separate from the
+// shared `services.ts` data (service.title/summary also feed nav, page
+// headings etc. and must stay UI-focused, not keyword-focused).
+const seoContent: Record<string, { title: string; description: string }> = {
+  "hydraulic-fluid-power": {
+    title: "Hydraulic Cylinder Repair & Fluid Power | AR Hydraulics",
+    description:
+      "Hydraulic cylinder, power pack, pump, motor and valve repair, testing and system support for industrial and heavy equipment across Kerala.",
+  },
+  "mobile-hydraulic-works": {
+    title: "Mobile Hydraulic Services | AR Hydraulics Kerala",
+    description:
+      "On-site hydraulic inspection, fault finding, hose replacement and emergency repair assistance for equipment across Kerala, wherever the work is.",
+  },
+  "sealing-solutions": {
+    title: "Hydraulic Sealing Solutions | AR Hydraulics",
+    description:
+      "O-rings, piston seals, rod seals, wipers and custom sealing components for hydraulic and industrial applications across Kerala.",
+  },
+  "precision-machining": {
+    title: "Precision Machining & Workshop Services | AR Hydraulics",
+    description:
+      "Turning, boring, cylinder barrel honing and thread repair for custom shafts, bushes, rods and hydraulic components across Kerala.",
+  },
+  "structural-fabrication": {
+    title: "Structural Fabrication Services | AR Hydraulics",
+    description:
+      "Industrial welding, structural steel fabrication and custom frameworks, gates and metal structures for sites across Kerala.",
+  },
+  "roofing-works": {
+    title: "Industrial Roofing Works | AR Hydraulics",
+    description:
+      "Structural roofing fabrication, sheet installation, trusses and supporting steel works for industrial sites across Kerala.",
+  },
+};
 
 export async function generateMetadata({
   params,
@@ -25,11 +62,13 @@ export async function generateMetadata({
   const service = getServiceBySlug(slug);
   if (!service) return {};
 
+  const seo = seoContent[service.slug] ?? { title: service.title, description: service.summary };
+
   return {
-    title: service.title,
-    description: service.summary,
+    title: { absolute: seo.title },
+    description: seo.description,
     alternates: { canonical: `/services/${service.slug}` },
-    openGraph: { title: `${service.title} | ${siteInfo.shortName}`, description: service.summary },
+    openGraph: buildOpenGraph({ path: `/services/${service.slug}`, title: seo.title, description: seo.description }),
   };
 }
 
@@ -47,8 +86,8 @@ export default async function ServiceDetailPage({
     "@type": "Service",
     name: service.title,
     description: service.description,
-    provider: { "@type": "LocalBusiness", name: siteInfo.name },
-    areaServed: "Kollam, Kerala, India",
+    provider: { "@id": `${siteInfo.url}/#organization` },
+    areaServed: "Kerala, India",
   };
 
   const related = services.filter((s) => s.slug !== service.slug).slice(0, 3);
@@ -72,7 +111,7 @@ export default async function ServiceDetailPage({
           <div className="mt-8 grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-10">
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3">
-                <span className="h-1.5 w-1.5 rounded-full bg-orange" />
+                <span className="h-1.5 w-1.5 rounded-full bg-blue" />
                 <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-charcoal">
                   {service.number} · {service.title}
                 </span>
@@ -83,7 +122,7 @@ export default async function ServiceDetailPage({
                 className="mt-6 font-heading text-[10vw] font-semibold uppercase leading-[0.94] tracking-tight text-black sm:text-[6vw] lg:text-[3.6vw]"
               />
               {service.supportingHeadline && (
-                <p className="mt-4 text-[16px] font-semibold uppercase tracking-[0.06em] text-orange">
+                <p className="mt-4 text-[16px] font-semibold uppercase tracking-[0.06em] text-blue">
                   {service.supportingHeadline}
                 </p>
               )}
@@ -102,7 +141,7 @@ export default async function ServiceDetailPage({
                   data-cursor="link"
                   className="inline-flex items-center gap-2 rounded-full border border-black/15 px-7 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-black"
                 >
-                  <MessageCircle className="h-4 w-4" /> WhatsApp Enquiry
+                  <MessageCircle className="h-4 w-4 shrink-0" /> WhatsApp Enquiry
                 </a>
               </div>
 
@@ -133,7 +172,7 @@ export default async function ServiceDetailPage({
           <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-4 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-3">
             {service.items.map((item) => (
               <div key={item} className="flex items-center gap-3 border-b border-border py-3">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue" />
                 <span className="text-[14px] text-charcoal">{item}</span>
               </div>
             ))}

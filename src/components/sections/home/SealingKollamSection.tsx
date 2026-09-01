@@ -19,10 +19,10 @@ export default function SealingKollamSection() {
           </div>
 
           <div className="lg:col-span-7">
-            <SectionLabel>Hydraulic Seals in Kollam</SectionLabel>
+            <SectionLabel>Hydraulic Seals in Kerala</SectionLabel>
             <TextReveal
               as="h2"
-              lines={["HYDRAULIC SEALS", "IN KOLLAM."]}
+              lines={["HYDRAULIC SEALS", "IN KERALA."]}
               className="mt-5 font-heading text-[8vw] font-semibold uppercase leading-[0.98] tracking-tight text-black sm:text-[5vw] lg:text-[2.6vw]"
             />
             <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-charcoal">

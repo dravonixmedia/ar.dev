@@ -7,8 +7,8 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import MobileActionBar from "@/components/layout/MobileActionBar";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
-import { siteInfo, contact } from "@/lib/data/site";
-import { defaultSeo } from "@/lib/data/seo";
+import { siteInfo, contact, credentials } from "@/lib/data/site";
+import { defaultSeo, defaultOgImage } from "@/lib/data/seo";
 
 // Premium industrial-editorial pairing: Manrope for display/headings
 // (cleaner, less condensed than the previous Space Grotesk/Sora combo),
@@ -41,31 +41,49 @@ export const metadata: Metadata = {
     siteName: siteInfo.name,
     title: defaultSeo.homeTitle,
     description: defaultSeo.homeDescription,
+    images: [defaultOgImage],
   },
   twitter: {
     card: "summary_large_image",
     title: defaultSeo.homeTitle,
     description: defaultSeo.homeDescription,
+    images: [defaultOgImage.url],
   },
   alternates: {
     canonical: "/",
   },
 };
 
+// LocalBusiness stays the single source-of-truth entity — areaServed
+// here reflects the physical/local business scope (Kollam, Kerala).
+// Individual Service schemas (services/[slug], sealing-solutions) link
+// back to this same entity via @id rather than duplicating a bare
+// LocalBusiness object, and set their own areaServed to reflect that
+// services are marketed to customers across Kerala.
+//
+// The GST-registered address is used here rather than the delivery
+// address — schema.org LocalBusiness represents one principal location,
+// and this is the one that matches the business's GST registration.
+// Looked up by key, not array position — contact.addresses is ordered
+// for on-page display (Address 01/02), not by which one is registered.
+const registeredAddress = contact.addresses.find((a) => a.key === "registered")!;
+
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "@id": `${siteInfo.url}/#organization`,
   name: siteInfo.name,
-  image: `${siteInfo.url}/og-image.jpg`,
+  image: defaultOgImage.url,
   url: siteInfo.url,
   telephone: contact.phone,
   email: contact.email,
+  taxID: credentials.gstin,
   address: {
     "@type": "PostalAddress",
-    streetAddress: `${contact.address.line1}, ${contact.address.line2}, ${contact.address.line3}`,
-    addressLocality: contact.address.city,
-    addressRegion: contact.address.state,
+    streetAddress: registeredAddress.lines.join(", "),
+    addressLocality: registeredAddress.city,
+    addressRegion: registeredAddress.state,
+    postalCode: registeredAddress.pincode,
     addressCountry: "IN",
   },
   parentOrganization: {
@@ -74,6 +92,15 @@ const organizationSchema = {
   },
   areaServed: "Kollam, Kerala, India",
   sameAs: [],
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${siteInfo.url}/#website`,
+  name: siteInfo.name,
+  url: siteInfo.url,
+  publisher: { "@id": `${siteInfo.url}/#organization` },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -86,6 +113,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
       <body className="flex min-h-full flex-col bg-warm text-black">

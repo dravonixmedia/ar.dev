@@ -6,14 +6,18 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import CompanyStrip from "@/components/sections/home/CompanyStrip";
 import { services } from "@/lib/data/services";
-import { credentials } from "@/lib/data/site";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
+const title = "About AR Hydraulics | Industrial Solutions in Kollam, Kerala";
+const description =
+  "AR Hydraulics is a DEV Group industrial workshop in Kollam, Kerala, covering hydraulics, sealing, machining, fabrication and roofing across six disciplines.";
+
 export const metadata: Metadata = {
-  title: "About Us",
-  description:
-    "AR Hydraulics and Sealing Solutions is an industrial engineering and workshop solutions provider under DEV Group, covering hydraulics, sealing, machining, fabrication and roofing.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/about" },
+  openGraph: buildOpenGraph({ path: "/about", title, description }),
 };
 
 export default function AboutPage() {
@@ -45,34 +49,35 @@ export default function AboutPage() {
                 className="mt-6 font-heading text-[7vw] font-semibold uppercase leading-[0.98] tracking-tight text-black sm:text-[4.5vw] lg:text-[2.4vw]"
               />
               <p className="mt-6 text-[15px] leading-relaxed text-charcoal">
-                We are positioned as a broader industrial engineering and workshop solutions
-                provider — supporting customers across hydraulics, mobile hydraulic works,
-                sealing, precision machining, structural fabrication and roofing works, so one
-                team can be approached for a wide range of workshop and site requirements.
+                We are positioned as a broader industrial hydraulic maintenance company and
+                workshop solutions provider — supporting customers across hydraulics (including
+                excavators and other construction equipment), mobile hydraulic works, sealing,
+                precision machining, structural fabrication and roofing works, so one team can be
+                approached for a wide range of workshop and site requirements.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-black py-20 text-white lg:py-28" data-cursor-theme="dark">
+      <section className="bg-cream py-20 text-black lg:py-28">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 p-8">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-yellow">
+            <div className="rounded-2xl border border-black/10 p-8">
+              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-blue">
                 Mission
               </span>
-              <p className="mt-4 text-[15px] leading-relaxed text-white/70">
+              <p className="mt-4 text-[15px] leading-relaxed text-charcoal">
                 To provide dependable, technically sound hydraulic, sealing, machining,
                 fabrication and roofing support that keeps customer equipment and operations
                 running.
               </p>
             </div>
-            <div className="rounded-2xl border border-white/10 p-8">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-yellow">
+            <div className="rounded-2xl border border-black/10 p-8">
+              <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-blue">
                 Vision
               </span>
-              <p className="mt-4 text-[15px] leading-relaxed text-white/70">
+              <p className="mt-4 text-[15px] leading-relaxed text-charcoal">
                 To be the workshop customers turn to first for integrated industrial engineering
                 support — from a single component to a complete fabrication requirement.
               </p>
@@ -92,7 +97,7 @@ export default function AboutPage() {
           <div className="mt-14 grid grid-cols-1 divide-y divide-border border-t border-border sm:grid-cols-2 lg:grid-cols-3 lg:divide-x">
             {services.map((service) => (
               <div key={service.slug} className="flex flex-col gap-3 px-1 py-8 lg:px-8">
-                <span className="font-heading text-[13px] font-semibold text-orange">
+                <span className="font-heading text-[13px] font-semibold text-blue">
                   {service.number}
                 </span>
                 <h3 className="font-heading text-[18px] font-semibold uppercase text-black">
@@ -111,12 +116,6 @@ export default function AboutPage() {
       </section>
 
       <CompanyStrip />
-
-      <section className="bg-grey py-16">
-        <div className="mx-auto max-w-[1440px] px-6 text-[13px] text-charcoal/70 lg:px-10">
-          Company credentials — KLMSME: {credentials.klmsme} · UDYAM: {credentials.udyam}
-        </div>
-      </section>
     </>
   );
 }

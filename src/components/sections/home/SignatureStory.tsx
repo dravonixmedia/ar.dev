@@ -74,7 +74,7 @@ export default function SignatureStory() {
         const st = ScrollTrigger.create({
           trigger: section,
           start: "top top",
-          end: "+=220%",
+          end: "+=340%",
           scrub: 0.6,
           onUpdate: (self) => {
             const progress = self.progress;
@@ -97,7 +97,7 @@ export default function SignatureStory() {
   const activeStep = processSteps[active];
 
   return (
-    <section ref={sectionRef} className="relative bg-yellow-soft lg:h-[320vh]">
+    <section ref={sectionRef} className="relative bg-yellow-soft lg:h-[440vh]">
       <div className="flex flex-col justify-center overflow-hidden py-20 lg:sticky lg:top-0 lg:min-h-screen lg:py-16">
         <div className="mx-auto w-full max-w-[1440px] px-6 lg:px-10">
           <SectionLabel>How We Work</SectionLabel>
@@ -136,7 +136,7 @@ export default function SignatureStory() {
               <div className="absolute left-0 right-0 top-[26px] h-px bg-black/10" />
               <div
                 ref={lineRef}
-                className="absolute left-0 right-0 top-[26px] h-px origin-left scale-x-0 bg-orange"
+                className="absolute left-0 right-0 top-[26px] h-px origin-left scale-x-0 bg-blue"
               />
               <div className="grid grid-cols-4 gap-6">
                 {processSteps.map((step, i) => (
@@ -144,7 +144,7 @@ export default function SignatureStory() {
                     <span
                       className={cn(
                         "h-3.5 w-3.5 rounded-full border-2 transition-colors duration-300",
-                        i <= active ? "border-orange bg-orange" : "border-black/20 bg-warm"
+                        i <= active ? "border-blue bg-blue" : "border-black/20 bg-warm"
                       )}
                     />
                     <span
@@ -172,7 +172,7 @@ export default function SignatureStory() {
                   frameClassName="rounded-2xl"
                 />
                 <div className="mt-5 flex items-start gap-4">
-                  <span className="font-heading text-[13px] font-semibold text-orange">
+                  <span className="font-heading text-[13px] font-semibold text-blue">
                     {step.number}
                   </span>
                   <div>

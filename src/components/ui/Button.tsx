@@ -22,10 +22,10 @@ interface ButtonProps {
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary: "bg-black text-yellow group-hover:bg-yellow group-hover:text-black",
-  secondary: "bg-yellow text-black group-hover:bg-black group-hover:text-yellow",
+  primary: "bg-olive-deep text-yellow group-hover:bg-yellow group-hover:text-black",
+  secondary: "bg-yellow text-black group-hover:bg-olive-deep group-hover:text-yellow",
   outline:
-    "bg-transparent text-black border border-black/20 group-hover:bg-black group-hover:text-yellow group-hover:border-black",
+    "bg-transparent text-black border border-black/20 group-hover:bg-olive-deep group-hover:text-yellow group-hover:border-olive-deep",
   outlineLight:
     "bg-transparent text-white border border-white/25 group-hover:bg-yellow group-hover:text-black group-hover:border-yellow",
   ghost: "bg-transparent text-black border border-black/0",
@@ -33,8 +33,8 @@ const variantClasses: Record<Variant, string> = {
 
 const fillColor: Record<Variant, string> = {
   primary: "bg-yellow",
-  secondary: "bg-black",
-  outline: "bg-black",
+  secondary: "bg-olive-deep",
+  outline: "bg-olive-deep",
   outlineLight: "bg-yellow",
   ghost: "bg-yellow",
 };

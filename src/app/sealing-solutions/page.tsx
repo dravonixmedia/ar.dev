@@ -5,13 +5,18 @@ import CinematicMedia from "@/components/ui/CinematicMedia";
 import Button from "@/components/ui/Button";
 import { getServiceBySlug } from "@/lib/data/services";
 import { siteInfo } from "@/lib/data/site";
+import { buildOpenGraph } from "@/lib/data/seo";
 import { mediaConfig } from "@/config/media";
 
+const title = "Hydraulic Seals in Kollam, Kerala | AR Hydraulics";
+const description =
+  "Hydraulic seals in Kollam, Kerala — O-rings, piston seals, rod seals, wipers, backup rings and custom sealing components from AR Hydraulics.";
+
 export const metadata: Metadata = {
-  title: "Hydraulic Seals in Kollam | Sealing Solutions",
-  description:
-    "Hydraulic seals in Kollam — O-rings, piston seals, rod seals, wipers, backup rings and custom sealing components from AR Hydraulics and Sealing Solutions.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/sealing-solutions" },
+  openGraph: buildOpenGraph({ path: "/sealing-solutions", title, description }),
 };
 
 export default function SealingSolutionsPage() {
@@ -21,7 +26,7 @@ export default function SealingSolutionsPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "Hydraulic and Industrial Sealing Solutions",
-    provider: { "@type": "LocalBusiness", name: siteInfo.name },
+    provider: { "@id": `${siteInfo.url}/#organization` },
     areaServed: "Kollam, Kerala, India",
     description: service.description,
   };
@@ -35,7 +40,7 @@ export default function SealingSolutionsPage() {
 
       <PageHero
         crumbs={[{ label: "Home", href: "/" }, { label: "Sealing Solutions" }]}
-        label="Hydraulic Seals in Kollam"
+        label="Hydraulic Seals in Kerala"
         lines={["HYDRAULIC & INDUSTRIAL", "SEALING SOLUTIONS."]}
         intro="Looking for hydraulic seals in Kollam? AR Hydraulics and Sealing Solutions supports hydraulic, pneumatic and industrial sealing requirements including O-rings, seal kits, piston seals, rod seals, hydraulic wipers, backup rings and specialised sealing components."
       >
@@ -72,7 +77,7 @@ export default function SealingSolutionsPage() {
               <div className="mt-9 grid grid-cols-1 gap-x-8 gap-y-3 border-t border-border pt-8 sm:grid-cols-2">
                 {service.items.map((item) => (
                   <div key={item} className="flex items-center gap-3 border-b border-border py-3">
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" />
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue" />
                     <span className="text-[14px] text-charcoal">{item}</span>
                   </div>
                 ))}

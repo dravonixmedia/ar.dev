@@ -46,7 +46,7 @@ export default function ProjectsSection() {
                 />
                 <div className="mt-5 flex items-start justify-between gap-4">
                   <div data-cursor="link">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue">
                       {project.category}
                     </span>
                     <h3 className="mt-1 font-heading text-[20px] font-semibold uppercase tracking-tight text-black transition-transform duration-300 group-hover:translate-x-1">

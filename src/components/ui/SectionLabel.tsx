@@ -11,7 +11,7 @@ export default function SectionLabel({
 }) {
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      <span className={cn("h-[6px] w-[6px] rounded-full", light ? "bg-yellow" : "bg-orange")} />
+      <span className={cn("h-[6px] w-[6px] rounded-full", light ? "bg-yellow" : "bg-blue")} />
       <span
         className={cn(
           "text-[12px] font-semibold uppercase tracking-[0.22em]",
