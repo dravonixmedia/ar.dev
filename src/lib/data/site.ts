@@ -38,7 +38,7 @@ export const contact = {
   ],
   phone: "+91 81297 41233",
   phoneRaw: "918129741233",
-  email: "arhydraulicssolutions@gmail.com",
+  email: "sales@arhydraulicssolutions.com",
   website: "www.arhydraulicssolutions.com",
 } as const;
 
