@@ -4,7 +4,7 @@ export const siteInfo = {
   group: "DEV GROUP",
   tagline: "One Workshop. Complete Industrial Solutions.",
   descriptor: "Hydraulics · Mobile Works · Sealing · Machining · Fabrication · Roofing",
-  url: "https://arx.dravonix.dev",
+  url: "https://arhydraulicssolutions.com",
   legacyUrl: "https://www.arhydraulicssolutions.com",
   locale: "en_IN",
 } as const;
