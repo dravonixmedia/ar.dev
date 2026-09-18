@@ -28,18 +28,6 @@ export function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-// btoa() operates on a binary string; chunking avoids blowing the call stack
-// via String.fromCharCode(...bytes) on multi-MB files.
-export function arrayBufferToBase64(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer);
-  const chunkSize = 0x8000;
-  let binary = "";
-  for (let i = 0; i < bytes.length; i += chunkSize) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
-  }
-  return btoa(binary);
-}
-
 // Confirms the file's actual bytes match a known signature for one of the
 // allowed types, rather than trusting the extension or browser-supplied MIME.
 export function sniffMimeType(bytes: Uint8Array): string | null {

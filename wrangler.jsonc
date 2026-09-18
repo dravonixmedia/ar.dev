@@ -10,7 +10,6 @@
     "run_worker_first": ["/api/*"]
   },
   "vars": {
-    "EMAIL_FROM": "AR Hydraulics Website <enquiries@mail.arhydraulicssolutions.com>",
     "CONTACT_FORM_RECIPIENT": "sales@arhydraulicssolutions.com"
   }
 }

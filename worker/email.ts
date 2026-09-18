@@ -1,5 +1,5 @@
 import { escapeHtml } from "./util";
-import type { ContactSubmission, ParsedAttachment, QuoteSubmission, Submission } from "./types";
+import type { ContactSubmission, QuoteSubmission, Submission } from "./types";
 
 function formatTimestamp(date: Date): string {
   try {
@@ -44,26 +44,47 @@ function htmlBlock(heading: string, rows: Row[]): string {
     <table role="presentation" style="border-collapse:collapse;width:100%;font-size:14px;">${rowsHtml}</table>`;
 }
 
+// Contact info goes first and is visually emphasised — this is how staff
+// reach the customer back, since Zoho's send-message API has no per-message
+// Reply-To (see worker/zoho.ts); Reply-To on the notification stays Zoho's
+// own default (sales@arhydraulicssolutions.com).
+function htmlContactBlock(rows: Row[]): string {
+  const present = rows.filter((r) => r.value);
+  if (present.length === 0) return "";
+  const rowsHtml = present
+    .map(
+      (r) =>
+        `<tr><td style="padding:5px 12px 5px 0;color:#555;white-space:nowrap;vertical-align:top;font-weight:600;">${escapeHtml(
+          r.label
+        )}</td><td style="padding:5px 0;color:#111;font-weight:600;">${escapeHtml(r.value)}</td></tr>`
+    )
+    .join("");
+  return `
+    <div style="background:#fdf6e3;border:1px solid #e8d9a0;border-radius:8px;padding:16px 20px;margin:0 0 20px;">
+      <h2 style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8a6d1f;margin:0 0 10px;">Customer Contact</h2>
+      <table role="presentation" style="border-collapse:collapse;width:100%;font-size:15px;">${rowsHtml}</table>
+    </div>`;
+}
+
 function buildContact(submission: ContactSubmission, submittedAt: Date) {
   const subject = "New Website Enquiry — AR Hydraulics";
   const heading = "NEW WEBSITE ENQUIRY — GENERAL CONTACT FORM";
 
-  const customerRows: Row[] = [
+  const contactRows: Row[] = [
     { label: "Name", value: submission.name },
-    { label: "Phone", value: submission.phone },
     { label: "Email", value: submission.email },
+    { label: "Phone", value: submission.phone },
   ];
   const requirementRows: Row[] = [{ label: "Service", value: submission.serviceCategory }];
-  const messageText = submission.message;
   const timestamp = formatTimestamp(submittedAt);
 
   const text = [
     heading,
     "AR HYDRAULICS & SEALING SOLUTIONS",
     "",
-    textBlock("CUSTOMER DETAILS", customerRows),
+    textBlock("CUSTOMER CONTACT", contactRows),
     textBlock("REQUIREMENT", requirementRows),
-    submission.message && `MESSAGE\n\n${messageText}`,
+    submission.message && `MESSAGE\n\n${submission.message}`,
     `Submitted: ${timestamp}`,
     "Source: AR Hydraulics Website",
   ]
@@ -76,7 +97,7 @@ function buildContact(submission: ContactSubmission, submittedAt: Date) {
         heading
       )}</p>
       <h1 style="font-size:18px;margin:0 0 16px;">AR Hydraulics &amp; Sealing Solutions</h1>
-      ${htmlBlock("Customer Details", customerRows)}
+      ${htmlContactBlock(contactRows)}
       ${htmlBlock("Requirement", requirementRows)}
       ${
         submission.message
@@ -96,15 +117,15 @@ function buildQuote(submission: QuoteSubmission, submittedAt: Date) {
   const subject = "New Quote Request — AR Hydraulics";
   const heading = "NEW WEBSITE ENQUIRY — QUOTE / ENQUIRY FORM";
 
-  const customerRows: Row[] = [
+  const contactRows: Row[] = [
     { label: "Name", value: submission.fullName },
-    { label: "Company", value: submission.companyName },
+    { label: "Email", value: submission.email },
     { label: "Phone", value: submission.phone },
     { label: "WhatsApp", value: submission.whatsapp },
-    { label: "Email", value: submission.email },
     { label: "Location", value: submission.location },
   ];
   const requirementRows: Row[] = [
+    { label: "Company", value: submission.companyName },
     { label: "Service", value: submission.serviceRequired },
     { label: "Product", value: submission.productRequired },
     { label: "Equipment Brand", value: submission.equipmentBrand },
@@ -122,7 +143,7 @@ function buildQuote(submission: QuoteSubmission, submittedAt: Date) {
     heading,
     "AR HYDRAULICS & SEALING SOLUTIONS",
     "",
-    textBlock("CUSTOMER DETAILS", customerRows),
+    textBlock("CUSTOMER CONTACT", contactRows),
     textBlock("REQUIREMENT", requirementRows),
     submission.applicationDetails && `APPLICATION DETAILS\n\n${submission.applicationDetails}`,
     submission.message && `MESSAGE\n\n${submission.message}`,
@@ -139,7 +160,7 @@ function buildQuote(submission: QuoteSubmission, submittedAt: Date) {
         heading
       )}</p>
       <h1 style="font-size:18px;margin:0 0 16px;">AR Hydraulics &amp; Sealing Solutions</h1>
-      ${htmlBlock("Customer Details", customerRows)}
+      ${htmlContactBlock(contactRows)}
       ${htmlBlock("Requirement", requirementRows)}
       ${
         submission.applicationDetails
@@ -163,43 +184,10 @@ function buildQuote(submission: QuoteSubmission, submittedAt: Date) {
   return { subject, html, text };
 }
 
+// Returns both an HTML and a plain-text rendering. Only `html` is actually
+// transmitted (Zoho's send-message API takes one `mailFormat` with a single
+// `content` field, not an html+text multipart pair) — `text` is kept for
+// our own tests/diagnostics and as groundwork if a future format needs it.
 export function buildEmailContent(submission: Submission, submittedAt: Date) {
   return submission.formType === "contact" ? buildContact(submission, submittedAt) : buildQuote(submission, submittedAt);
-}
-
-interface SendEmailArgs {
-  apiKey: string;
-  from: string;
-  to: string;
-  replyTo: string;
-  subject: string;
-  html: string;
-  text: string;
-  attachments: ParsedAttachment[];
-}
-
-// Calls Resend's HTTPS API directly (no SDK) — Workers-compatible fetch(),
-// zero new runtime dependency.
-export async function sendViaResend(args: SendEmailArgs): Promise<{ ok: true } | { ok: false; status: number }> {
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${args.apiKey}`,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      from: args.from,
-      to: [args.to],
-      reply_to: args.replyTo,
-      subject: args.subject,
-      html: args.html,
-      text: args.text,
-      attachments: args.attachments.map((a) => ({ filename: a.filename, content: a.base64 })),
-    }),
-  });
-
-  if (!res.ok) {
-    return { ok: false, status: res.status };
-  }
-  return { ok: true };
 }

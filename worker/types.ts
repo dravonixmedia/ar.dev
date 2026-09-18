@@ -1,9 +1,11 @@
 export interface Env {
   ASSETS: Fetcher;
-  EMAIL_API_KEY: string;
   TURNSTILE_SECRET_KEY: string;
-  EMAIL_FROM: string;
   CONTACT_FORM_RECIPIENT: string;
+  ZOHO_CLIENT_ID: string;
+  ZOHO_CLIENT_SECRET: string;
+  ZOHO_REFRESH_TOKEN: string;
+  ZOHO_ACCOUNT_ID: string;
 }
 
 export type FormType = "contact" | "quote";
@@ -11,7 +13,7 @@ export type FormType = "contact" | "quote";
 export interface ParsedAttachment {
   filename: string;
   mimeType: string;
-  base64: string;
+  bytes: ArrayBuffer;
 }
 
 export interface ContactSubmission {

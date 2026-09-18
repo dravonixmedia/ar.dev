@@ -1,5 +1,6 @@
-import { buildEmailContent, sendViaResend } from "./email";
+import { buildEmailContent } from "./email";
 import { verifyTurnstile } from "./turnstile";
+import { deliverViaZoho } from "./zoho";
 import type { ContactSubmission, Env, ParsedAttachment, QuoteSubmission } from "./types";
 import {
   ALLOWED_EXTENSIONS,
@@ -7,7 +8,6 @@ import {
   MAX_FILES,
   MAX_FILE_SIZE,
   MAX_TOTAL_SIZE,
-  arrayBufferToBase64,
   cleanString,
   extensionOf,
   isValidEmail,
@@ -82,7 +82,7 @@ async function handleContact(form: FormData, env: Env): Promise<Response> {
   }
 
   const submission: ContactSubmission = { formType: "contact", name, phone, email, serviceCategory, message };
-  return deliver(submission, email, [], env);
+  return deliver(submission, [], env);
 }
 
 async function handleQuote(form: FormData, env: Env): Promise<Response> {
@@ -143,7 +143,7 @@ async function handleQuote(form: FormData, env: Env): Promise<Response> {
     attachments.push({
       filename: sanitizeFilename(file.name),
       mimeType: sniffed,
-      base64: arrayBufferToBase64(buffer),
+      bytes: buffer,
     });
   }
 
@@ -165,30 +165,20 @@ async function handleQuote(form: FormData, env: Env): Promise<Response> {
     message,
     attachments,
   };
-  return deliver(submission, email, attachments, env);
+  return deliver(submission, attachments, env);
 }
 
 async function deliver(
   submission: ContactSubmission | QuoteSubmission,
-  replyTo: string,
   attachments: ParsedAttachment[],
   env: Env
 ): Promise<Response> {
-  const { subject, html, text } = buildEmailContent(submission, new Date());
+  const { subject, html } = buildEmailContent(submission, new Date());
 
-  const result = await sendViaResend({
-    apiKey: env.EMAIL_API_KEY,
-    from: env.EMAIL_FROM,
-    to: env.CONTACT_FORM_RECIPIENT,
-    replyTo,
-    subject,
-    html,
-    text,
-    attachments,
-  });
+  const result = await deliverViaZoho(env, { subject, html, attachments });
 
   if (!result.ok) {
-    console.error("enquiry delivery failed", { formType: submission.formType, providerStatus: result.status });
+    console.error("enquiry delivery failed", { formType: submission.formType, reason: result.reason, status: result.status });
     return jsonResponse({ ok: false, reason: "provider_error" }, 502);
   }
 
