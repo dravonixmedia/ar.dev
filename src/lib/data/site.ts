@@ -5,7 +5,6 @@ export const siteInfo = {
   tagline: "One Workshop. Complete Industrial Solutions.",
   descriptor: "Hydraulics · Mobile Works · Sealing · Machining · Fabrication · Roofing",
   url: "https://arhydraulicssolutions.com",
-  legacyUrl: "https://www.arhydraulicssolutions.com",
   locale: "en_IN",
 } as const;
 
@@ -39,7 +38,6 @@ export const contact = {
   phone: "+91 81297 41233",
   phoneRaw: "918129741233",
   email: "sales@arhydraulicssolutions.com",
-  website: "www.arhydraulicssolutions.com",
 } as const;
 
 export type Address = (typeof contact.addresses)[number];
