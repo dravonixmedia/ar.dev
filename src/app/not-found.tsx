@@ -1,5 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+
+// A nonexistent path has no single canonical URL and shouldn't advertise the
+// homepage's — and it shouldn't inherit the homepage's Open Graph/title
+// either, since without an override this segment inherits the root layout's
+// metadata (including its canonical "/" and og:url). `alternates: {}` and
+// `openGraph: {}` replace those inherited objects outright rather than
+// merging into them, per Next.js's per-segment metadata resolution.
+//
+// No `robots` field here: Next.js already injects `noindex` for this route
+// unconditionally, and adding our own stacks a second, redundant
+// <meta name="robots"> tag rather than replacing it.
+export const metadata: Metadata = {
+  title: "Page Not Found",
+  description: "The page you're looking for doesn't exist or may have moved.",
+  alternates: {},
+  openGraph: {},
+};
 
 export default function NotFound() {
   return (
