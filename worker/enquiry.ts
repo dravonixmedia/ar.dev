@@ -1,5 +1,5 @@
 import { buildEmailContent } from "./email";
-import { verifyTurnstile, type TurnstileOutcome } from "./turnstile";
+import { verifyTurnstile } from "./turnstile";
 import { deliverViaZoho } from "./zoho";
 import type { ContactSubmission, Env, ParsedAttachment, QuoteSubmission } from "./types";
 import {
@@ -53,9 +53,13 @@ export async function handleEnquiry(request: Request, env: Env): Promise<Respons
 
   const turnstileToken = cleanString(form.get("turnstileToken"), 4000);
   const remoteIp = request.headers.get("CF-Connecting-IP");
-  const turnstileOutcome = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET_KEY, remoteIp);
-  if (turnstileOutcome !== "success") {
-    console.error(`[enquiry] ${TURNSTILE_DIAGNOSTIC_CODE[turnstileOutcome]}`);
+  const turnstileResult = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET_KEY, remoteIp);
+  if (turnstileResult.outcome !== "success") {
+    if (turnstileResult.outcome === "http_error") {
+      console.error(`[enquiry] TURNSTILE_HTTP_ERROR status=${turnstileResult.status}`);
+    } else {
+      console.error(`[enquiry] ${TURNSTILE_DIAGNOSTIC_CODE[turnstileResult.outcome]}`);
+    }
     return jsonResponse({ ok: false, reason: "turnstile_failed" }, 400);
   }
 
@@ -70,13 +74,14 @@ export async function handleEnquiry(request: Request, env: Env): Promise<Respons
   return jsonResponse({ ok: false, reason: "invalid_form_type" }, 400);
 }
 
-// Maps a non-success Turnstile outcome to its closed-set diagnostic code.
-// "success" never reaches this lookup (guarded by the caller).
-const TURNSTILE_DIAGNOSTIC_CODE: Record<Exclude<TurnstileOutcome, "success">, string> = {
+// Maps a non-success, non-http_error Turnstile outcome to its closed-set
+// diagnostic code. "success" and "http_error" are handled by the caller
+// directly (the latter carries a numeric status logged separately).
+const TURNSTILE_DIAGNOSTIC_CODE: Record<"token_missing" | "verify_failed" | "network_error" | "json_parse_error", string> = {
   token_missing: "TURNSTILE_TOKEN_MISSING",
   verify_failed: "TURNSTILE_VERIFY_FAILED",
   network_error: "TURNSTILE_VERIFY_NETWORK_ERROR",
-  response_error: "TURNSTILE_VERIFY_RESPONSE_ERROR",
+  json_parse_error: "TURNSTILE_JSON_PARSE_ERROR",
 };
 
 async function handleContact(form: FormData, env: Env): Promise<Response> {
