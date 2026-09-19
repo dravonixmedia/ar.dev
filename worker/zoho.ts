@@ -133,7 +133,7 @@ export async function deliverViaZoho(
 ): Promise<DeliveryResult> {
   const tokenResult = await refreshAccessToken(env);
   if (!tokenResult.ok) {
-    console.error("zoho token refresh failed", { status: tokenResult.status, error: tokenResult.error });
+    console.error("[enquiry] DELIVERY_FAILED", { stage: "token_refresh_failed", status: tokenResult.status });
     return { ok: false, reason: "token_refresh_failed", status: tokenResult.status };
   }
 
@@ -141,7 +141,7 @@ export async function deliverViaZoho(
   for (const file of args.attachments) {
     const result = await uploadAttachment(env, tokenResult.token, file);
     if (!result.ok) {
-      console.error("zoho attachment upload failed", { status: result.status });
+      console.error("[enquiry] DELIVERY_FAILED", { stage: "attachment_upload_failed", status: result.status });
       return { ok: false, reason: "attachment_upload_failed", status: result.status };
     }
     uploaded.push(result.attachment);
@@ -153,7 +153,7 @@ export async function deliverViaZoho(
     attachments: uploaded,
   });
   if (!sendResult.ok) {
-    console.error("zoho send failed", { status: sendResult.status });
+    console.error("[enquiry] DELIVERY_FAILED", { stage: "send_failed", status: sendResult.status });
     return { ok: false, reason: "send_failed", status: sendResult.status };
   }
 

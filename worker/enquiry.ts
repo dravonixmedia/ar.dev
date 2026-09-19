@@ -1,5 +1,5 @@
 import { buildEmailContent } from "./email";
-import { verifyTurnstile } from "./turnstile";
+import { verifyTurnstile, type TurnstileOutcome } from "./turnstile";
 import { deliverViaZoho } from "./zoho";
 import type { ContactSubmission, Env, ParsedAttachment, QuoteSubmission } from "./types";
 import {
@@ -40,6 +40,7 @@ export async function handleEnquiry(request: Request, env: Env): Promise<Respons
   try {
     form = await request.formData();
   } catch {
+    console.error("[enquiry] INVALID_FORM_DATA");
     return jsonResponse({ ok: false, reason: "invalid_form_data" }, 400);
   }
 
@@ -52,8 +53,9 @@ export async function handleEnquiry(request: Request, env: Env): Promise<Respons
 
   const turnstileToken = cleanString(form.get("turnstileToken"), 4000);
   const remoteIp = request.headers.get("CF-Connecting-IP");
-  const turnstileOk = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET_KEY, remoteIp);
-  if (!turnstileOk) {
+  const turnstileOutcome = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET_KEY, remoteIp);
+  if (turnstileOutcome !== "success") {
+    console.error(`[enquiry] ${TURNSTILE_DIAGNOSTIC_CODE[turnstileOutcome]}`);
     return jsonResponse({ ok: false, reason: "turnstile_failed" }, 400);
   }
 
@@ -64,8 +66,18 @@ export async function handleEnquiry(request: Request, env: Env): Promise<Respons
   if (formType === "quote") {
     return handleQuote(form, env);
   }
+  console.error("[enquiry] INVALID_FORM_TYPE");
   return jsonResponse({ ok: false, reason: "invalid_form_type" }, 400);
 }
+
+// Maps a non-success Turnstile outcome to its closed-set diagnostic code.
+// "success" never reaches this lookup (guarded by the caller).
+const TURNSTILE_DIAGNOSTIC_CODE: Record<Exclude<TurnstileOutcome, "success">, string> = {
+  token_missing: "TURNSTILE_TOKEN_MISSING",
+  verify_failed: "TURNSTILE_VERIFY_FAILED",
+  network_error: "TURNSTILE_VERIFY_NETWORK_ERROR",
+  response_error: "TURNSTILE_VERIFY_RESPONSE_ERROR",
+};
 
 async function handleContact(form: FormData, env: Env): Promise<Response> {
   const name = cleanString(form.get("name"), SHORT_MAX);
@@ -75,9 +87,11 @@ async function handleContact(form: FormData, env: Env): Promise<Response> {
   const message = cleanString(form.get("message"), LONG_MAX);
 
   if (!name || !phone || !email || !message) {
+    console.error("[enquiry] VALIDATION_FAILED");
     return jsonResponse({ ok: false, reason: "validation_failed" }, 400);
   }
   if (!isValidEmail(email)) {
+    console.error("[enquiry] INVALID_EMAIL");
     return jsonResponse({ ok: false, reason: "invalid_email" }, 400);
   }
 
@@ -102,15 +116,18 @@ async function handleQuote(form: FormData, env: Env): Promise<Response> {
   const message = cleanString(form.get("message"), LONG_MAX);
 
   if (!fullName || !phone || !email || !serviceRequired || !message) {
+    console.error("[enquiry] VALIDATION_FAILED");
     return jsonResponse({ ok: false, reason: "validation_failed" }, 400);
   }
   if (!isValidEmail(email)) {
+    console.error("[enquiry] INVALID_EMAIL");
     return jsonResponse({ ok: false, reason: "invalid_email" }, 400);
   }
 
   const files = form.getAll("attachments").filter((v): v is File => v instanceof File && v.size > 0);
 
   if (files.length > MAX_FILES) {
+    console.error("[enquiry] TOO_MANY_FILES");
     return jsonResponse({ ok: false, reason: "too_many_files" }, 400);
   }
 
@@ -119,24 +136,29 @@ async function handleQuote(form: FormData, env: Env): Promise<Response> {
 
   for (const file of files) {
     if (file.size > MAX_FILE_SIZE) {
+      console.error("[enquiry] FILE_TOO_LARGE");
       return jsonResponse({ ok: false, reason: "file_too_large" }, 400);
     }
     totalSize += file.size;
     if (totalSize > MAX_TOTAL_SIZE) {
+      console.error("[enquiry] TOTAL_FILE_SIZE_EXCEEDED");
       return jsonResponse({ ok: false, reason: "payload_too_large" }, 413);
     }
 
     const ext = extensionOf(file.name);
     if (!ALLOWED_EXTENSIONS.includes(ext)) {
+      console.error("[enquiry] FILE_TYPE_NOT_ALLOWED");
       return jsonResponse({ ok: false, reason: "file_type_not_allowed" }, 400);
     }
     if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+      console.error("[enquiry] FILE_TYPE_NOT_ALLOWED");
       return jsonResponse({ ok: false, reason: "file_type_not_allowed" }, 400);
     }
 
     const buffer = await file.arrayBuffer();
     const sniffed = sniffMimeType(new Uint8Array(buffer));
     if (!sniffed || sniffed !== file.type) {
+      console.error("[enquiry] FILE_CONTENT_MISMATCH");
       return jsonResponse({ ok: false, reason: "file_content_mismatch" }, 400);
     }
 
@@ -178,10 +200,10 @@ async function deliver(
   const result = await deliverViaZoho(env, { subject, html, attachments });
 
   if (!result.ok) {
-    console.error("enquiry delivery failed", { formType: submission.formType, reason: result.reason, status: result.status });
+    console.error("[enquiry] DELIVERY_FAILED");
     return jsonResponse({ ok: false, reason: "provider_error" }, 502);
   }
 
-  console.log("enquiry delivered", { formType: submission.formType });
+  console.log("[enquiry] ENQUIRY_DELIVERED");
   return jsonResponse({ ok: true }, 200);
 }
