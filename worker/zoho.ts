@@ -13,10 +13,41 @@ interface TokenResponse {
   error?: string;
 }
 
+type TokenRefreshResult = { ok: true; token: string } | { ok: false; status?: number };
+
+// Zoho's own documented OAuth error identifiers, mapped to closed-set
+// diagnostic codes. Only a match against this fixed allowlist is ever
+// logged — the raw `error` string from Zoho is read for comparison only
+// and never itself written to a log.
+const ZOHO_OAUTH_ERROR_CODE: Record<string, string> = {
+  invalid_client: "ZOHO_OAUTH_ERROR_INVALID_CLIENT",
+  invalid_client_secret: "ZOHO_OAUTH_ERROR_INVALID_CLIENT_SECRET",
+  invalid_grant: "ZOHO_OAUTH_ERROR_INVALID_GRANT",
+  invalid_code: "ZOHO_OAUTH_ERROR_INVALID_CODE",
+  invalid_token: "ZOHO_OAUTH_ERROR_INVALID_TOKEN",
+};
+
 // Exchanges the long-lived refresh token for a short-lived access token.
 // Called once per request — deliberately no caching/KV in this first pass
 // (traffic is low; a cache can be added later without changing this shape).
-async function refreshAccessToken(env: Env): Promise<{ ok: true; token: string } | { ok: false; status: number; error?: string }> {
+//
+// Every early return here logs only a fixed diagnostic code (plus, where
+// safe, the numeric HTTP status) — never a credential, never the raw Zoho
+// response body, never a Zoho error string that isn't on the allowlist above.
+async function refreshAccessToken(env: Env): Promise<TokenRefreshResult> {
+  if (!env.ZOHO_CLIENT_ID) {
+    console.error("[enquiry] ZOHO_CONFIG_CLIENT_ID_MISSING");
+    return { ok: false };
+  }
+  if (!env.ZOHO_CLIENT_SECRET) {
+    console.error("[enquiry] ZOHO_CONFIG_CLIENT_SECRET_MISSING");
+    return { ok: false };
+  }
+  if (!env.ZOHO_REFRESH_TOKEN) {
+    console.error("[enquiry] ZOHO_CONFIG_REFRESH_TOKEN_MISSING");
+    return { ok: false };
+  }
+
   const body = new URLSearchParams();
   body.set("grant_type", "refresh_token");
   body.set("client_id", env.ZOHO_CLIENT_ID);
@@ -29,13 +60,34 @@ async function refreshAccessToken(env: Env): Promise<{ ok: true; token: string }
     body,
   });
 
-  // Zoho's OAuth endpoint sometimes returns HTTP 200 with an "error" field
-  // instead of a non-2xx status, so both are checked.
-  const data = (await res.json().catch(() => ({}))) as TokenResponse;
-  if (!res.ok || !data.access_token) {
-    return { ok: false, status: res.status, error: data.error };
+  if (!res.ok) {
+    console.error(`[enquiry] ZOHO_OAUTH_HTTP_ERROR status=${res.status}`);
+    return { ok: false, status: res.status };
   }
-  return { ok: true, token: data.access_token };
+
+  // Zoho's OAuth endpoint sometimes returns HTTP 200 with an "error" field
+  // instead of a non-2xx status — handled explicitly below rather than
+  // folded into one condition, so a JSON parse failure, a recognized OAuth
+  // error, an unrecognized one, and a body with neither are distinguishable.
+  let data: TokenResponse;
+  try {
+    data = (await res.json()) as TokenResponse;
+  } catch {
+    console.error("[enquiry] ZOHO_OAUTH_JSON_PARSE_ERROR");
+    return { ok: false, status: res.status };
+  }
+
+  if (data.access_token) {
+    return { ok: true, token: data.access_token };
+  }
+
+  if (typeof data.error === "string") {
+    const code = ZOHO_OAUTH_ERROR_CODE[data.error.toLowerCase()];
+    console.error(`[enquiry] ${code ?? "ZOHO_OAUTH_ERROR_UNRECOGNIZED"}`);
+  } else {
+    console.error("[enquiry] ZOHO_OAUTH_NO_ACCESS_TOKEN");
+  }
+  return { ok: false, status: res.status };
 }
 
 interface UploadResponse {
