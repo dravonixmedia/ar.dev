@@ -19,6 +19,19 @@ function timingSafeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
+// The only diagnostic detail ever shown on the failure page — a closed set
+// of fixed, non-sensitive classification strings. Never derived from an
+// exception message, a Zoho response body, or any other dynamic/untrusted
+// value.
+type DiagnosticCode =
+  | "MISSING_PARAMETERS"
+  | "STATE_INVALID"
+  | "TOKEN_EXCHANGE_FAILED"
+  | "REFRESH_TOKEN_MISSING"
+  | "ACCOUNT_LOOKUP_FAILED"
+  | "MAILBOX_NOT_FOUND"
+  | "INTERNAL_ERROR";
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -35,10 +48,11 @@ function htmlResponse(status: number, bodyHtml: string): Response {
   });
 }
 
-// Generic on purpose — used for every failure path (missing/invalid state,
-// missing code, token exchange failure, account lookup failure, mailbox
-// not found) so the browser never learns which one occurred.
-function failureResponse(): Response {
+// Generic on purpose — the page text never varies by failure cause. The
+// only thing that varies is `code`, a fixed classification string from the
+// closed DiagnosticCode set — never an exception message, never anything
+// derived from Zoho's response body, the incoming request, or a secret.
+function failureResponse(code: DiagnosticCode): Response {
   return htmlResponse(
     400,
     `<!doctype html>
@@ -47,6 +61,7 @@ function failureResponse(): Response {
 <body style="font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; color: #111;">
 <h1 style="font-size: 20px;">Setup failed</h1>
 <p>The request could not be completed. Generate a fresh authorization code and try again, or check the setup configuration.</p>
+<p style="margin-top:16px; font-size:13px; color:#555;">Diagnostic code: <code>${code}</code></p>
 </body>
 </html>`
   );
@@ -135,15 +150,18 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 // in a `data` field: {"status":{"code":200,...},"data":[{accountId,...}]}
 // (confirmed against Zoho's own "Get all accounts of a user" doc page).
 // A bare array is tolerated as a fallback in case a future API version
-// drops the wrapper.
-function extractAccountList(json: unknown): Record<string, unknown>[] {
+// drops the wrapper. Returns `ok: false` when the shape doesn't match
+// either form — that's a lookup failure (ACCOUNT_LOOKUP_FAILED), distinct
+// from a well-formed list that just doesn't contain the target mailbox
+// (MAILBOX_NOT_FOUND).
+function extractAccountList(json: unknown): { ok: true; accounts: Record<string, unknown>[] } | { ok: false } {
   if (Array.isArray(json)) {
-    return json.filter(isRecord);
+    return { ok: true, accounts: json.filter(isRecord) };
   }
   if (isRecord(json) && Array.isArray(json.data)) {
-    return json.data.filter(isRecord);
+    return { ok: true, accounts: json.data.filter(isRecord) };
   }
-  return [];
+  return { ok: false };
 }
 
 // The account's own address field is NOT reliably pinned down by primary
@@ -193,10 +211,22 @@ async function findAccountId(accessToken: string): Promise<AccountLookupResult> 
     return { ok: false, reason: "lookup_failed", status: res.status };
   }
 
-  const json = await res.json().catch(() => null);
-  const accounts = json === null ? [] : extractAccountList(json);
+  let json: unknown;
+  try {
+    json = await res.json();
+  } catch {
+    // Malformed/unparseable response body — a lookup failure, not "not found".
+    return { ok: false, reason: "lookup_failed", status: res.status };
+  }
 
-  for (const account of accounts) {
+  const extraction = extractAccountList(json);
+  if (!extraction.ok) {
+    // Parsed fine but didn't match either documented shape — same
+    // classification as a parse failure: the lookup itself didn't succeed.
+    return { ok: false, reason: "lookup_failed", status: res.status };
+  }
+
+  for (const account of extraction.accounts) {
     if (accountMatchesTarget(account, TARGET_MAILBOX) && typeof account.accountId === "string") {
       return { ok: true, accountId: account.accountId };
     }
@@ -207,42 +237,51 @@ async function findAccountId(accessToken: string): Promise<AccountLookupResult> 
 
 // Every early return here logs at most an operation name + HTTP status/
 // reason classification — never the incoming code, state, Client Secret,
-// access_token, refresh_token, or any raw Zoho response body.
+// access_token, refresh_token, or any raw Zoho response body. The
+// try/catch around the whole body exists only to turn a genuinely
+// unexpected thrown error into INTERNAL_ERROR instead of an unhandled
+// Worker exception — exception.message is deliberately never read or
+// rendered.
 export async function handleZohoOAuthCallback(request: Request, env: Env): Promise<Response> {
-  const url = new URL(request.url);
-  const code = url.searchParams.get("code");
-  const state = url.searchParams.get("state");
+  try {
+    const url = new URL(request.url);
+    const code = url.searchParams.get("code");
+    const state = url.searchParams.get("state");
 
-  if (!code || !state) {
-    console.error("zoho oauth callback: missing code or state");
-    return failureResponse();
+    if (!code || !state) {
+      console.error("zoho oauth callback: missing code or state");
+      return failureResponse("MISSING_PARAMETERS");
+    }
+
+    if (!env.OAUTH_SETUP_SECRET || !timingSafeEqual(state, env.OAUTH_SETUP_SECRET)) {
+      console.error("zoho oauth callback: state validation failed");
+      return failureResponse("STATE_INVALID");
+    }
+
+    const tokenResult = await exchangeCodeForToken(code, env);
+    if (!tokenResult.ok || !tokenResult.accessToken) {
+      console.error("zoho oauth callback: token exchange failed", { status: tokenResult.status });
+      return failureResponse("TOKEN_EXCHANGE_FAILED");
+    }
+
+    if (!tokenResult.refreshToken) {
+      console.error("zoho oauth callback: token exchange succeeded but no refresh_token returned");
+      return failureResponse("REFRESH_TOKEN_MISSING");
+    }
+
+    const accountResult = await findAccountId(tokenResult.accessToken);
+    if (!accountResult.ok) {
+      console.error("zoho oauth callback: account lookup failed", {
+        reason: accountResult.reason,
+        status: accountResult.status,
+      });
+      return failureResponse(accountResult.reason === "not_found" ? "MAILBOX_NOT_FOUND" : "ACCOUNT_LOOKUP_FAILED");
+    }
+
+    console.log("zoho oauth callback: setup succeeded");
+    return successResponse(tokenResult.refreshToken, accountResult.accountId);
+  } catch {
+    console.error("zoho oauth callback: unexpected internal error");
+    return failureResponse("INTERNAL_ERROR");
   }
-
-  if (!env.OAUTH_SETUP_SECRET || !timingSafeEqual(state, env.OAUTH_SETUP_SECRET)) {
-    console.error("zoho oauth callback: state validation failed");
-    return failureResponse();
-  }
-
-  const tokenResult = await exchangeCodeForToken(code, env);
-  if (!tokenResult.ok || !tokenResult.accessToken) {
-    console.error("zoho oauth callback: token exchange failed", { status: tokenResult.status });
-    return failureResponse();
-  }
-
-  if (!tokenResult.refreshToken) {
-    console.error("zoho oauth callback: token exchange succeeded but no refresh_token returned");
-    return failureResponse();
-  }
-
-  const accountResult = await findAccountId(tokenResult.accessToken);
-  if (!accountResult.ok) {
-    console.error("zoho oauth callback: account lookup failed", {
-      reason: accountResult.reason,
-      status: accountResult.status,
-    });
-    return failureResponse();
-  }
-
-  console.log("zoho oauth callback: setup succeeded");
-  return successResponse(tokenResult.refreshToken, accountResult.accountId);
 }
