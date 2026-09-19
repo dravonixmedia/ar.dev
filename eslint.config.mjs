@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Cloudflare Worker source: separate runtime (no DOM/React), type-checked
+    // on its own via worker/tsconfig.json rather than the Next.js lint/TS setup.
+    "worker/**",
   ]),
 ]);
 

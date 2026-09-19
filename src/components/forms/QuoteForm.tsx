@@ -1,10 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { services } from "@/lib/data/services";
 import { productFamilies } from "@/lib/data/products";
-import { contact } from "@/lib/data/site";
+import { submitEnquiry } from "@/lib/submitEnquiry";
+import Turnstile, { type TurnstileHandle } from "./Turnstile";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+// Kept in sync with worker/util.ts — the server enforces these limits
+// authoritatively; this is only for immediate, friendlier client feedback.
+const MAX_FILES = 5;
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_TOTAL_SIZE = 15 * 1024 * 1024;
+const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".pdf"];
 
 interface FormState {
   fullName: string;
@@ -43,6 +53,7 @@ const initialState: FormState = {
 };
 
 type Errors = Partial<Record<keyof FormState, string>>;
+type Status = "idle" | "submitting" | "success" | "error";
 
 function inputClass(hasError?: boolean) {
   return `w-full rounded-xl border bg-white px-4 py-3.5 text-[14px] text-black placeholder:text-charcoal/40 focus:outline-none focus:ring-2 focus:ring-error/40 ${
@@ -50,14 +61,67 @@ function inputClass(hasError?: boolean) {
   }`;
 }
 
+function extensionOf(filename: string): string {
+  const idx = filename.lastIndexOf(".");
+  return idx === -1 ? "" : filename.slice(idx).toLowerCase();
+}
+
 export default function QuoteForm() {
   const [form, setForm] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<Errors>({});
-  const [fileNote, setFileNote] = useState("");
-  const [status, setStatus] = useState<"idle" | "redirecting">("idle");
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const honeypotRef = useRef<HTMLInputElement>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(e.target.files ?? []);
+    if (selected.length === 0) {
+      setFiles([]);
+      setFileError("");
+      return;
+    }
+
+    if (selected.length > MAX_FILES) {
+      setFileError(`You can attach up to ${MAX_FILES} files.`);
+      setFiles([]);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    const invalidType = selected.find((f) => !ALLOWED_EXTENSIONS.includes(extensionOf(f.name)));
+    if (invalidType) {
+      setFileError("Only JPG, PNG, WEBP and PDF files are accepted.");
+      setFiles([]);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    const oversized = selected.find((f) => f.size > MAX_FILE_SIZE);
+    if (oversized) {
+      setFileError("Each file must be 5 MB or smaller.");
+      setFiles([]);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    const totalSize = selected.reduce((sum, f) => sum + f.size, 0);
+    if (totalSize > MAX_TOTAL_SIZE) {
+      setFileError("Total attachments must be 15 MB or smaller.");
+      setFiles([]);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    setFileError("");
+    setFiles(selected);
   };
 
   const validate = (): boolean => {
@@ -76,48 +140,66 @@ export default function QuoteForm() {
     return Object.keys(next).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (status === "redirecting") return;
+    if (status === "submitting") return;
     if (!validate()) return;
 
-    setStatus("redirecting");
+    setStatus("submitting");
 
-    const lines = [
-      `Quote Request — AR Hydraulics and Sealing Solutions`,
-      ``,
-      `Full Name: ${form.fullName}`,
-      form.companyName && `Company: ${form.companyName}`,
-      `Phone: ${form.phone}`,
-      form.whatsapp && `WhatsApp: ${form.whatsapp}`,
-      `Email: ${form.email}`,
-      form.location && `Location: ${form.location}`,
-      `Service Required: ${form.serviceRequired}`,
-      form.productRequired && `Product Required: ${form.productRequired}`,
-      form.equipmentBrand && `Equipment Brand: ${form.equipmentBrand}`,
-      form.equipmentModel && `Equipment Model: ${form.equipmentModel}`,
-      form.partNumber && `Part Number: ${form.partNumber}`,
-      form.dimensions && `Dimensions: ${form.dimensions}`,
-      form.applicationDetails && `Application Details: ${form.applicationDetails}`,
-      ``,
-      `Message:`,
-      form.message,
-    ]
-      .filter(Boolean)
-      .join("\n");
+    const data = new FormData();
+    data.set("formType", "quote");
+    data.set("fullName", form.fullName);
+    data.set("companyName", form.companyName);
+    data.set("phone", form.phone);
+    data.set("whatsapp", form.whatsapp);
+    data.set("email", form.email);
+    data.set("location", form.location);
+    data.set("serviceRequired", form.serviceRequired);
+    data.set("productRequired", form.productRequired);
+    data.set("equipmentBrand", form.equipmentBrand);
+    data.set("equipmentModel", form.equipmentModel);
+    data.set("partNumber", form.partNumber);
+    data.set("dimensions", form.dimensions);
+    data.set("applicationDetails", form.applicationDetails);
+    data.set("message", form.message);
+    data.set("turnstileToken", turnstileToken);
+    data.set("website", honeypotRef.current?.value ?? "");
+    for (const file of files) {
+      data.append("attachments", file);
+    }
 
-    const subject = encodeURIComponent(`Quote Request — ${form.fullName}`);
-    const body = encodeURIComponent(lines);
-    window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+    const ok = await submitEnquiry(data);
+    turnstileRef.current?.reset();
+    setTurnstileToken("");
 
-    // If no mail client is configured, the browser never navigates away and
-    // the button would otherwise stay disabled/stuck forever — reset after
-    // a few seconds so the form is usable again either way.
-    window.setTimeout(() => setStatus("idle"), 3000);
+    if (ok) {
+      setStatus("success");
+      setForm(initialState);
+      setFiles([]);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } else {
+      setStatus("error");
+    }
   };
+
+  if (status === "success") {
+    return (
+      <div role="status" className="rounded-2xl border border-border bg-white p-8 text-center sm:col-span-2">
+        <p className="text-[15px] font-semibold text-black">
+          Thank you. Your enquiry has been submitted successfully. Our team will contact you shortly.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} noValidate className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor="quote-website">Website</label>
+        <input id="quote-website" ref={honeypotRef} type="text" name="website" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className="sm:col-span-2 sm:grid sm:grid-cols-2 sm:gap-6">
         <Field label="Full Name" required error={errors.fullName}>
           <input
@@ -242,19 +324,24 @@ export default function QuoteForm() {
           Attach Files (product photo, seal photo, equipment plate, drawing)
         </label>
         <input
+          ref={fileInputRef}
           type="file"
           multiple
-          accept="image/*,.pdf"
-          onChange={(e) =>
-            setFileNote(
-              e.target.files && e.target.files.length > 0
-                ? `${e.target.files.length} file(s) selected — attachments require the email/WhatsApp step below since this form has no backend configured yet.`
-                : ""
-            )
-          }
+          accept="image/jpeg,image/png,image/webp,application/pdf,.jpg,.jpeg,.png,.webp,.pdf"
+          onChange={handleFileChange}
           className="block w-full text-[13px] text-charcoal file:mr-4 file:rounded-full file:border-0 file:bg-olive-deep file:px-5 file:py-2.5 file:text-[12px] file:font-semibold file:uppercase file:tracking-[0.08em] file:text-yellow"
         />
-        {fileNote && <p className="mt-2 text-[12px] text-charcoal/60">{fileNote}</p>}
+        <p className="mt-2 text-[12px] text-charcoal/60">
+          JPG, PNG, WEBP or PDF — up to {MAX_FILES} files, 5 MB each, 15 MB total.
+        </p>
+        {fileError && (
+          <p role="alert" className="mt-1.5 text-[12px] text-error">
+            {fileError}
+          </p>
+        )}
+        {!fileError && files.length > 0 && (
+          <p className="mt-1.5 text-[12px] text-charcoal/60">{files.length} file(s) selected.</p>
+        )}
       </div>
 
       <div className="sm:col-span-2 flex items-start gap-3">
@@ -272,23 +359,29 @@ export default function QuoteForm() {
       </div>
       {errors.consent && <p role="alert" className="sm:col-span-2 -mt-3 text-[12px] text-error">{errors.consent}</p>}
 
+      {TURNSTILE_SITE_KEY && (
+        <div className="sm:col-span-2">
+          <Turnstile ref={turnstileRef} siteKey={TURNSTILE_SITE_KEY} onToken={setTurnstileToken} />
+        </div>
+      )}
+
       <div className="sm:col-span-2">
         <button
           type="submit"
           data-cursor="link"
-          disabled={status === "redirecting"}
+          disabled={status === "submitting"}
           className="inline-flex items-center gap-3 rounded-full bg-olive-deep px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-yellow transition-colors hover:bg-yellow hover:text-black disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-olive-deep disabled:hover:text-yellow"
         >
-          {status === "redirecting" ? "Opening Your Email App…" : "Submit Enquiry"}
+          {status === "submitting" ? "Submitting…" : "Submit Enquiry"}
         </button>
         <span role="status" aria-live="polite" className="sr-only">
-          {status === "redirecting" ? "Opening your email app…" : ""}
+          {status === "submitting" ? "Submitting…" : ""}
         </span>
-        <p className="mt-4 max-w-lg text-[12px] leading-relaxed text-charcoal/60">
-          Submitting opens your email app with the enquiry pre-filled to {contact.email}, since a
-          server-side form endpoint is not yet configured for this site. For a faster response,
-          you can also send the same details directly via WhatsApp.
-        </p>
+        {status === "error" && (
+          <p role="alert" className="mt-4 max-w-lg text-[12px] leading-relaxed text-error">
+            We couldn&apos;t submit your enquiry right now. Please try again or contact us via WhatsApp.
+          </p>
+        )}
       </div>
     </form>
   );
