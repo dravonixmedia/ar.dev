@@ -110,34 +110,35 @@ export default function ContactForm() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div>
-          <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
+          <label htmlFor="contact-name" className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
             Name <span className="text-error">*</span>
           </label>
-          <input className={inputClass(!!errors.name)} value={form.name} onChange={(e) => update("name", e.target.value)} />
+          <input id="contact-name" className={inputClass(!!errors.name)} value={form.name} onChange={(e) => update("name", e.target.value)} />
           {errors.name && <p role="alert" className="mt-1.5 text-[12px] text-error">{errors.name}</p>}
         </div>
         <div>
-          <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
+          <label htmlFor="contact-phone" className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
             Phone <span className="text-error">*</span>
           </label>
-          <input className={inputClass(!!errors.phone)} value={form.phone} onChange={(e) => update("phone", e.target.value)} type="tel" />
+          <input id="contact-phone" className={inputClass(!!errors.phone)} value={form.phone} onChange={(e) => update("phone", e.target.value)} type="tel" />
           {errors.phone && <p role="alert" className="mt-1.5 text-[12px] text-error">{errors.phone}</p>}
         </div>
       </div>
 
       <div>
-        <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
+        <label htmlFor="contact-email" className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
           Email <span className="text-error">*</span>
         </label>
-        <input className={inputClass(!!errors.email)} value={form.email} onChange={(e) => update("email", e.target.value)} type="email" />
+        <input id="contact-email" className={inputClass(!!errors.email)} value={form.email} onChange={(e) => update("email", e.target.value)} type="email" />
         {errors.email && <p role="alert" className="mt-1.5 text-[12px] text-error">{errors.email}</p>}
       </div>
 
       <div>
-        <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
+        <label htmlFor="contact-service-category" className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
           Service Category
         </label>
         <select
+          id="contact-service-category"
           className={inputClass()}
           value={form.serviceCategory}
           onChange={(e) => update("serviceCategory", e.target.value)}
@@ -152,10 +153,10 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
+        <label htmlFor="contact-message" className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
           Message <span className="text-error">*</span>
         </label>
-        <textarea className={inputClass(!!errors.message)} value={form.message} onChange={(e) => update("message", e.target.value)} rows={5} />
+        <textarea id="contact-message" className={inputClass(!!errors.message)} value={form.message} onChange={(e) => update("message", e.target.value)} rows={5} />
         {errors.message && <p role="alert" className="mt-1.5 text-[12px] text-error">{errors.message}</p>}
       </div>
 

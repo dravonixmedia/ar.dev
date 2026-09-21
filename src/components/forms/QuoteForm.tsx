@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import type { FormEvent } from "react";
+import { cloneElement, isValidElement, useRef, useState } from "react";
+import type { FormEvent, ReactElement } from "react";
 import { services } from "@/lib/data/services";
 import { productFamilies } from "@/lib/data/products";
 import { submitEnquiry } from "@/lib/submitEnquiry";
@@ -201,7 +201,7 @@ export default function QuoteForm() {
       </div>
 
       <div className="sm:col-span-2 sm:grid sm:grid-cols-2 sm:gap-6">
-        <Field label="Full Name" required error={errors.fullName}>
+        <Field id="quote-full-name" label="Full Name" required error={errors.fullName}>
           <input
             className={inputClass(!!errors.fullName)}
             value={form.fullName}
@@ -209,7 +209,7 @@ export default function QuoteForm() {
             autoComplete="name"
           />
         </Field>
-        <Field label="Company Name" error={errors.companyName}>
+        <Field id="quote-company-name" label="Company Name" error={errors.companyName}>
           <input
             className={inputClass()}
             value={form.companyName}
@@ -219,7 +219,7 @@ export default function QuoteForm() {
         </Field>
       </div>
 
-      <Field label="Phone" required error={errors.phone}>
+      <Field id="quote-phone" label="Phone" required error={errors.phone}>
         <input
           className={inputClass(!!errors.phone)}
           value={form.phone}
@@ -228,7 +228,7 @@ export default function QuoteForm() {
           autoComplete="tel"
         />
       </Field>
-      <Field label="WhatsApp Number" error={errors.whatsapp}>
+      <Field id="quote-whatsapp" label="WhatsApp Number" error={errors.whatsapp}>
         <input
           className={inputClass()}
           value={form.whatsapp}
@@ -237,7 +237,7 @@ export default function QuoteForm() {
         />
       </Field>
 
-      <Field label="Email" required error={errors.email}>
+      <Field id="quote-email" label="Email" required error={errors.email}>
         <input
           className={inputClass(!!errors.email)}
           value={form.email}
@@ -246,7 +246,7 @@ export default function QuoteForm() {
           autoComplete="email"
         />
       </Field>
-      <Field label="Location" error={errors.location}>
+      <Field id="quote-location" label="Location" error={errors.location}>
         <input
           className={inputClass()}
           value={form.location}
@@ -255,7 +255,7 @@ export default function QuoteForm() {
         />
       </Field>
 
-      <Field label="Service Required" required error={errors.serviceRequired}>
+      <Field id="quote-service-required" label="Service Required" required error={errors.serviceRequired}>
         <select
           className={inputClass(!!errors.serviceRequired)}
           value={form.serviceRequired}
@@ -269,7 +269,7 @@ export default function QuoteForm() {
           ))}
         </select>
       </Field>
-      <Field label="Product Required" error={errors.productRequired}>
+      <Field id="quote-product-required" label="Product Required" error={errors.productRequired}>
         <select
           className={inputClass()}
           value={form.productRequired}
@@ -284,22 +284,22 @@ export default function QuoteForm() {
         </select>
       </Field>
 
-      <Field label="Equipment Brand" error={errors.equipmentBrand}>
+      <Field id="quote-equipment-brand" label="Equipment Brand" error={errors.equipmentBrand}>
         <input className={inputClass()} value={form.equipmentBrand} onChange={(e) => update("equipmentBrand", e.target.value)} />
       </Field>
-      <Field label="Equipment Model" error={errors.equipmentModel}>
+      <Field id="quote-equipment-model" label="Equipment Model" error={errors.equipmentModel}>
         <input className={inputClass()} value={form.equipmentModel} onChange={(e) => update("equipmentModel", e.target.value)} />
       </Field>
 
-      <Field label="Part Number" error={errors.partNumber}>
+      <Field id="quote-part-number" label="Part Number" error={errors.partNumber}>
         <input className={inputClass()} value={form.partNumber} onChange={(e) => update("partNumber", e.target.value)} />
       </Field>
-      <Field label="Dimensions" error={errors.dimensions}>
+      <Field id="quote-dimensions" label="Dimensions" error={errors.dimensions}>
         <input className={inputClass()} value={form.dimensions} onChange={(e) => update("dimensions", e.target.value)} placeholder="e.g. Bore x Rod x Stroke" />
       </Field>
 
       <div className="sm:col-span-2">
-        <Field label="Application Details" error={errors.applicationDetails}>
+        <Field id="quote-application-details" label="Application Details" error={errors.applicationDetails}>
           <input
             className={inputClass()}
             value={form.applicationDetails}
@@ -309,7 +309,7 @@ export default function QuoteForm() {
       </div>
 
       <div className="sm:col-span-2">
-        <Field label="Message" required error={errors.message}>
+        <Field id="quote-message" label="Message" required error={errors.message}>
           <textarea
             className={inputClass(!!errors.message)}
             value={form.message}
@@ -320,10 +320,11 @@ export default function QuoteForm() {
       </div>
 
       <div className="sm:col-span-2">
-        <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
+        <label htmlFor="quote-attachments" className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
           Attach Files (product photo, seal photo, equipment plate, drawing)
         </label>
         <input
+          id="quote-attachments"
           ref={fileInputRef}
           type="file"
           multiple
@@ -346,13 +347,13 @@ export default function QuoteForm() {
 
       <div className="sm:col-span-2 flex items-start gap-3">
         <input
-          id="consent"
+          id="quote-consent"
           type="checkbox"
           checked={form.consent}
           onChange={(e) => update("consent", e.target.checked)}
           className="mt-1 h-4 w-4 shrink-0 rounded border-border accent-blue"
         />
-        <label htmlFor="consent" className="text-[13px] leading-relaxed text-charcoal">
+        <label htmlFor="quote-consent" className="text-[13px] leading-relaxed text-charcoal">
           I consent to AR Hydraulics and Sealing Solutions contacting me regarding this enquiry
           using the details provided above.
         </label>
@@ -388,22 +389,24 @@ export default function QuoteForm() {
 }
 
 function Field({
+  id,
   label,
   required,
   error,
   children,
 }: {
+  id: string;
   label: string;
   required?: boolean;
   error?: string;
-  children: React.ReactNode;
+  children: ReactElement<{ id?: string }>;
 }) {
   return (
     <div className="mb-6 sm:mb-0">
-      <label className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
+      <label htmlFor={id} className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.1em] text-charcoal/70">
         {label} {required && <span className="text-error">*</span>}
       </label>
-      {children}
+      {isValidElement(children) ? cloneElement(children, { id }) : children}
       {error && <p role="alert" className="mt-1.5 text-[12px] text-error">{error}</p>}
     </div>
   );
