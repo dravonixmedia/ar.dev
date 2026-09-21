@@ -121,14 +121,20 @@ export default function Hero() {
     };
   }, [showVideo]);
 
-  // Intro timeline — the panel itself slides/fades in first, then its
-  // contents (eyebrow, headline, supporting line, paragraph, CTAs) settle
-  // in a short stagger. Headline/tagline animate via TextReveal itself
+  // Intro timeline — the panel and its contents (eyebrow, headline,
+  // supporting line, paragraph, CTAs) settle into place via movement only,
+  // never opacity: every one of these elements is already opacity:1 in the
+  // server-rendered/static HTML (nothing here sets an initial opacity via
+  // className or inline style), so they must stay visibly painted through
+  // hydration and this effect too — a transform-only offset lets the
+  // premium "settle into place" feel survive without ever making the hero
+  // paragraph (the page's LCP element) or its panel ancestor invisible
+  // while JS/GSAP loads. Headline/tagline animate via TextReveal itself
   // (trigger={false} so they always play on mount, never waiting on a
   // scroll position the hero — being the first section — would never
-  // naturally receive). Nothing here is hidden by default CSS: if this
-  // effect never runs (JS error, disabled JS), every element stays at its
-  // normal server-rendered visible state — the safe fallback.
+  // naturally receive). If this effect never runs (JS error, disabled JS),
+  // every element stays at its normal server-rendered visible position —
+  // the safe fallback.
   useEffect(() => {
     const panel = panelRef.current;
     const eyebrow = eyebrowRef.current;
@@ -137,23 +143,23 @@ export default function Hero() {
     if (!panel || !eyebrow || !paragraph || !cta) return;
 
     if (reducedMotion) {
-      gsap.set([panel, eyebrow, paragraph, cta], { opacity: 1, x: 0, y: 0 });
+      gsap.set([panel, eyebrow, paragraph, cta], { x: 0, y: 0 });
       return;
     }
 
     ensureGsapRegistered();
     const ctx = gsap.context(() => {
-      gsap.set(panel, { opacity: 0, x: -20 });
-      gsap.set(eyebrow, { opacity: 0, y: 12 });
-      gsap.set(paragraph, { opacity: 0, y: 16 });
-      gsap.set(cta, { opacity: 0, y: 16 });
+      gsap.set(panel, { x: -20 });
+      gsap.set(eyebrow, { y: 12 });
+      gsap.set(paragraph, { y: 16 });
+      gsap.set(cta, { y: 16 });
 
       gsap
         .timeline({ defaults: { ease: "power3.out" } })
-        .to(panel, { opacity: 1, x: 0, duration: 0.7 }, 0)
-        .to(eyebrow, { opacity: 1, y: 0, duration: 0.4 }, 0.1)
-        .to(paragraph, { opacity: 1, y: 0, duration: 0.45 }, 0.55)
-        .to(cta, { opacity: 1, y: 0, duration: 0.4 }, 0.68);
+        .to(panel, { x: 0, duration: 0.7 }, 0)
+        .to(eyebrow, { y: 0, duration: 0.4 }, 0.1)
+        .to(paragraph, { y: 0, duration: 0.45 }, 0.55)
+        .to(cta, { y: 0, duration: 0.4 }, 0.68);
     });
 
     return () => ctx.revert();
