@@ -37,7 +37,63 @@ export default function Hero() {
   const isFinePointer = useIsFinePointer();
   const reducedMotion = usePrefersReducedMotion();
   const [videoReady, setVideoReady] = useState(false);
+  // Gates when the <video> element (and its real source URLs) is even
+  // inserted into the DOM — not just its opacity. False on the static-
+  // exported HTML and on first client render (same safe pattern as
+  // reducedMotion/isFinePointer above), so the multi-megabyte video never
+  // appears in markup the browser's preload scanner can discover until
+  // this effect below explicitly decides it's safe to attach it. The
+  // poster <img> is unconditional and always renders immediately either way.
+  const [canLoadVideo, setCanLoadVideo] = useState(false);
   const showVideo = Boolean(mediaConfig.hero.video) && !reducedMotion;
+
+  useEffect(() => {
+    if (!showVideo) return;
+
+    type NetworkInformation = { saveData?: boolean; effectiveType?: string };
+    const connection = (navigator as Navigator & { connection?: NetworkInformation }).connection;
+    // Save-Data and a reported slow connection both mean: stay on the
+    // poster, never fetch the video at all. Feature-detected — Safari and
+    // Firefox simply don't have `navigator.connection`, and that's fine.
+    if (connection?.saveData) return;
+    if (connection?.effectiveType && ["slow-2g", "2g"].includes(connection.effectiveType)) return;
+
+    let cancelled = false;
+    const start = () => {
+      if (!cancelled) setCanLoadVideo(true);
+    };
+
+    // Desktop keeps the existing near-immediate premium autoplay feel —
+    // this still only runs after the current frame has committed/painted
+    // (a normal effect, not blocking first paint), same as every other
+    // effect in this component.
+    const isMobileViewport = window.matchMedia("(max-width: 1023px)").matches;
+    if (!isMobileViewport) {
+      start();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    // Mobile: defer attaching the video until the browser reports idle
+    // (i.e. past the critical rendering path), so it never competes with
+    // the poster, fonts, or other above-the-fold work for bandwidth. Falls
+    // back to a fixed delay where requestIdleCallback isn't available
+    // (Safari) — feature-detected, no hard dependency.
+    const ric = window.requestIdleCallback;
+    if (ric) {
+      const id = ric(start, { timeout: 3000 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback?.(id);
+      };
+    }
+    const timeoutId = window.setTimeout(start, 2000);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [showVideo]);
 
   // Intro timeline — the panel itself slides/fades in first, then its
   // contents (eyebrow, headline, supporting line, paragraph, CTAs) settle
@@ -199,7 +255,7 @@ export default function Hero() {
               decoding="async"
             />
           )}
-          {showVideo && (
+          {showVideo && canLoadVideo && (
             <video
               className="hero-media absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
               style={{ opacity: videoReady ? 1 : 0 }}

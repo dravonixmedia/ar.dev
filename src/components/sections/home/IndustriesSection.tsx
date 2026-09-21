@@ -143,11 +143,15 @@ export default function IndustriesSection() {
 }
 
 // The large 16:9 stage behind the industry rows. Every industry's photo is
-// mounted at once, stacked absolutely and preloaded (loading="eager") so
-// the very first hover/tap never shows a blank frame — only opacity/scale
-// crossfades between layers on `active` change. This sits inside
-// ImageReveal purely for the section's one-time entrance clip/scale; the
-// crossfade below runs on its own refs and never touches ImageReveal's
+// mounted at once, stacked absolutely, so the crossfade between layers on
+// `active` change is instant with no network wait once each has loaded.
+// Only the first (default-active) layer loads eagerly — this section sits
+// well below the fold, so the other four load lazily instead of competing
+// with the hero/fonts for bandwidth on initial page load. Native lazy
+// loading fires as the section nears the viewport, well before a visitor
+// scrolls far enough to actually hover/tap a different industry. This sits
+// inside ImageReveal purely for the section's one-time entrance clip/scale;
+// the crossfade below runs on its own refs and never touches ImageReveal's
 // own scroll-triggered tween, so the two never fight each other.
 function IndustryImageStage({ active }: { active: number }) {
   const reducedMotion = usePrefersReducedMotion();
@@ -202,7 +206,7 @@ function IndustryImageStage({ active }: { active: number }) {
                   src={asset.src}
                   alt={asset.alt}
                   fill
-                  loading="eager"
+                  loading={i === 0 ? "eager" : "lazy"}
                   sizes="(min-width: 1024px) 50vw, 100vw"
                   style={
                     {
