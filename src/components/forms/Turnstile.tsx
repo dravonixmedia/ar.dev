@@ -50,6 +50,16 @@ function loadTurnstileScript(): Promise<void> {
 // Renders Cloudflare's managed Turnstile widget and reports the challenge
 // token up to the form. The token is single-use, so the form calls
 // ref.current.reset() after every submit attempt (success or failure).
+//
+// appearance: "interaction-only" is an officially supported Turnstile
+// render option (not a CSS/DOM hack) — Cloudflare's own widget script
+// keeps this container at zero visual footprint for the common case where
+// the managed/non-interactive challenge succeeds without needing visitor
+// input, and only paints the widget's UI into this same container when
+// Cloudflare genuinely determines interaction is required. `execution`
+// intentionally stays at its default ("render"): the challenge still runs
+// automatically as soon as the widget mounts, exactly as before — only
+// its visibility changed, not when the token is generated.
 const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Turnstile({ siteKey, onToken }, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | undefined>(undefined);
@@ -70,6 +80,7 @@ const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Turnstile
         if (cancelled || !containerRef.current || !window.turnstile) return;
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
+          appearance: "interaction-only",
           callback: (token: string) => onToken(token),
           "expired-callback": () => onToken(""),
           "error-callback": () => onToken(""),
