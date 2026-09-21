@@ -224,14 +224,19 @@ export default function Hero() {
       className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pt-[84px]"
     >
       {/* Full-bleed cinematic background: the poster — a real frame lifted
-          from the hero video itself — paints instantly on first render, so
-          there is nothing to flash before the video takes over. The video
-          crossfades in fast (~300ms) once it can actually play, and because
-          poster and video are literally the same footage at the same crop,
-          the handoff reads as one continuous shot rather than a swap. No
-          gradient sits over the footage anywhere — readability comes from
-          the small translucent content card below, which the video
-          otherwise dominates around and behind. */}
+          from the hero video itself — paints instantly on first render and
+          stays mounted permanently underneath the video, at opacity 1,
+          for the section's entire lifetime. It is never faded out or
+          removed — the video is the thing that fades IN over it (once a
+          real decoded frame exists, see onLoadedData below), so there is
+          no state in which neither layer has visible content and no way
+          for the browser's own pre-decode rendering to show through as a
+          black flash. Because poster and video are literally the same
+          footage at the same crop, the handoff reads as one continuous
+          shot rather than a swap. No gradient sits over the footage
+          anywhere — readability comes from the small translucent content
+          card below, which the video otherwise dominates around and
+          behind. */}
       <div className="absolute inset-0 overflow-hidden bg-warm" aria-hidden="true">
         <div
           ref={mainLayerRef}
@@ -248,8 +253,7 @@ export default function Hero() {
             <img
               src={mediaConfig.hero.poster}
               alt=""
-              className="hero-media absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
-              style={{ opacity: showVideo && videoReady ? 0 : 1 }}
+              className="hero-media absolute inset-0 h-full w-full object-cover"
               data-hero-layer="poster"
               fetchPriority="high"
               decoding="async"
@@ -257,7 +261,7 @@ export default function Hero() {
           )}
           {showVideo && canLoadVideo && (
             <video
-              className="hero-media absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
+              className="hero-media absolute inset-0 h-full w-full object-cover bg-transparent transition-opacity duration-[400ms]"
               style={{ opacity: videoReady ? 1 : 0 }}
               data-hero-layer="video"
               poster={mediaConfig.hero.poster ?? undefined}
@@ -268,7 +272,14 @@ export default function Hero() {
               preload="auto"
               tabIndex={-1}
               aria-hidden="true"
-              onCanPlay={() => setVideoReady(true)}
+              // loadeddata (not canplay) — it specifically guarantees the
+              // first frame has actually decoded and is paintable, which is
+              // exactly the condition needed before crossfading over the
+              // poster. canplay only promises enough is buffered to play
+              // through without stalling; it can fire without a frame yet
+              // composited, which is what let a black paint show through
+              // during the opacity handoff.
+              onLoadedData={() => setVideoReady(true)}
             >
               <source src={mediaConfig.hero.video!} type="video/mp4" />
               {mediaConfig.hero.webm && <source src={mediaConfig.hero.webm} type="video/webm" />}
