@@ -23,8 +23,13 @@ export default function MobileActionBar() {
         <MessageCircle className="h-4 w-4" />
         WhatsApp
       </a>
+      {/* This bar is `fixed`, so it's always in the viewport on every
+          mobile page load — Next's default viewport-triggered prefetch
+          would otherwise fetch the full /quote page + its RSC payload
+          immediately on every single page, not just when tapped. */}
       <Link
         href="/quote"
+        prefetch={false}
         className="flex flex-1 flex-col items-center gap-1 bg-yellow py-2.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-black"
       >
         <Wrench className="h-4 w-4" />

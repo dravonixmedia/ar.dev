@@ -145,14 +145,16 @@ export default function IndustriesSection() {
 // The large 16:9 stage behind the industry rows. Every industry's photo is
 // mounted at once, stacked absolutely, so the crossfade between layers on
 // `active` change is instant with no network wait once each has loaded.
-// Only the first (default-active) layer loads eagerly — this section sits
-// well below the fold, so the other four load lazily instead of competing
-// with the hero/fonts for bandwidth on initial page load. Native lazy
-// loading fires as the section nears the viewport, well before a visitor
-// scrolls far enough to actually hover/tap a different industry. This sits
-// inside ImageReveal purely for the section's one-time entrance clip/scale;
-// the crossfade below runs on its own refs and never touches ImageReveal's
-// own scroll-triggered tween, so the two never fight each other.
+// All five layers load lazily — on the homepage this section sits six
+// sections below the hero (About, What We Do, Signature Story, mobile CTA,
+// Products all come first), well outside any critical-path/LCP concern, so
+// none of them should compete with the hero/fonts for bandwidth on initial
+// page load. Native lazy loading fires as the section nears the viewport,
+// well before a visitor scrolls far enough to actually reach it (let alone
+// hover/tap a different industry). This sits inside ImageReveal purely for
+// the section's one-time entrance clip/scale; the crossfade below runs on
+// its own refs and never touches ImageReveal's own scroll-triggered tween,
+// so the two never fight each other.
 function IndustryImageStage({ active }: { active: number }) {
   const reducedMotion = usePrefersReducedMotion();
   const layerRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -206,7 +208,7 @@ function IndustryImageStage({ active }: { active: number }) {
                   src={asset.src}
                   alt={asset.alt}
                   fill
-                  loading={i === 0 ? "eager" : "lazy"}
+                  loading="lazy"
                   sizes="(min-width: 1024px) 50vw, 100vw"
                   style={
                     {

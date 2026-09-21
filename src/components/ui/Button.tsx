@@ -19,6 +19,15 @@ interface ButtonProps {
   type?: "button" | "submit";
   cursor?: string;
   external?: boolean;
+  /**
+   * Passed straight through to next/link. Leave unset almost everywhere —
+   * Next's default viewport-triggered prefetch is desirable for links a
+   * visitor is likely to click next. Only set `false` for a link that's
+   * guaranteed to sit in the initial viewport (e.g. a hero CTA), where
+   * prefetch fires immediately on load and downloads a full page + its
+   * RSC payload before the visitor has done anything.
+   */
+  prefetch?: boolean;
 }
 
 const variantClasses: Record<Variant, string> = {
@@ -97,6 +106,7 @@ export default function Button({
   type = "button",
   cursor = "link",
   external = false,
+  prefetch,
 }: ButtonProps) {
   const content = (
     <span
@@ -110,7 +120,7 @@ export default function Button({
             <ButtonInner variant={variant} size={size}>{children}</ButtonInner>
           </a>
         ) : (
-          <Link href={href} className="inline-block">
+          <Link href={href} prefetch={prefetch} className="inline-block">
             <ButtonInner variant={variant} size={size}>{children}</ButtonInner>
           </Link>
         )

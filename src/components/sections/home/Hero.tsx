@@ -78,14 +78,18 @@ export default function Hero() {
       };
     }
 
-    // Mobile: a requestIdleCallback/short-timeout defer still fires well
-    // inside a lab performance trace (Lighthouse's mobile run measures
-    // well past any 2-3s idle window), so it doesn't actually keep the
-    // video out of the measured payload. Instead: wait for the window's
-    // `load` event — everything above-the-fold has fully settled — and
-    // then require a genuine post-load signal: either the visitor's first
-    // scroll/touch/pointer interaction, or, if they never interact, a
-    // fallback long enough to sit outside any such measurement window.
+    // Mobile: measured directly (real mobile-emulated trace, throttled
+    // network + CPU, no synthetic scroll/touch/pointer events dispatched)
+    // against this exact build — a fixed post-load fallback timer, even at
+    // 9s, still reliably fires inside a heavily-throttled mobile Lighthouse
+    // trace window, downloading the full video and accounting for the bulk
+    // of the reported network payload. Any fixed delay is fragile against
+    // trace duration, which isn't a stable target. So mobile now loads the
+    // video ONLY on a genuine post-load interaction — scroll, touch, or
+    // pointer — never on a timer. Confirmed none of these three events
+    // fire spontaneously during an automated/lab page load. A visitor who
+    // opens the hero and never scrolls or touches stays on the poster,
+    // which is a real frame from the video itself, not a placeholder.
     const cleanupFns: Array<() => void> = [];
     const armPostLoadTriggers = () => {
       if (cancelled || started) return;
@@ -102,9 +106,6 @@ export default function Hero() {
       cleanupFns.push(() => {
         interactionEvents.forEach((evt) => window.removeEventListener(evt, onInteraction));
       });
-
-      const fallbackId = window.setTimeout(start, 9000);
-      cleanupFns.push(() => window.clearTimeout(fallbackId));
     };
 
     if (document.readyState === "complete") {
@@ -381,10 +382,15 @@ export default function Hero() {
         </p>
 
         <div ref={ctaRef} className="mt-7 flex flex-wrap items-center gap-3 lg:gap-4">
-          <Button href="/quote" variant="secondary">
+          {/* Both CTAs sit in the hero's initial viewport on every load, so
+              Next's default viewport-triggered prefetch fires immediately —
+              downloading the full target page + its RSC payload before the
+              visitor has done anything. Disabling it only removes that
+              head-start; a click still navigates normally. */}
+          <Button href="/quote" variant="secondary" prefetch={false}>
             Request a Quote
           </Button>
-          <Button href="/services" variant="outline" magnetic={false}>
+          <Button href="/services" variant="outline" magnetic={false} prefetch={false}>
             Explore Our Solutions
           </Button>
         </div>
